@@ -1,8 +1,9 @@
-const mongoose=require("mongoose")
+const mongoose=require("mongoose");
+const { array } = require("../src/middlewares/multerMiddleware");
 
 const schema={
-    image:{
-        type:String,
+    productImage:{
+        type:Array,
         required:true
     },
     productName:{
@@ -11,6 +12,25 @@ const schema={
     },
     category:{
         type:String,
+        required:true
+    },
+    subcategory:{
+        type:String,
+        required:true
+    },
+    size:{
+        type:[String]
+    },
+    color:{
+        type:[String]
+    },
+    return:{
+        type:Boolean,
+        default:false
+    },
+    deliverydate:{
+        type:String,
+        required:true
     },
     description:{
         type : String,

@@ -2,27 +2,27 @@ const express=require('express')
 const router=express.Router()
 
 
-const userController=require("../controller/user")
+const authController=require("../controller/auth")
 
-router.get("/signup",userController.usersignupGet)
-router.post("/sendotp",userController.usersignupPost)
+router.get("/signup",authController.usersignupGet)
+router.post("/sendotp",authController.usersignupPost)
 
-router.get("/sendotp/:num",userController.sendotpget)
-router.post("/login/:num",userController.sendotpPost)
-router.get("/resendotp/:num",userController.resendotp)
+router.get("/sendotp/:num",authController.sendotpget)
+router.post("/login/:num",authController.sendotpPost)
+router.get("/resendotp/:num",authController.resendotp)
 
-router.get("/login",userController.userloginGet)
-router.post("/home",userController.userloginPost)
+router.get("/login",authController.userloginGet)
+router.post("/home",authController.userloginPost)
 
-router.get("/forgot",userController.forgotpasswordGet)
-router.post("/forgotpost",userController.forgotpasswordPost)
+router.get("/forgot",authController.forgotpasswordGet)
+router.post("/forgotpost",authController.forgotpasswordPost)
 
-router.get("/forgototp/:mail",userController.forgototpGet)
-// router.get("/resendemailotp/:mail",userController.resendemailotp)
-router.post("/resetpassword/:mail",userController.forgototpPost)
+router.get("/forgototp/:mail",authController.forgototpGet)
+// router.get("/resendemailotp/:mail",authController.resendemailotp)
+router.post("/resetpassword/:mail",authController.forgototpPost)
 
-router.get("/resetpasswordGet/:mail",userController.resetpasswordGet)
-router.post("/resetlogin/:mail",userController.resetpasswordPost)
+router.get("/resetpasswordGet/:mail",authController.resetpasswordGet)
+router.post("/resetlogin/:mail",authController.resetpasswordPost)
 
 
 

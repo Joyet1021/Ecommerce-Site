@@ -19,15 +19,7 @@
 			<li><a class="active" href="/admin/products"><i class='bx bxs-chart icon' ></i> Products</a></li>
 			<li><a href="#"><i class='bx bxs-widget icon' ></i> Widgets</a></li>
 			<li><a href="/admin/userslist"><i class='bx bx-table icon' ></i> Users List</a></li>
-			<li>
-				<a href="#"><i class='bx bxs-notepad icon' ></i> Forms <i class='bx bx-chevron-right icon-right' ></i></a>
-				<ul class="side-dropdown">
-					<li><a href="#">Basic</a></li>
-					<li><a href="#">Select</a></li>
-					<li><a href="#">Checkbox</a></li>
-					<li><a href="#">Radio</a></li>
-				</ul>
-			</li>
+			<li><a href="/admin/couponlist"><i class='bx bxs-notepad icon' ></i>Add Coupon </a></li>
 		</ul>
 		
 	</section>
@@ -82,14 +74,14 @@
 						<div class="imagefull">
 							<div class="addproducthead"></div>
 							<div class="profileimgbox">
-								<img src="/uploads/<%= productDetails.image %>" alt="submit" id="imagePreview" class="productimage" width="80%" height="100%"  >
+								<img src="/uploads/<%= productDetails.productImage[0] %>" alt="submit" id="imagePreview" class="productimage" width="80%" height="100%"  >
 								
 								
 							</div>
 							<div class="choose">
 								<div class="chooseinner1">
 									choose pic
-									<input type="file" name="image" onchange="previewImage(this)" class="profileImageADD">
+									<input type="file" name="image" multiple onchange="previewImage(this)" class="profileImageADD">
 								</div>
 							</div>
 						</div>
@@ -101,10 +93,77 @@
 				<input type="text" id="price" name="price" value="<%= productDetails.price %>"><br><br>
 		
 				<label for="category">Category</label><br>
-				<input type="text" id="category" name="category" value="<%= productDetails.category %>" ><br><br>
+				<select style="height: 35px; width: 80%;" id="size"  name="category" required>
+					<option onchange="select(e)" value="<%= productDetails.category %>"><%= productDetails.category %></option>
+					<% categoryList.forEach((category)=>{ %>
+					<option onchange="select(e)" value="<%=category.categoryName%>"><%=category.categoryName%></option>
+					<% }) %>
+				</select><br><br>
+
+				<label for="subcategory">Sub Category</label><br>
+				<select style="height: 35px; width: 80%;" id="size" name="subcategory" required>
+					<option onchange="select(e)" value="<%= productDetails.subcategory %>"><%= productDetails.subcategory %></option>
+					<% categoryList.forEach((category) => { %>
+						<% category.subCategory.forEach((sub) => { %>
+							<option onchange="select(e)" value="<%= sub %>"><%= sub %></option>
+						<% }) %>
+					<% }) %>
+				</select> <br><br>
+
+				<div style="display: flex; gap:1rem; width: 100%;">
+					<span style="display: flex; flex-direction: column; gap: .2rem;">
+						<label for="size">Size</label>
+						<div class="color_drop">
+							<p><%= productDetails.size %></p>
+							<ul class="drop_bar">
+								<li><input type="checkbox" name="size" id="S" class="size" value="S"><label
+										for="S">S</label></li>
+								<li><input type="checkbox" name="size" id="M" class="size" value="M"><label
+										for="M">M</label></li>
+								<li><input type="checkbox" name="size" id="L" class="size" value="L"><label
+										for="L">L</label></li>
+								<li><input type="checkbox" name="size" id="XL" class="size"
+										value="XL"><label for="XL">XL</label></li>
+								<li><input type="checkbox" name="size" id="2XL" class="size"
+										value="2XL"><label for="2XL">2XL</label></li>
+							</ul>
+						</div>
+					</span>
+
+					<span style="display: flex; flex-direction: column; gap: .2rem;">
+						<label for="size">Color</label>
+						<div class="color_drop ">
+							<p><%= productDetails.color %></p>
+							<ul class="drop_bar">
+								<li><input type="checkbox" name="color" class="color" id="green"
+										value="green"><label style="color: rgb(0, 195, 0);"
+										for="green">green</label></li>
+								<li><input type="checkbox" name="color" class="color" id="black"
+										value="black"><label for="black" style="color: black;">black</label>
+								</li>
+								<li><input type="checkbox" name="color" class="color" id="red"
+										value="red"><label style="color: red;" for="red">red</label></li>
+								<li><input type="checkbox" name="color" class="color" id="orange"
+										value="orange"><label style="color: orange;"
+										for="orange">orange</label></li>
+								<li><input type="checkbox" name="color" class="color" id="pink"
+										value="pink"><label style="color: rgb(216, 118, 135);"
+										for="pink">pink</label></li>
+							</ul>
+						</div>
+					</span>
+					<span style="display: flex; flex-direction: column; gap: .2rem;">
+						<label for="returnproduct">Return</label>
+						<input type="checkbox" name="returnproduct" class="returnproduct" id="returnproduct" value="<%=productDetails.returnproduct%>=='true'?:''">
+					</span>
+				</div>
+
 		
 				<label for="discount">Discount Price</label><br>
-				<input type="text" id="number" name="discount" value="<%= productDetails.discount %>"><br><br>
+				<input type="text" id="discount" name="discount" value="<%= productDetails.discount %>"><br><br>
+
+				<label for="deliverydate">Delivery within</label><br>
+				<input type="deliverydate" id="deliverydate" name="deliverydate" value="<%= productDetails.deliverydate %> "><br><br>
 		
 				<div class="description"><label for="description">Description</label><br>
 					<textarea id="description" name="description" class="description" ><%= productDetails.description %></textarea></div><br>
@@ -112,6 +171,7 @@
 				<label for="quantity">Stock</label><br>
 				<input type="text" id="quantity" name="quantity" value="<%= productDetails.quantity %>" >
 				<button class="submit" >Submit</button>
+				<div class="errorMsg" style="color: rgb(183, 21, 21);margin-bottom: 10px; font-weight: bold;"></div>
 
 						</div>
 				

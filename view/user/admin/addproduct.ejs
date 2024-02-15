@@ -6,6 +6,7 @@
 	<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 	<link rel="stylesheet" href="/css/admin/dashboard.css">
     <link rel="stylesheet" href="/css/user.css">
+	
 	<title>AdminSite</title>
 </head>
 <body>
@@ -19,15 +20,7 @@
 			<li><a href="/admin/products"><i class='bx bxs-chart icon' ></i> Products</a></li>
 			<li><a href="/admin/categories"><i class='bx bxs-widget icon' ></i> Categories</a></li>
 			<li><a href="/admin/userslist"><i class='bx bx-table icon' ></i> Users List</a></li>
-			<li>
-				<a href="#"><i class='bx bxs-notepad icon' ></i> Forms <i class='bx bx-chevron-right icon-right' ></i></a>
-				<ul class="side-dropdown">
-					<li><a href="#">Basic</a></li>
-					<li><a href="#">Select</a></li>
-					<li><a href="#">Checkbox</a></li>
-					<li><a href="#">Radio</a></li>
-				</ul>
-			</li>
+			<li><a href="/admin/couponlist"><i class='bx bxs-notepad icon' ></i>Add Coupon </a></li>
 		</ul>
 		
 	</section>
@@ -74,20 +67,20 @@
 			</ul>
 			<div class="productsfull">
 				<div class="productform">
-					<form class="specdetail" action="/admin/addproductpost" method="post" enctype="multipart/form-data">
+					<form class="specdetail" id="form_add" enctype="multipart/form-data">
 
                             
 						<div class="imagefull">
 							<div class="addproducthead"></div>
 							<div class="profileimgbox">
-								<img  src="" alt="submit" id="imagePreview" class="productimage" width="80%" height="100%"  >
+								<img  src="/uploads/" alt="submit" name="image" id="imagePreview" class="productimage" width="80%" height="100%"  >
 								
 								
 							</div>
 							<div class="choose">
 								<div class="chooseinner1">
 									choose pic
-									<input type="file" name="image" onchange="previewImage(this)" class="profileImageADD">
+									<input type="file"  name="productImage" multiple onchange="previewImage(this)" class="profileImageADD">
 								</div>
 							</div>
 						</div>
@@ -96,20 +89,93 @@
 				<input type="text" id="productName" name="productName" required><br><br>
 		
 				<label for="price">Price</label><br>
-				<input type="text" id="price" name="price"><br><br>
+				<input type="text" id="price" name="price" required><br><br>
 		
 				<label for="category">Category</label><br>
-				<input type="text" id="category" name="category" ><br><br>
+				<select style="height: 35px; width: 80%;" id="size"  name="category" required>
+					<option onchange="select(e)" value="">Category</option>
+					<% categoryList.forEach((category)=>{ %>
+					<option onchange="select(e)" value="<%=category.categoryName%>"><%=category.categoryName%></option>
+					<% }) %>
+				</select> <br><br>
+
+				
+						
+				
+				<label for="subcategory">Sub Category</label><br>
+				<select style="height: 35px; width: 80%;" id="subcategory" name="subcategory" required>
+					<option onchange="select(e)" value="">Sub Category</option>
+					<% categoryList.forEach((category) => { %>
+						<% category.subCategory.forEach((sub) => { %>
+							<option onchange="select(e)" value="<%= sub %>"><%= sub %></option>
+						<% }) %>
+					<% }) %>
+				</select> <br><br>
+				<div class="size" style="width: 100%;gap: 5%;">
+					<div style="display: flex; flex-direction: column; gap: 5%;width: 28%;">
+						<label  for="size">Size</label>
+						<div style="width: 100%;" class="color_drop">
+							<p>SIZE</p>
+							<ul class="drop_bar">
+								<li><input type="checkbox" name="size" id="S" class="size" value="S"><label
+										for="S">S</label></li>
+								<li><input type="checkbox" name="size" id="M" class="size" value="M"><label
+										for="M">M</label></li>
+								<li><input type="checkbox" name="size" id="L" class="size" value="L"><label
+										for="L">L</label></li>
+								<li><input type="checkbox" name="size" id="XL" class="size"
+										value="XL"><label for="XL">XL</label></li>
+								<li><input type="checkbox" name="size" id="2XL" class="size"
+										value="2XL"><label for="2XL">2XL</label></li>
+							</ul>
+						</div>
+					</div>
+
+					<div style="display: flex; flex-direction: column; gap:5%;width: 28%;">
+						<label for="size">Color</label>
+						<div style="width: 100%;" class="color_drop ">
+							<p>COLOR</p>
+							<ul class="drop_bar">
+								<li><input type="checkbox" name="color" class="color" id="green"
+										value="green"><label style="color: rgb(0, 195, 0);"
+										for="green">green</label></li>
+								<li><input type="checkbox" name="color" class="color" id="black"
+										value="black"><label for="black" style="color: black;">black</label>
+								</li>
+								<li><input type="checkbox" name="color" class="color" id="red"
+										value="red"><label style="color: red;" for="red">red</label></li>
+								<li><input type="checkbox" name="color" class="color" id="orange"
+										value="orange"><label style="color: orange;"
+										for="orange">orange</label></li>
+								<li><input type="checkbox" name="color" class="color" id="pink"
+										value="pink"><label style="color: rgb(216, 118, 135);"
+										for="pink">pink</label></li>
+							</ul>
+						</div>
+					</div>
+					<div style="display: flex; flex-direction: column; gap:5%;">
+						<label for="returnproduct">Return</label>
+						<input style="margin-left: 10%;" type="checkbox" name="returnproduct" class="returnproduct" id="returnproduct" value="true">
+					</div>
+				</div>
+
+				
 		
 				<label for="discount">Discount Price</label><br>
-				<input type="text" id="number" name="discount" ><br><br>
+				<input type="text" id="number" name="discount" required><br><br>
 		
+				<label for="deliverydate">Delivery within</label><br>
+				<input type="number" id="deliverydate" name="deliverydate" required>
+				
+
 				<div class="description"><label for="description">Description</label><br>
-					<textarea id="description" name="description" class="description"></textarea></div><br>
+					<textarea id="description" name="description" class="description" required></textarea></div><br>
 		
 				<label for="quantity">Stock</label><br>
-				<input type="text" id="quantity" name="quantity" >
-				<button class="submit" >Submit</button>
+				<input type="text" id="quantity" name="quantity" required><br>
+				<div class="message" style="color: rgb(183, 21, 21);margin-bottom: 10px; font-weight: bold;"></div>
+				<button type="button" class="submit" >Submit</button>
+			    
 
 						</div>
 				
@@ -133,8 +199,10 @@
 			document.getElementById("imagePreview").setAttribute('src', 'https://via.placeholder.com/150');
 			}
 		}
-	</script>
 
+		
+	</script>
+	<script src="/js/addproduct.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 	<script src="/js/script.js"></script>
 </body>

@@ -3,11 +3,11 @@ const mongoose=require('mongoose')
 const schema={
     categoryName:{
         type:String,
-        unique:true
     },
     subCategory:{
-        type:[String],
-        unique:true
+        type:Array
+        
+        
     }
 
 }

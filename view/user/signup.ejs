@@ -597,17 +597,16 @@ p.copy-footer-29 a:hover {
                 <div class="main-hotair">
                    
 <h2 class="text-uppercase text-center mb-5">Account</h2>
-<!-- Add this where you want to display the error -->
-<% if (typeof error !== 'undefined') { %>
-    <div class="alert alert-danger" role="alert">
-        <%= error %>
-    </div>
-<% } %>
+
 
 
 <form id="registrationForm" action="/user/sendotp" method="post" onsubmit="return validateForm()">
+<!-- Add this where you want to display the error -->
 
     <div class="form-outline mb-4">
+        <div id="flash-message" style="color: rgb(207, 0, 0);">
+        <%= error %>
+    </div>
         <input type="text" id="username" name="username" class="form-control form-control-lg"
             placeholder="Name" required />
     </div>
@@ -661,6 +660,16 @@ p.copy-footer-29 a:hover {
    
         <a class="text-white" href="" style="opacity: .7; font-size: 12px; color: white;">RedStore</a>
      </div>
+
+     
+<script>
+    
+    setTimeout(() => {
+        document.getElementById('flash-message').style.display = 'none';
+    }, 2000);
+</script>
+
+     
     <!-- //form section start -->
     <!-- js -->
     <script src="js/jquery.min.js"></script>
