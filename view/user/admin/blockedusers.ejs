@@ -82,9 +82,9 @@ rel="stylesheet">
 			<li><a href='/admin/addproduct'><i class='bx bxs-inbox icon' ></i> Add Product</i></a></li>
 			<li><a href='/admin/products' ><i class='bx bxs-chart icon' ></i> Products</a></li>
 			<li><a href="/admin/categories"  ><i class='bx bxs-widget icon' ></i> Categories</a></li>
-			<li><a href="#" class="active"><i class='bx bx-table icon' ></i> Users List</a></li>
+			<li><a href="/admin/userslist"><i class='bx bx-table icon' ></i> Users List</a></li>
 			<li><a href="/admin/couponlist"><i class='bx bxs-notepad icon' ></i>Couponlist </a></li><br><br>
-            <li><a href="/admin/blockedusers" style="color: red;"><i class='bx bx-table icon'  ></i>Blocked Users </a></li>
+            <li><a href="#" style="color: rgb(251, 50, 50);  background-color: rgb(241,240,246);"><i class='bx bx-table icon'  ></i>Blocked Users </a></li>
 		</ul>
 		
 	</section>
@@ -122,11 +122,11 @@ rel="stylesheet">
 		
 		<main>
             <form >
-            <h1 class="title" style="padding-left: 10px;">Users List</h1>
+            <h1 class="title" style="padding-left: 10px;">Blocked Users</h1>
 			<ul class="breadcrumbs"style="padding-left: 10px;">
 				<li><a href="/admin/adminhome">Home</a></li>
 				<li class="divider">/</li>
-				<li><a href="#" class="active">Users List</a></li>
+				<li><a href="#" class="active">Blocked Users</a></li>
 			</ul>
             <div class="productsfull">
                 <div class="productform">
@@ -139,7 +139,7 @@ rel="stylesheet">
                                 <th style="font-weight: bold;">Phone Number</th>
                                 
                                 
-                                <th style="font-weight: bold;">Block</th>
+                                <th style="font-weight: bold;">Unlock</th>
                                 
                             </tr>
                         </thead>
@@ -150,7 +150,7 @@ rel="stylesheet">
                                     
                                     <td style="padding-top: 30px;"><h5 class="card-title"><%= users.username %></h5></td>
                                     <td style="padding-top: 30px;"><p class="card-text"><%=users.phonenumber %></p></td>
-                                    <td style="padding-top: 30px;"><a class="btn btn-light border px-2 pt-2 icon-hover" onclick="window.location.href='/admin/blockuser/<%= users._id %>'"><i class="fas fa-trash fa-lg text-secondary px-1"></i></a></td>
+                                    <td style="padding-top: 30px;"><a class="btn btn-light border px-2 pt-2 icon-hover" onclick="window.location.href='/admin/unblockuser?id=<%= users._id %>'"><i class="fas fa-trash fa-lg text-secondary px-1"></i></a></td>
                                     
                                 </tr>
                                 

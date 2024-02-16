@@ -25,7 +25,7 @@ router.get("/subCategory/:name",categoryController.subCategory)
 router.delete("/deletesubCategory",categoryController.deletesubCategory)
 
 router.get("/userslist",adminController.userslistGet)
-router.get("/deleteuser/:id",adminController.deleteuser)
+router.get("/blockuser/:id",adminController.blockuser)
 
 router.get("/couponlist",couponController.couponlistGet)
 router.get("/addCoupon",couponController.addCouponGet)
@@ -33,6 +33,10 @@ router.post("/addcoupon",couponController.addCouponPost)
 router.get("/editcoupon",couponController.editCouponGet)
 router.post("/editCouponPost",couponController.editcouponPost)
 router.delete("/deletecoupon",couponController.deleteCoupon)
+
+router.get("/blockedusers",adminController.blockedusersGet)
+router.get("/unblockuser",adminController.unblockuser)
+
 
 
 

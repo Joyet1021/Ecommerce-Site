@@ -6,7 +6,8 @@ const schema={
     phonenumber:{type:String,required:true},
     password:{type:String,required:true},
     role:{type:String,required:true},
-    verified:{type:Boolean}
+    verified:{type:Boolean},
+    blocked: { type : Boolean , default : false }  
 }
 
 
