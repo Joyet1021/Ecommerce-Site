@@ -84,7 +84,6 @@ exports.editproductPost = async (req, res) => {
         const { productName, price, category,subcategory,size,returnproduct, discount,deliverydate, description, quantity } = req.body;
 
         const product =await productModel.findOne({ _id: data });
-        console.log(data);
 
         const productDetail = {
             productName,
@@ -100,11 +99,9 @@ exports.editproductPost = async (req, res) => {
             productImage:[]
         }
 
-console.log(product);
         if(req.files.length>0){
             product.productImage.forEach(img=>{
                 const imagePath='./public/'+'uploads/'+img
-                console.log(imagePath,'llll');
                 if(fs.existsSync(imagePath)){
                     fs.unlinkSync(imagePath)
                 }
@@ -129,11 +126,9 @@ console.log(product);
 exports.deleteproduct=async(req,res)=>{
     try{
         const id=req.query.id;
-        console.log(id);
         const product=await productModel.findOne({_id:id})
         product.productImage.forEach(img=>{
             const imagePath='./public/'+'uploads/'+img
-            console.log(imagePath);
             if(fs.existsSync(imagePath)){
                 fs.unlinkSync(imagePath)
             }

@@ -26,7 +26,7 @@ router.get("/subCategory/:name",categoryController.subCategory)
 router.delete("/deletesubCategory",categoryController.deletesubCategory)
 
 router.get("/userslist",adminController.userslistGet)
-router.get("/blockuser/:id",adminController.blockuser)
+router.get("/blockuser",adminController.blockuser)
 
 router.get("/couponlist",couponController.couponlistGet)
 router.get("/addCoupon",couponController.addCouponGet)

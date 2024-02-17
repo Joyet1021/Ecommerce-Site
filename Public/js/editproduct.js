@@ -8,13 +8,13 @@ submit.addEventListener("click", async (e) => {
         const addproductForm = document.getElementById("form_add");
         const form = new FormData(addproductForm);
 
-        const productName = document.getElementsByName("productName")[0].value;
-        const price = document.getElementsByName("price")[0].value;
-        const quantity = document.getElementsByName("quantity")[0].value;
-        const category = document.getElementsByName("category")[0].value;
-        const subCategory = document.getElementsByName("subcategory")[0].value;
-        const deliverydate = document.getElementsByName("deliverydate")[0].value;
-        const description = document.getElementsByName("description")[0].value;
+        const productName = document.getElementsByName("productName")[0].value.trim();
+        const price = document.getElementsByName("price")[0].value.trim();
+        const quantity = document.getElementsByName("quantity")[0].value.trim();
+        const category = document.getElementsByName("category")[0].value.trim();
+        const subCategory = document.getElementsByName("subcategory")[0].value.trim();
+        const deliverydate = document.getElementsByName("deliverydate")[0].value.trim();
+        const description = document.getElementsByName("description")[0].value.trim();
         const productImage=document.getElementsByName("productImage")[0].value;
  
         

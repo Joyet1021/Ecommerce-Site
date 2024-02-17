@@ -8,17 +8,17 @@ submit.addEventListener("click", async (e) => {
 
         const addcategoryForm = document.getElementById('addCategory');
         const form = new FormData(addcategoryForm);
-console.log(form);
-        const categoryName = document.getElementsByName('categoryName')[0].value;  // get the value of input field by its name attribute
-        const subCategory = document.getElementsByName('subCategory')[0].value;  // get the value of input field by its name
-console.log(categoryName);
+
+        const categoryName = document.getElementsByName('categoryName')[0].value.trim();  // get the value of input field by its name attribute
+        const subCategory = document.getElementsByName('subCategory')[0].value.trim();  // get the value of input field by its name
+
         if (!categoryName || !subCategory) {
             message.textContent = "Please fill all fields";
             setTimeout(() => {
                 message.textContent = "";
             }, 1000);
         } else {
-            console.log('hii');
+            
             // Disable the submit button to prevent multiple submissions
 
             const response = await fetch("/admin/addCategory", {

@@ -7,11 +7,11 @@ submit.addEventListener("click",async(e)=>{
         const addbannerForm=document.getElementById("add_banner");
         const form=new FormData(addbannerForm);
         
-        const bannerName=document.getElementsByName("bannerName")[0].value;
-        const bannerHeading=document.getElementsByName("bannerHeading")[0].value;
-        const offerPrice=document.getElementsByName("offerPrice")[0].value;
-        const startDate=document.getElementsByName("startDate")[0].value;
-        const endDate=document.getElementsByName("endDate")[0].value;
+        const bannerName=document.getElementsByName("bannerName")[0].value.trim();
+        const bannerHeading=document.getElementsByName("bannerHeading")[0].value.trim();
+        const offerPrice=document.getElementsByName("offerPrice")[0].value.trim();
+        const startDate=document.getElementsByName("startDate")[0].value.trim();
+        const endDate=document.getElementsByName("endDate")[0].value.trim();
         
         // const img=document.getElementById('banner_image').files[0];
         // form.append('bannerImage',img);

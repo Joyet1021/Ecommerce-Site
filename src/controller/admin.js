@@ -20,7 +20,7 @@ exports.userslistGet = async (req, res) => {
 
 exports.blockuser=async(req,res)=>{
     try{
-        const  id = req.params.id;
+        const  id = req.query.id;
         await  signupModel.findOneAndUpdate(
           { _id : id },
           {
@@ -28,8 +28,10 @@ exports.blockuser=async(req,res)=>{
               blocked:true
             }
           })
+          
+        res.status(203).json({ success: true,  message: "Blocked user Successfully" })
         
-        res.redirect('/admin/userslist')
+        
     }catch(error){
       console.error('Error in blocking user:', error.message);
       res.status(500).send('Internal Server Error');
@@ -58,7 +60,7 @@ exports.unblockuser=async(req,res)=>{
           }
         })
       
-      res.redirect('/admin/blockedusers')
+        res.status(203).json({ success: true,  message: "Unblocked user" })
   }catch(error){
     console.error('Error fetching user data:', error.message);
     res.status(500).send('Internal Server Error');

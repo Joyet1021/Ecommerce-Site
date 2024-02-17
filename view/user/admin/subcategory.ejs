@@ -150,7 +150,7 @@ rel="stylesheet">
 					if(result.success==true){
 						Swal.fire({
 							title:"Deleted!",
-							text:"Your file has been deleted.",
+							text:`${id} has been deleted from ${categoryName} list.`,
 							icon:"success"
 						});
 						document.querySelector('.row'+id).remove()

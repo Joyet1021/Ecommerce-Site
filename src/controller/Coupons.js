@@ -49,7 +49,6 @@ exports.editCouponGet=async(req,res)=>{
     try{
         const id=req.query.id;
         const couponDetails=await couponModel.findOne({_id : id});
-        console.log(couponDetails);
         res.render('admin/editcoupon',{couponDetails:couponDetails})
     }catch(error){
         console.log('Error in Edit Coupon Page', error);

@@ -8,11 +8,11 @@ submit.addEventListener("click",async(e)=>{
         const addcouponForm=document.getElementById("add_coupon");
         let formData = new FormData(addcouponForm);
 
-        const couponCode=document.getElementsByName("couponCode")[0].value;
-        const minimumPurchase=document.getElementsByName("minimumPurchase")[0].value;
-        const discountPercentage=document.getElementsByName("discountPercentage")[0].value;
+        const couponCode=document.getElementsByName("couponCode")[0].value.trim();
+        const minimumPurchase=document.getElementsByName("minimumPurchase")[0].value.trim();
+        const discountPercentage=document.getElementsByName("discountPercentage")[0].value.trim();
         const startDate=document.getElementsByName("startDate")[0].value;
-        const endDate=document.getElementsByName("endDate")[0].value;
+        const endDate=document.getElementsByName("endDate")[0].value.trim();
         console.log(couponCode,minimumPurchase,discountPercentage,startDate,endDate);
         if(!couponCode||!minimumPurchase||!discountPercentage||!startDate||!endDate){
             message.textContent="Please fill out all fields";

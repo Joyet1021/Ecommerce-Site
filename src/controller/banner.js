@@ -49,7 +49,6 @@ exports.editbannerGet=async(req,res)=>{
   try{
     let id = req.query.id;
     const bannerData=await  bannerModel.findById(id)
-    console.log(bannerData);
     res.render('admin/editbanner',{bannerData});
   }catch (error) {
     console.error('Error fetching banner:', error);
@@ -73,7 +72,6 @@ exports.editbannerPost=async(req,res)=>{
       endDate,
       bannerImage:banner.bannerImage
     }
-console.log(req.file,'oooooo');
     if(req.file){
       const img=banner.bannerImage;
       const imagePath='./public/'+'uploads/'+img;

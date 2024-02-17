@@ -136,11 +136,11 @@ rel="stylesheet">
 											<tr class="row<%=coupon._id%>" >
 												<td style="padding-top: 30px;"><h5 class="card-title"><%= coupon.couponCode %></h5></td>
 												<td style="padding-top: 30px;"><p class="card-text"><%= coupon.minimumPurchase %></p></td>
-												<td style="padding-top: 30px;"><p class="card-text"><%= coupon.startDate %></p></td>
-												<td style="padding-top: 30px;"><p class="card-text"><%= coupon.endDate %></p></td>
+												<td style="padding-top: 30px;"><p class="card-text"><%= coupon.startDate.toISOString().substring(0, 10) %></p></td>
+												<td style="padding-top: 30px;"><p class="card-text"><%= coupon.endDate.toISOString().substring(0, 10) %></p></td>
 												<td style="padding-top: 30px;"><a class="btn btn-light border px-2 pt-2 icon-hover" onclick="window.location.href='/admin/editcoupon?id=<%=coupon._id%>'"><i class="fas fa-pencil fa-lg text-secondary px-1"></i></a></td>
 												<td style="padding-top: 30px;">
-													<a href="javascript:void(0);" class="btn btn-light border px-2 pt-2 icon-hover" onclick="confirmDelete('<%=coupon._id%>')"><i class="fas fa-trash fa-lg text-secondary px-1"></i></a></td>
+													<a href="javascript:void(0);" class="btn btn-light border px-2 pt-2 icon-hover" onclick="confirmDelete('<%=coupon._id%>','<%= coupon.couponCode %>')"><i class="fas fa-trash fa-lg text-secondary px-1"></i></a></td>
 											</tr>
 											<% }) %>
 
@@ -160,7 +160,7 @@ rel="stylesheet">
 	</section>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
-		function confirmDelete(id){
+		function confirmDelete(id,code){
 			Swal.fire({
                 title: "Are you sure?",
                 text: "You won't be able to revert this!",
@@ -179,7 +179,7 @@ rel="stylesheet">
 					if(result.success){
 						Swal.fire({
 							title:"Deleted!",
-							text:"Yout file has been deleted.",
+							text:`Coupon Code: ${code} has been deleted.`,
 							icon:"success"
 						});
 						document.querySelector('.row'+id).remove()
