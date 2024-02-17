@@ -61,8 +61,8 @@ rel="stylesheet">
 			<li><a href='/admin/products'><i class='bx bxs-chart icon' ></i> Products</a></li>
 			<li><a href="/admin/categories" ><i class='bx bxs-widget icon' ></i> Categories</a></li>
 			<li><a href="/admin/userslist"><i class='bx bx-table icon' ></i> Users List</a></li>
-			<li><a href="/admin/couponlist" class="active"><i class='bx bxs-notepad icon' ></i>Couponlist </a></li>
-            <li><a href="/admin/bannerlist"><i class='bx bxs-notepad icon' ></i>Bannerlist </a></li><br>
+			<li><a href="/admin/couponlist" ><i class='bx bxs-notepad icon' ></i>Couponlist </a></li>
+            <li><a href="/admin/bannerlist" class="active"><i class='bx bxs-notepad icon' ></i>Bannerlist </a></li><br>
             <li><a href="/admin/blockedusers" style="color: rgb(251, 50, 50);"><i class='bx bx-table icon'  ></i>Blocked Users </a></li>
 		</ul>
 		
@@ -100,37 +100,51 @@ rel="stylesheet">
 		</nav>
 		
 		<main>
-            <h1 class="title" style="padding-left: 10px;">Edit Coupon</h1>
+            <h1 class="title" style="padding-left: 10px;">Add Banner</h1>
 			<ul class="breadcrumbs"style="padding-left: 10px;">
 				<li><a href="/admin/adminhome">Home</a></li>
 				<li class="divider">/</li>
-				<li><a href="/admin/couponlist" > Couponlist</a></li>
+				<li><a href="/admin/bannerlist" > Bannerlist</a></li>
 				<li class="divider">/</li>
-				<li><a href="" class="active"> Edit Coupon</a></li>
+				<li><a href="" class="active"> Add Banner</a></li>
 			</ul>
-			<form action="/admin/editCouponPost?id=<%=couponDetails.id%>" method="post">
-				<div class="data2" >
-					<div class="content-data2" >
-						<label for="categoryName" style="font-weight: bold; font-size: larger;padding-bottom: 20px; padding-left: 35%;">Edit Coupon</label ><br><br>
+			<form class="banner" id="add_banner" enctype="multipart/form-data">
+				<div class="data3" >
+					<div class="content-data3" >
+						<label for="categoryName" style="font-weight: bold; font-size: larger;padding-bottom: 20px; padding-left: 35%;">Add Banner</label ><br><br>
 							<!-- Display success messages -->
+                            <div class="imagefull1">
+                                
+                                <div class="profileimgbox1">
+                                    <img  src="/uploads/" alt="submit" name="image" id="imagePreview" class="bannerimage" width="100%" height="100%"  >
+                                    
+                                    
+                                </div>
+                                <div class="choose1">
+                                    <div class="choose1inner1">
+                                       
+                                        <input type="file"  name="bannerImage" onchange="previewImage(this)" id="banner_image" class="bannerImageADD">
+                                    </div>
+                                </div>
+                            </div><br>
 
 	
-							<div class="category" style="font-weight: bold;margin-left: 15%;">Coupon Code</div>
-							<input type="text" id="couponCode" name="couponCode" style="margin-left: 15%;width: 70%; height: 7%; border: 2px solid black; border-radius: 5px; padding-left: 5px;" required value="<%= couponDetails.couponCode%>" ><br><br>
+							<div class="bannerName" style="font-weight: bold;margin-left: 15%;">Banner Name</div>
+							<input type="text" id="bannerName" name="bannerName" style="margin-left: 15%;width: 70%; height: 5%; border: 2px solid black; border-radius: 5px; padding-left: 5px;" placeholder="Enter Banner Name" required ><br><br>
 
-							<div class="category" style="font-weight: bold;margin-left: 15%;">Minimum Purchase</div>
-							<input type="number" id="minimumPurchase" name="minimumPurchase" style="margin-left: 15%;width: 70%; height: 7%; border: 2px solid black; border-radius: 5px; padding-left: 5px;"  required value="<%= couponDetails.minimumPurchase%>"><br><br>
+							<div class="bannerHeading" style="font-weight: bold;margin-left: 15%;"><label for="description">Banner Heading</label><br>
+                            <textarea name="bannerHeading" id="bannerHeading" style="width: 82%; height: 3%; border: 2px solid black; border-radius: 5px; padding-left: 5px;"  required></textarea></div>
 
-							<div class="category" style="font-weight: bold;margin-left: 15%;">Discount Percentage</div>
-							<input type="number" id="discountPercentage" name="discountPercentage" style="margin-left: 15%;width: 70%; height: 7%; border: 2px solid black; border-radius: 5px; padding-left: 5px;" min="0" max="100" required value="<%= couponDetails.discountPercentage%>"><br><br>
+							<div class="offerPrice" style="font-weight: bold;margin-left: 15%;">Offer Price</div>
+							<input type="number" id="offerPrice" name="offerPrice" style="margin-left: 15%;width: 70%; height: 5%; border: 2px solid black; border-radius: 5px; padding-left: 5px;" placeholder="Enter Price" min="0" max="1000" required><br><br>
 
-							<div class="subCategory" style="font-weight: bold;margin-left: 15%;">Start Date</div>
-							<input type="date" id="startDate" name="startDate"  oninput="formatDateInput(this)" style="margin-left: 15%;width: 70%; height: 7%; border: 2px solid black; border-radius: 5px; padding-left: 5px;" required value="<%= couponDetails.startDate.toISOString().substring(0, 10)%>"><br><br>
+							<div class="startDate" style="font-weight: bold;margin-left: 15%;">Start Date</div>
+							<input type="date" id="startDate" name="startDate" oninput="formatDateInput(this)" style="margin-left: 15%;width: 70%; height: 5%; border: 2px solid black; border-radius: 5px; padding-left: 5px;" required><br><br>
 
-							<div class="subCategory" style="font-weight: bold;margin-left: 15%;">Expiry Date</div>
-							<input type="date" id="endDate" name="endDate" oninput="formatDateInput(this)" style="margin-left: 15%;width: 70%; height: 7%; border: 2px solid black; border-radius: 5px; padding-left: 5px;" required value="<%= couponDetails.endDate.toISOString().substring(0, 10)%>"><br><br>
-                            <div class="message" style="color: rgb(183, 21, 21);margin-bottom: 10px; font-weight: bold;"></div>
-							<button class="submit" style="height: 7%; width: 50%; display: flex; align-items: center; justify-content: center;margin-left: 25%;" >Submit</button>
+							<div class="endDate" style="font-weight: bold;margin-left: 15%;">Expiry Date</div>
+							<input type="date" id="endDate" name="endDate" oninput="formatDateInput(this)" style="margin-left: 15%;width: 70%; height: 5%; border: 2px solid black; border-radius: 5px; padding-left: 5px;" required><br><br>
+							<div class="message" style="color: rgb(183, 21, 21);margin-bottom: 10px;margin-left: 15%; font-weight: bold;"></div>
+							<button type="button" class="submit" style="height: 5%; width: 50%; display: flex; align-items: center; justify-content: center;margin-left: 25%;" >Add</button>
 						</div>
 						<div style="width: 50%;"></div>
 						
@@ -144,18 +158,34 @@ rel="stylesheet">
 		</main>
 		<!-- MAIN -->
 	</section>
-	
-	
+	<script src="/js/addbanner.js"></script>
+	<script>
+		function previewImage(input) {
+			var file = input.files[0];
+			if(file){
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				document.getElementById('imagePreview').src= e.target.result;
+			};
+			reader.readAsDataURL(file);
+		}else{
+			document.getElementById("imagePreview").setAttribute('src', 'https://via.placeholder.com/150');
+			}
+		}
+
+		
+	</script>
 	<script>
 		
 		function formatDateInput(input) {
 			const dateValue = input.value;
 			const formattedDate = moment(dateValue).format('YYYY-MM-DD');
+			
 			input.value = formattedDate;
 		}
 	</script>
 
 
-	
+	<script src="/js/script.js"></script>
 </body>
 </html>

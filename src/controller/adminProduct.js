@@ -1,6 +1,6 @@
 const productModel=require('../../Models/productdetails')
 const categoryModel=require('../../Models/categories')
-
+const fs=require( 'fs'); 
 
 exports.addproductGet = async (req, res) => {
     try {
@@ -83,31 +83,40 @@ exports.editproductPost = async (req, res) => {
         const data = req.params.id;
         const { productName, price, category,subcategory,size,returnproduct, discount,deliverydate, description, quantity } = req.body;
 
-        const productImage=req.files.map((file)=>file.filename)
+        const product =await productModel.findOne({ _id: data });
+        console.log(data);
 
-        const product = productModel.find({ _id: data });
-        const productimage = product.image;
-        const image = req.files ? req.files.filename : productimage;
-        
+        const productDetail = {
+            productName,
+            price,
+            category,
+            subcategory,
+            size,
+            returnproduct,
+            discount,
+            deliverydate,
+            description,
+            quantity,
+            productImage:[]
+        }
 
-        const productDetail = await productModel.updateOne(
-            { _id: data },
-            {
-                $set: {
-                    productName,
-                    price,
-                    category,
-                    subcategory,
-                    size,
-                    returnproduct,
-                    discount,
-                    deliverydate,
-                    description,
-                    quantity,
-                    productImage:productImage
+console.log(product);
+        if(req.files.length>0){
+            product.productImage.forEach(img=>{
+                const imagePath='./public/'+'uploads/'+img
+                console.log(imagePath,'llll');
+                if(fs.existsSync(imagePath)){
+                    fs.unlinkSync(imagePath)
                 }
-            }
-        );
+            });
+        
+        const productImage=req.files.map((file)=>file.filename)
+        productDetail.productImage=productImage
+        }else{
+            productDetail.productImage=product.productImage
+        }
+        await productModel.updateOne({_id:data},productDetail)
+        
 
         res.redirect("/admin/products");
 
@@ -121,6 +130,14 @@ exports.deleteproduct=async(req,res)=>{
     try{
         const id=req.query.id;
         console.log(id);
+        const product=await productModel.findOne({_id:id})
+        product.productImage.forEach(img=>{
+            const imagePath='./public/'+'uploads/'+img
+            console.log(imagePath);
+            if(fs.existsSync(imagePath)){
+                fs.unlinkSync(imagePath)
+            }
+        });
         await productModel.deleteOne({_id: id});
         res.status(203).json({ success: true,  message: "Product Deleted Successfully" })
 

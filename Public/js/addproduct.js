@@ -7,7 +7,7 @@ submit.addEventListener("click", async (e) => {
         
         const addproductForm = document.getElementById("form_add");
         const form = new FormData(addproductForm);
-console.log(form);
+
         const productName = document.getElementsByName("productName")[0].value;
         const price = document.getElementsByName("price")[0].value;
         const quantity = document.getElementsByName("quantity")[0].value;

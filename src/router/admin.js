@@ -5,6 +5,7 @@ const adminProductController=require("../controller/adminProduct")
 const categoryController=require("../controller/category")
 const authController=require("../controller/auth")
 const couponController=require("../controller/Coupons")
+const bannerController=require("../controller/banner")
 const upload = require('../middlewares/multerMiddleware')
 
 
@@ -34,8 +35,18 @@ router.get("/editcoupon",couponController.editCouponGet)
 router.post("/editCouponPost",couponController.editcouponPost)
 router.delete("/deletecoupon",couponController.deleteCoupon)
 
+router.get("/bannerlist",bannerController.bannerlistGet)
+router.get("/addbannerGet",bannerController.addbannerGet)
+router.post('/addbannerPost',upload.single("bannerImage"),bannerController.addbannerPost)
+router.get("/editbanner",bannerController.editbannerGet)
+router.post("/editbannerPost",upload.single("bannerImage"),bannerController.editbannerPost)
+router.delete("/deletebanner",bannerController.deletebanner)
+
 router.get("/blockedusers",adminController.blockedusersGet)
 router.get("/unblockuser",adminController.unblockuser)
+
+
+
 
 
 

@@ -1,0 +1,33 @@
+const mongoose=require('mongoose')
+
+const schema={
+    bannerImage:{
+        type:String,
+        required:true
+    },
+    bannerName:{
+        type:String,
+        required:true
+    },
+    offerPrice:{
+        type:Number,
+        required:true
+    },
+    bannerHeading:{
+        type:String,
+        required:true
+    },
+    startDate:{
+        type:Date,
+        default:()=>new Date()
+    },
+    endDate:{
+        type:Date,
+        require:true
+    }
+}
+
+const bannerSchema=new mongoose.Schema(schema)
+const bannerModel=mongoose.model("Bannerdatas",bannerSchema)
+
+module.exports=bannerModel;
