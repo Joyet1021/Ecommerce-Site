@@ -1,0 +1,18 @@
+<div class="top_nav">
+  <div class="web_logo"><i class="bi bi-list"></i><span class="labio_text">LABIO</span></div>
+  <div class="search_div">
+    <div class="search_bar">
+      <input class="search_input" placeholder="Search..." type="text" />
+      <button class="search_btn"><i class="bi bi-search"></i></button>
+    </div>
+  </div>
+  <div class="page_links">
+    <ul>
+      <li><a class="page_links home_li <%= state==='home'? 'active' : '' %>" href="/home">Home</a></li>
+      <li><a class="page_links" href="/wishlist"><i class="bi bi-heart bi_top_heart <%= state==='wishlist'? 'active' : '' %>"></i><span class="product_count wish_count_top"><%= wishCount? wishCount : 0 %></span></a></li>
+      <li><a class="page_links" href="/cart"><i class="bi bi-cart3  <%= state==='cart'? 'active' : '' %>"></i><span class="product_count cart_count"><%= cartCount %></span></a></li>
+      <li><a class="page_links <%= state==='address'? 'active' : '' %>" href="/account/address">Account</a></li>
+      <li><a class="page_links" href=""><i class="bi bi-box-arrow-right"></i></a></li>
+    </ul>
+  </div>
+</div>

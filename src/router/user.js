@@ -3,6 +3,7 @@ const router=express.Router()
 
 
 const authController=require("../controller/auth")
+const userController=require("../controller/userController")
 
 router.get("/signup",authController.usersignupGet)
 router.post("/sendotp",authController.usersignupPost)
@@ -23,6 +24,9 @@ router.post("/resetpassword/:mail",authController.forgototpPost)
 
 router.get("/resetpasswordGet/:mail",authController.resetpasswordGet)
 router.post("/resetlogin/:mail",authController.resetpasswordPost)
+
+router.get("/userhome",userController.userhomeGet)
+
 
 
 

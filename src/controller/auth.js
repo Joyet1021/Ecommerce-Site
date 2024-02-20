@@ -8,7 +8,8 @@ const authToken =process.env.authToken;
 const verifysid = process.env.verifysId;
 const client =twilio(accountsid, authToken);
 var nodemailer = require('nodemailer');
-const flash=require('connect-flash')
+const flash=require('connect-flash');
+const { render } = require('ejs');
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -16,7 +17,7 @@ const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!
 exports.usersignupGet = async (req, res)=> {
     try {
         const error = req.flash('error');
-        res.render('signup', { error });
+        res.render('user/signup', { error });
     } catch (error) {
         console.error("Error in usersignupGet:", error);
         res.status(500).send("Internal Server Error");
@@ -73,13 +74,13 @@ exports.usersignupPost = async (req, res) => {
             }
         }
     } catch (error) {
-        return res.status(500).redirect('/signup'); // Internal Server Error
+        return res.status(500).redirect('/user/signup'); // Internal Server Error
     }
 };
 
 exports.sendotpget = (req, res) => {
     const phone = req.params.num
-    res.render('sendotp',{phone});
+    res.render('user/sendotp',{phone});
     
 };
 
@@ -99,7 +100,7 @@ exports.sendotpPost = async (req, res) => {
         
 
         if (!user) {
-            res.render('sendotp',{phone,error:"User not found"})
+            res.render('user/sendotp',{phone,error:"User not found"})
             
         }
 
@@ -109,17 +110,17 @@ exports.sendotpPost = async (req, res) => {
 
         if (verification_check.status === 'approved') {
             await signupModel.updateOne({ phonenumber: phone }, { $set: { verified: true } });
-            res.render('login');
+            res.render('user/login');
         } else {
-            res.render('sendotp',{phone,error:"Incorrect  OTP"})
+            res.render('user/sendotp',{phone,error:"Incorrect  OTP"})
         }
     } catch (err) {
-        res.render('login', { error: 'Server Error' }); 
+        res.render('user/login', { error: 'Server Error' }); 
     }
 };
 
 exports.userloginGet = function (req, res) {
-    res.render('login');
+    res.render('user/login');
 };
 exports.userloginPost = async (req, res) => {
     try {
@@ -128,7 +129,7 @@ exports.userloginPost = async (req, res) => {
         const userExist = userDatas.find((val) => val.email === email);
 
         if (!userExist) {
-            res.render('login', { error: "User doesn't exist" });
+            res.render('user/login', { error: "User doesn't exist" });
             
         } else {
             const comparePassword = await bcrypt.compare(password, userExist.password);
@@ -139,7 +140,7 @@ exports.userloginPost = async (req, res) => {
                     if (userExist.role === "admin") {
                         res.render("admin/adminhome");
                     } else {
-                        res.redirect("/user/home");
+                        res.redirect("/user/userhome");
                     }
                 } else {
                     res.redirect(`/user/resendotp/${phone}`);
@@ -149,12 +150,12 @@ exports.userloginPost = async (req, res) => {
             }
         }
     } catch (error) {
-        res.render('login', { error: 'Internal Server Error' });
+        res.render('user/login', { error: 'Internal Server Error' });
     }
 };
 
 exports.forgotpasswordGet=(req,res)=>{
-    res.render('forgotpassword')
+    res.render('user/forgotpassword')
 }
 
 exports.forgotpasswordPost=async(req,res)=>{
@@ -191,7 +192,7 @@ exports.forgotpasswordPost=async(req,res)=>{
               res.redirect(`/user/forgototp/${email}`)
         }
     }catch(error){
-        res.render('forgotpassword',{error:'Try after sometime'})
+        res.render('user/forgotpassword',{error:'Try after sometime'})
         
     }
 
@@ -202,7 +203,7 @@ exports.forgotpasswordPost=async(req,res)=>{
 exports.forgototpGet=(req,res)=>{
     const email=req.params.mail
     
-    res.render('forgototp',{email,})
+    res.render('user/forgototp',{email,})
     
 }
 exports.resendotp = async (req, res) => {
@@ -232,14 +233,14 @@ exports.forgototpPost=async(req,res)=>{
 
         if (!user) {
             console.log('User not found');
-            res.redirect('/login');  // or handle the error accordingly
+            res.redirect('/user/login');  // or handle the error accordingly
             return;
         }
         if(otp==mailOTP.otp){
             res.redirect(`/user/resetpasswordGet/${email}`)
         } else {
             
-            res.redirect('forgototp',{email})
+            res.redirect('/user/forgototp',{email})
         }
         
 
@@ -254,7 +255,7 @@ exports.resetpasswordGet=(req,res)=>{
     const email=req.params.mail;
     
     
-    res.render('resetpassword',{email})
+    res.render('user/resetpassword',{email})
 }
 
 
@@ -266,7 +267,7 @@ exports.resetpasswordPost = async (req, res) => {
 
     if (!password || !confirmpassword || !validatingPassword || password !== confirmpassword) {
         // Handle invalid password scenarios, render appropriate error messages
-        return res.render('resetpassword', { email, error: 'Invalid password or passwords do not match' });
+        return res.render('user/resetpassword', { email, error: 'Invalid password or passwords do not match' });
     }
 
     try {
@@ -287,3 +288,4 @@ exports.resetpasswordPost = async (req, res) => {
 exports.adminhomeGet=(req,res)=>{
     res.render('admin/adminhome')
 }
+

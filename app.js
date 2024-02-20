@@ -24,7 +24,8 @@ const adminRouter=require("./src/router/admin")
 app.use(express.static("public"))
 
 app.set("view engine","ejs")
-app.set("views","./view/user")
+app.set("views", "view");
+
 app.use(flash());
 
 app.use("/admin",adminRouter)

@@ -97,7 +97,7 @@
 				<select style="height: 35px; width: 80%;" id="size"  name="category" required>
 					<option onchange="select(e)" value="">Category</option>
 					<% categoryList.forEach((category)=>{ %>
-					<option onchange="select(e)" value="<%=category.categoryName%>"><%=category.categoryName%></option>
+					<option  value="<%=category.categoryName%>"><%=category.categoryName%></option>
 					<% }) %>
 				</select> <br><br>
 
@@ -205,7 +205,7 @@
 		
 	</script>
 	<script src="/js/addproduct.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+	
 	<script src="/js/script.js"></script>
 </body>
 </html>

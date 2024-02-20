@@ -1,0 +1,279 @@
+<%- include('../common/head.ejs') %>
+    <!-- <style>
+      .banner_sub_div {
+          position: relative;
+          background-color: aqua;
+          width: 100%;
+          height: 300px; /* Adjust height as needed */
+      }
+  
+      .banner_sub_div img {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover; /* Ensure the image covers the entire div */
+          z-index: 1;
+      }
+  
+      .banner_text_frame {
+          position: absolute;
+          bottom: 20px; /* Adjust vertical position as needed */
+          left: 20px; /* Adjust horizontal position as needed */
+          z-index: 2; /* Ensure text is above the image */
+          color: white; /* Text color */
+      }
+  
+      .banner_text_frame h2,
+      .banner_text_frame h4,
+      .banner_text_frame h5 {
+          margin: 5px 0; /* Adjust spacing as needed */
+      }
+  
+      .banner_text_frame h5 i {
+          margin-right: 5px; /* Adjust spacing between icon and text */
+      }
+  </style>
+   -->
+
+  
+    <div class="home_wrapper">
+      <div class="top_nav">
+        <div class="web_logo">
+          <i class="bi bi-list"></i><span class="labio_text">MITMAT</span>
+        </div>
+        <div class="search_div">
+          <div class="search_bar">
+            <input class="search_input" placeholder="Search..." type="text" />
+            <button class="search_btn"><i class="bi bi-search"></i></button>
+          </div>
+        </div>
+        <div class="page_links">
+          <ul>
+            <li><a class="page_links home_li" href="/home">Home</a></li>
+            <li>
+              <a class="page_links" href="/wishlist"
+                ><i class="bi bi-heart bi_top_heart"></i
+                ><span class="product_count wish_count_top"></span
+              ></a>
+            </li>
+            <li>
+              <a class="page_links" href="/cart"
+                ><i class="bi bi-cart3"></i
+                ><span class="product_count cart_count"></span
+              ></a>
+            </li>
+            <li><a class="page_links" href="/account/address">Account</a></li>
+            <li>
+              <a class="page_links" href=""
+                ><i class="bi bi-box-arrow-right"></i
+              ></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="home_content">
+        <!-- =============================================================================================================== -->
+
+        <header>
+          <ul>
+            <li class=""><a href="/home">HOME</a></li>
+            <li><a href="/all_products">ALL PRODUCTS</a></li>
+            <li class="category_li">
+               <a href="#">ALL CATEGORY&nbsp;<i class="bi bi-chevron-down"></i></a>
+               <table class="drop_bar">
+                  <% categoryDetails.forEach((category) => { %>
+                      <tr>
+                          <td><a href="" style="color: red;font-size: large;"><%= category.categoryName %></a></td>
+                          <% category.subCategory.forEach((sub) => { %>
+                              <td><a href=""><%= sub %></a></td>
+                          <% }); %>
+                      </tr>
+                  <% }); %>
+              </table>
+              
+            </li>
+            <li class=""><a href="/subcategory/MOBILES">MOBILES</a></li>
+            <li class=""><a href="/subcategory/LAPTOPS">LAPTOPS</a></li>
+            <li class=""><a href="/subcategory/PAINTINGS">PAINTINGS</a></li>
+          </ul>
+        </header>
+
+        <!-- ========================================================================================================= -->
+        <div class="banner">
+          <button class="prev_banner"><i class="bi banner_chevron bi-chevron-left"></i></button>
+          
+          <% bannerDetails.forEach((banner) => { %>
+
+          <div class="banner_sub_div">
+          <img src="/uploads/<%= banner.bannerImage %>"  style="width: 45%;">
+          <div class="banner_text_frame">
+               <h2><%= banner.bannerHeading.toUpperCase() %></h2>
+               <h4><%= banner.bannerName.toUpperCase() %></h4>
+               <h5><i class="bi bi-currency-rupee"></i><%= banner.offerPrice.toLocaleString() %></h5>
+          </div>
+          </div>
+
+          <% }) %>
+               
+          <button class="next_banner"><i class="bi banner_chevron bi-chevron-right"></i></button>
+       </div>
+
+        <!-- ========================================================================================================= -->
+
+        <!-- ------------------------- CATEGORY --------------------------- -->
+
+        <!-- ============================================================================================================================ -->
+
+        <!-- ------------------------- MENS SHIRTS --------------------------- -->
+        <% categoryDetails.forEach((category) => { %>
+          <div class="product_frame">
+            <div class="product_top"><%= category.categoryName %></div>
+            <div class="product_bottom">
+              <% const products = productDetails.filter(product => product.category == category.categoryName); %>
+              <% products.forEach((product) => { %>
+                <div class="product_frame_grid" onclick="productOpen(event, '')">
+                  <div class="top">
+                    <button class="wish_btn" onclick="addToWish(event, '')">
+                      <i class="bi bi-heart bi_top_heart"></i>
+                    </button>
+                    <img src="/uploads/<%=  product.productImage[0]%>" style="width: 75%; height: 90%" alt="" />
+                  </div>
+                  <div class="center">
+                    <div class="name_div">
+                      <p class="product_name"><%= product.productName %></p>
+                    </div>
+                    <div class="price_div">
+                      <p class="old_price"><i class="bi bi-currency-rupee"></i><%= product.price %></p>
+                      <p class="new_price"><i class="bi bi-currency-rupee"></i><%= product.discount %></p>
+                    </div>
+                  </div>
+                  <div class="bottom">
+                    <button onclick="addToCart(event, '')" class="addto_cart_btn addto_cart_btn">
+                      <i class="bi">Add to Cart</i>
+                    </button>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          </div>
+        <% }); %>
+        
+        <!-- --------------------------------------------------------------------------------------------------------- -->
+
+        <!-- ------------------------- MENS TSHIRTS --------------------------- -->
+
+        <div class="product_frame">
+          <div class="product_top">MENS T-SHIRTS</div>
+          <div class="product_bottom">
+            <div class="product_frame_grid" onclick="productOpen(event,'')">
+              <div class="top">
+                <button class="wish_btn" onclick="addToWish(event,'')">
+                  <i class="bi bi-heart bi_top_heart"></i>
+                </button>
+                <img
+                  src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxEQEBUQEBAQDxUVEBAQEBAVEg8PDw8QFRUWFxUVFRUYHSggGBolHRUVITEhJSkrLi4uFx8zODMtNygtLisBCgoKDg0NFw8PFi0dFR0rKy0tKystKysrLS0rLSstLSstKysrKy0tKystLS0tLS03Li0tLS03LTctKy0rKystK//AABEIAOEA4QMBIgACEQEDEQH/xAAcAAEAAgMBAQEAAAAAAAAAAAAABQcDBAYBAgj/xABREAACAQICBAYKDgcFCQAAAAAAAQIDBAURBxIhQQYxUWFxkRMiMjQ2dIGhsbMXNUJSVFVic3WTssHR0xQjJXKDkpQWJILD0hUmM0NEU2Nlo//EABcBAQEBAQAAAAAAAAAAAAAAAAABAgP/xAAcEQEBAQADAAMAAAAAAAAAAAAAARECITEDEoH/2gAMAwEAAhEDEQA/ALxAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACtuFekGfZJW9hlnFtSrtRlm1x6iezJe+fI9m86fh/iDt8PrSi8pSSpJrjWu9Vtc+TZ+fsVulGmqe5wVWql7vNtU6b+Tszy6AiavOFFxN9vf1pv5E6skn/g7XqNOfCSr8MuP5rj8TjKt9Uk883s5NkY8htW123mpbWlnnvaXHmUdP/aWr8MuP57hfeZoY5Xks43VaXLlWq7OlZ7CL4P2P6VW7G5aqy1m9meWaWzrNzhNgrspx2t62sot5N5rj2rjRU1tf7ZufhFf66r+Jr3nCWvSjnK5r/XVfxNKhW1o5n3wYwqN/ilK3qrWpxjK4qx3SjDii+ZvLrZFSODW+OX8VVt51aVJ7YVa1xWpqS5YxTza58mSNxwV4QQi5SxOgkv8Az3PUv1ZbaW5bNyXEkjn7+v2atqLuYPLplvYicrkV7b8HuEE+LEaa6a1f8s+7jg5jtNJ1cXtaWfFr3VaGfRnT2lrWtFJFM6V+C2IVcQlXhQq3FKcKapSgtdQilk4NLudub8oZ421s/wCyMY+PbD+tqf6Dx4TjHx7Y/wBbU/0HC/2QxD4Dc/VSPFwPxH4Dc/VT/AN/qwFwfx5x144pQqR3ShcV5xflVMzW/BbhBNZxxSjzrs9zmun9UbuiHg9d20LiVxTnQp1HDsdKeyTms9aeruWWSz3+Q7WUnRnrLiz7ZcqGMfbK4WPBThHHasSoNriXZ7hf5aPujw8xnCKsI4pT7PRlLJVO1knzRqrfvylmWhCSaTXE9qNXFsNpXVCdvWipQqR1ZJ7uSS5Gnk0+Yjo6DA8Xo3lCFxQlrQms1ulF74yW5riN8pbQJeTo3F5h05ZqnOWquSdKbhJrpTX8qLpAAAAAAAAAAAAAAOI0vP8AZ38en5e6KDxLtpyjy06OXSo8RfemD2v/AI9P0SKBxH/iP9yl9ksSoul2ralmvfR5elGRyyUp5auacYLlzWR5OdRcUs+TNRbXlaPKFJzlnUbaScpdC3cxU1uYVeVKUlUpycZLfln5Gt6NrE8Tr3U1Ur1NdxWrFJasYrfkuUi6l7LijnFJZ6sV3K5WZKFy57HteWae/oYMSmHPtX0nR6KF+2am/wDuE/t0jmsLecH0nTaJ/bip9Hy+3RJVi4byrqU5T5It+Xcc7gcM9r3vMmOEMsrefPqrzojsBXaosc/k9T9GJtQRgom1AEMjxo+8g0RWtUiRWIUs0TM0aV3DYVmtLBq2cXB+54ugkiCtZ6ldc7yflJ/IldOF6Vdot2cI8Q+fvdn8Zl5FG6L/AAkxD5+99bIvIjQAAAAAAAAAAAAA4fTB7X/x6fokfn2/l2yfLGKfTHZ+B+g9L3tevn6fokULe2me1cZYlRrqdrlq5vPus+JHtF91Hi1o5Lp3HzOlNe5fnMUoS94ysvmC1ZZSzSzWvHblLLc8txlUkm5pasVnl07l5zH2SrxOOtya0c31mWjZVarWvsXJxJdCDSTwVfqs+VnU6J/bmp9Hy+3RIOlSUIqK3Im9EvtzU+j5fbokFqcKe9ZdMPSR2AT7VEvwip61rUXyU+po5rCb2FKnr1JqEVvf3cpZ45fJ67KgbcSvLrhy89W3p5/Lltz8hhhjt9U/5jjzLZ6AsWYGV9Ru7z/vT62b9DFLuPHLW6VmRXYSRqXESNtuED4qtPLnX4Eiq8Kkc4PP0oJXP4lDJ585PW1XXgpcqXWRmJU9hmwCrnTcfevzMU4XtX+i/wAJMQ+fvfWyLyKN0YeEmIfP3vrZF5EdQAAAAAAAAAAAABxGl3vBfP0/RIpSSLi0yVGrSik9krpJ8+VKo150U+VGN0z5dNGXIZAYXSXIfcIpH1kepAeS4iZ0SL9s1Po+f26JDz4iZ0R+3NT6Pn9uiBb+L1YQt6sqj1YqnLWfNll6cimOyzuJ7c1FPtY7kju9KV81Tp2692+yT/di8orrz6jl8FtuIsZ5JHCsMSS2HSWtmluMNjS2EvQiGCnbLkM8bdchkgjNFEaasrJPcasraVN60HkTGR8zgFR0qyqR4smuNGrgc9Ws4e+T820y3cdR6y8vOjUT1a8JLizXnDN6uuS0YeEmIfP3vrWXkUJo9qNcJrtJ5Z3t7F861qr+5F9kdQAAAAAAAAAAAABXumbva38a/wAmoVEW7pm72t/G/wDJqlRlR4D0ZAeZA9AHxMmdEK/bNT6Pn093RIafETWiD25qfR8/t0Qqc0iz1r1L3tOEV5395jwmPEZeH0P7638mPoMOHyyyDHL109oyTosg7SqStCqVlIwZmizUhMzRkRWdMORi1j5lUCtfEdsWQUqmcYvfGWXnJW/q7Gc7Tq9pL99CM8vHPaPn/vNcvlvbx9fZi/j8/aOfCSv43deiqfoEjqAAAAAAAAAAAAAOJ0t94Lxin6JFMFz6Wu8F4xT9EimCoAADw+alRR43kfRG3cu3fUBluqqktkklv5eo6PQ77cVPo6X26Jx0jsdDPtxP6Nl9uiKR1mkWhlcRlywj5m0RNlHYjrtIFupKnLes01vy3feQVja7CJY+6M8iQoXBru1PhwaKzYm6Nc2o1Tnadw0blO8CJjsphq1jRd2adze85TXuKXeSZE4Y3PtV7qpFGpit9se0m9H1k6klUfcwblzOWWUV9/kBmoTRgsuEl+uSteLqqtF5FHaM/CXEfGL710i8TLqAAAAAAAAAAAAAOJ0td4Lxin6JFMFz6W+8F4xT9EimCo9PAABoX9LbrLi39JvnjQEHLiOy0MP9sVM/i2XVr0SHmtmRu6N62piVw18WTS8tSigLJvZO57LV3e4XJGLMmHW/ao38Et06eT3prrQw+llnF7m11Eo8/RTDVsiYVI8lSA5a5smjQqxlE7Ctb5kZdWWYSxzVS5aI+5umTl3YkNd2mRWcQl3VbZa2jijq2Kfvqs31KK+4q6vR2lw8DqOpZUlyxcutsNcYrjRp4TYj4xfeukXgUfo08JsR8YvvXSLwI0AAAAAAAAAAAAAOJ0t94Lxin6JFMFz6W+8F4xT9EimCoAAADwAfMzJwFf7Sq+Iv1lExzM3AKOeJVuawb/8ApRAu3Bl2iPudPVrP5WUvxMeDPtEbt/DZGfI8n0MiR9xiHE9pvNH00RWvKJr1aZuyRgqICHuqKIG/onTXSIDEd5Ry9zT7bLnLlwuh2OhThyU4rzFWYXadmuqdPlms+hcZb+QFNaNfCbEfGL710i8Cj9G3hNiPjF966ReAUAAAAAAAAAAAAAcTpb7wXjFP0SKXLo0ud4Lxin6JFLFR6AAAAA+Zkhoypa2J3K/9ZUfVUosjpk7obhrYzWi9+G1F1zogWhgVTOKJ5RUk0+JrJnM4I9VuD3SafSjpaLIkatLOL1Xu863GbMy3FDXWa2NcT5eZmj2Vp5S2PkIrNJmvVZ9SqmrWrIDVu5HOYpVyzJTELtJcZF2GG1LypvjTT7ee7oXOUfXBR9iqxrvZrS1V+7xMs84bGbdU4pQWSjklluSOww2v2SjCfLBde8EVFo18JsR8Yv8A10i8Cj9GvhNiPjF/66ReAUAAAAAAAAAAAAAcTpc7wXjFP0SKWLp0ud4Lxin6JFLFQAAAHh6B8zJ/Qv7d1fo6frKJz8zoNC/t3V+jp/bohVlXkOxXklullNeXj8+ZOW89ho8LLfZCuvcvVl+6+Lz+k+sOr5xRGUvFnzXt4zXbLofE15TyEjKgqJr4RP3FRdEk150aVXA7iXu6a585fgdIAObocFIZ51pur8ldrHy7yZVGMIqMIqKWxJbEjaZhqAc/jtPOLN/gbW1rVL3s5R9D+81cZ7l9B98Bu95/PSy/liCK80a+E2I+MX/rpF4FH6NfCbEfGL/10i8AoAAAAAAAAAAAAA4nS33gvn6fokUsXZpZg3hzfJXot9DbX3lJFR6DwAD08AHkyf0Me3dX6On9uic/IndDlVRxySfu7CrGPO1Km/RBgXtdUFUhKEuKSaf4nJWEpUpypT2OMmunkZ2RB8IsPckq9NdtBdsvfRX3ohW5QnmbMWQmGXakkS8JgZswfOZ7mAZhqMyNmvXnkgIPHquUGSnBO31LWGfHJyqP/FxeZIgb6DuK0aEd77Z8kVxs7WnBJKMVkkkkuRLYgRTWjXwmxHxi+9dIvApDRX+s4RYjVjtj2e9efM67y9Jd4UAAAAAAAAAAAAAR3CLC1d2tW2b1eyU3GMuPUnxwl5JJM/O9/aVKFSVGtFwnCWrOPI+VcqfGnvR+mSF4RcFrW/S7PT7dLKNWPaVYrk1t65nmgPzyC0LnRCs/1V9KK3KdBTfXGcfQa/sQ1Ph8P6eX5hUVselkexDU+Hw/p5fmD2Ianw+H9PL8wCtmaVK9rWV1Svbda06U9bUeeVSD7qLy5U31lrexDU+Hw/p5fmHzPQ7Uf/Xw/ppfmAdXwW4dWGI01KjXhCeS16FRqnWpyy2rJ90vlRzR0XZo++j/ADIqSvoLc3m72l0/os1LrVU9Wgt/GMl/CqZesIrucTsOxydWi4tPbOmms488ebmPbHE4SXdR60cL7BkvjKX1dT8w89gl/GL+qn+YExZkbqPvo9aPr9Jj76PWisfYKfxjL6qp+Ye+wW/jGX1VT8wCyql3Fe6j1ohsRxNN6lNqcnsSTXGcb7BT+MZfVVPzAtBL+MZfVT/MBixcEsYW8XOpOHZJd3LWjlFe9TOX4f6TLazpTo2tWFzdyi404QevCi3s16kls2cernnxcS2kJHQSnsniM2uTsU3n11Dq+C+irDrGSqODuaiaalUUXFNb1BbOvMKjtCHBSpZ207q4TVW51ZKL7pU1nLN88nLPoSLMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//2Q=="
+                  style="width: 85%; height: 90%"
+                  alt=""
+                />
+              </div>
+              <div class="center">
+                <div class="name_div">
+                  <p class="product_name">dghjd</p>
+                </div>
+                <div class="price_div">
+                  <p class="old_price">
+                    <i class="bi bi-currency-rupee"></i>67896
+                  </p>
+                  <p class="new_price">
+                    <i class="bi bi-currency-rupee"></i>707
+                  </p>
+                </div>
+              </div>
+              <div class="bottom">
+                <button
+                  onclick="addToCart(event,'')"
+                  class="addto_cart_btn addto_cart_btn"
+                >
+                  add to cart
+                  <i class="bi"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- --------------------------------------------------------------------------------------------------------- -->
+
+        <!-- ------------------------- WOMENS KURTAS --------------------------- -->
+
+        <!-- -------------------------------------------------------------------------------------------- -->
+
+        <div class="footer">
+          <h3>LABIO</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ABOUT</th>
+                <th>HELP</th>
+                <th>CONSUMER PLOICY</th>
+                <th>SOCIAL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Contact Us</td>
+                <td>Payment</td>
+                <td>Canceleation & return</td>
+                <td>Facebook</td>
+              </tr>
+              <tr>
+                <td>About Us</td>
+                <td>Shipping</td>
+                <td>Terms Of Use</td>
+                <td>Twitter</td>
+              </tr>
+              <tr>
+                <td>Careers</td>
+                <td>Canceleation & return</td>
+                <td>Security</td>
+                <td>Youtube</td>
+              </tr>
+              <tr>
+                <td>Labio Stories</td>
+                <td>FAQ</td>
+                <td>Privacy</td>
+                <td>Instagram</td>
+              </tr>
+              <tr>
+                <td>Press</td>
+                <td>Report Infrigement</td>
+                <td>Sitemap</td>
+                <td>Whatsapp</td>
+              </tr>
+              <tr>
+                <td>Labio Wholesale</td>
+                <td></td>
+                <td>Grievance Redrassal</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Clear trip</td>
+                <td></td>
+                <td>EPR Compliance</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="/javascript/addtowish.js"></script>
+    <script src="/javascript/addtocart.js"></script>
+    <script src="/javascript/product-open.js"></script>
+    <script src="/javascript/btnsearch.js"></script>
+    <script src="/javascript/banner.js"></script>
+  </body>
+</html>
