@@ -26,7 +26,7 @@ router.get("/resetpasswordGet/:mail",authController.resetpasswordGet)
 router.post("/resetlogin/:mail",authController.resetpasswordPost)
 
 router.get("/userhome",userController.userhomeGet)
-
+router.get("/viewproduct",userController.viewProduct)
 
 
 

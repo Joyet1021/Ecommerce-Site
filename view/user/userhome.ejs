@@ -1,42 +1,5 @@
 <%- include('../common/head.ejs') %>
-    <!-- <style>
-      .banner_sub_div {
-          position: relative;
-          background-color: aqua;
-          width: 100%;
-          height: 300px; /* Adjust height as needed */
-      }
-  
-      .banner_sub_div img {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover; /* Ensure the image covers the entire div */
-          z-index: 1;
-      }
-  
-      .banner_text_frame {
-          position: absolute;
-          bottom: 20px; /* Adjust vertical position as needed */
-          left: 20px; /* Adjust horizontal position as needed */
-          z-index: 2; /* Ensure text is above the image */
-          color: white; /* Text color */
-      }
-  
-      .banner_text_frame h2,
-      .banner_text_frame h4,
-      .banner_text_frame h5 {
-          margin: 5px 0; /* Adjust spacing as needed */
-      }
-  
-      .banner_text_frame h5 i {
-          margin-right: 5px; /* Adjust spacing between icon and text */
-      }
-  </style>
-   -->
-
+ 
   
     <div class="home_wrapper">
       <div class="top_nav">
@@ -133,7 +96,8 @@
             <div class="product_bottom">
               <% const products = productDetails.filter(product => product.category == category.categoryName); %>
               <% products.forEach((product) => { %>
-                <div class="product_frame_grid" onclick="productOpen(event, '')">
+                <div class="product_frame_grid" onclick="window.location.href='/user/viewproduct?id=<%= product._id %>'">
+
                   <div class="top">
                     <button class="wish_btn" onclick="addToWish(event, '')">
                       <i class="bi bi-heart bi_top_heart"></i>
@@ -210,70 +174,12 @@
 
         <!-- -------------------------------------------------------------------------------------------- -->
 
-        <div class="footer">
-          <h3>LABIO</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>ABOUT</th>
-                <th>HELP</th>
-                <th>CONSUMER PLOICY</th>
-                <th>SOCIAL</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Contact Us</td>
-                <td>Payment</td>
-                <td>Canceleation & return</td>
-                <td>Facebook</td>
-              </tr>
-              <tr>
-                <td>About Us</td>
-                <td>Shipping</td>
-                <td>Terms Of Use</td>
-                <td>Twitter</td>
-              </tr>
-              <tr>
-                <td>Careers</td>
-                <td>Canceleation & return</td>
-                <td>Security</td>
-                <td>Youtube</td>
-              </tr>
-              <tr>
-                <td>Labio Stories</td>
-                <td>FAQ</td>
-                <td>Privacy</td>
-                <td>Instagram</td>
-              </tr>
-              <tr>
-                <td>Press</td>
-                <td>Report Infrigement</td>
-                <td>Sitemap</td>
-                <td>Whatsapp</td>
-              </tr>
-              <tr>
-                <td>Labio Wholesale</td>
-                <td></td>
-                <td>Grievance Redrassal</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>Clear trip</td>
-                <td></td>
-                <td>EPR Compliance</td>
-                <td></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <%- include('../common/footer.ejs') %>
       </div>
     </div>
-
     <script src="/javascript/addtowish.js"></script>
     <script src="/javascript/addtocart.js"></script>
     <script src="/javascript/product-open.js"></script>
     <script src="/javascript/btnsearch.js"></script>
     <script src="/javascript/banner.js"></script>
-  </body>
-</html>
+    <%- include('../common/end.ejs') %>

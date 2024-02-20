@@ -409,7 +409,7 @@ body::-webkit-scrollbar-thumb {
 
 .footer{
     width: 100%;
-    height: 23rem;
+    height: 100%;
     background-color:#3F4E4F;
 }
 .footer h3{
@@ -1549,6 +1549,7 @@ word-wrap: break-word;
         font-weight: 400;
     }
     .new_price{
+        
         font-family: 'Poppins',sans-serif;
         font-size: 1rem;
         font-weight: 500;
@@ -2598,10 +2599,10 @@ word-wrap: break-word;
     align-items: center;
     .productopen_content{
         display: flex;
+        height: 100%;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        overflow-y: scroll;
         padding: 2rem;
     }
     .main_frame{
@@ -3094,6 +3095,7 @@ word-wrap: break-word;
     @media screen and (max-width:1100px) {
         .productopen_content{
             display: flex;
+            height: 100%;
             align-items: center;
             justify-content: center;
             padding: 2rem;
@@ -3103,7 +3105,7 @@ word-wrap: break-word;
             align-items: center;
             flex-direction: column;
             width: 90%;
-            height: 55rem;
+            height: 70rem;
             margin-top: 4.5rem;
         }
         .product_frame{
@@ -3355,6 +3357,7 @@ word-wrap: break-word;
    .product_frame{
     position: relative;
     width: 100%;
+    height: 100%;
     margin-top: 1rem;
     height: auto;
    }

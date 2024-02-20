@@ -37,15 +37,15 @@ const schema={
         required:true
     },
     price:{
-        type:String,
+        type:Number,
         required: true
     },
     quantity:{
-        type:String,
+        type:Number,
         required:true
     },
     discount:{
-        type:String,
+        type:Number,
         required:true
     }
     

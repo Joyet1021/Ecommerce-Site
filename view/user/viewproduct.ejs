@@ -1,0 +1,232 @@
+<%- include('../common/head.ejs') %>
+<div class="wrapper productopen_wrapper">
+    <%- include('../common/top_nav.ejs') %>
+
+
+    <form action="" style="width: 100%;">
+        <div class="content productopen_content">
+            <div class="main_frame">
+                <div class="product_frame" style="margin-top: 0px;">
+                    <div class="img_frame">
+                        <button type="button" class="prev_next_btn" onclick="prevImg()">
+                            <i class="bi left_right_icon bi-caret-left"></i>
+                        </button>
+                        <div>
+                            <img src="/uploads/<%=product.productImage[0]%>" class="product_image_img" style="height: 300px; width: 100%;" alt="">
+                        </div>
+                        <button type="button" class="prev_next_btn" onclick="nextImg()">
+                            <i class="bi left_right_icon bi-caret-right"></i>
+                        </button>
+                    </div>
+                    <div class="img_position" style="display: flex; width: 100%; justify-content: space-evenly; margin-bottom: 1rem;">
+                        <% product.productImage.forEach((img) => { %>
+                            <div style="width: 4rem;height: 6rem; border-radius: 0%; cursor: pointer; border: 1px solid rgba(115, 115, 115, 0.277); border-radius: .2rem; overflow: hidden;">
+                                <img onmouseover="changeImg('/uploads/<%= img %>')" class="pro_img_loop" src="/uploads/<%= img %>" style="width: 100%; height: 100%;" alt="">
+                            </div>
+                        <% }) %>
+                    </div>
+                </div>
+                
+                <div class="product_detail_frame">
+                    <ul>
+
+                        <li style="font-size: 1.3rem; font-family: 'Poppins',sans-serif; font-weight: 600; color: white;">
+                            <%=product.productName%>
+                        </li>
+                        <li style="display: flex; gap: .7rem; align-items: center;">
+                            <p class="old_price"><i class="bi bi-currency-rupee"></i><%= product.price.toLocaleString() %></p>
+                            <p class="new_price" style="color: white;"><i class="bi bi-currency-rupee"></i><%= product.discount.toLocaleString() %></p><br>
+                            
+                        </li>
+                        <p class="discount"><%= Math.round(100-(product.discount / product.price * 100)) %> % Off</p>
+                        
+                        
+                        
+                        <!-- ========================================== -->
+    
+                        
+                         <li style="display: flex; gap: .7rem; align-items: center; height: 2rem;">
+                            <div style="display: flex; align-items: center; font-family: 'sans-serif'; ">Return
+                               <% if(product.return==true) { %>
+                                  <i class="bi bi-check"></i>
+                                  <% } else{ %>
+                                  <i class="bi bi-x"></i>
+                                  <% } %>
+                            </div>
+                         </li>
+    
+       
+                         <!-- ===================================== -->
+                         <div class="top_rating"><span style="font-size: 1.3rem;">5</span><i class="bi top_star bi-star-fill"></i><span style="font-size: .7rem; font-family: 'Poppins',sans-serif;">Out of <span>4</span> Reviews</span></div><BR>
+                         
+                         <!-- =========================================================== -->
+                         <%if(product.size){%>
+                         <li class="size_li">
+                            <p style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgb(255, 255, 255);">SIZE :</p>
+    
+                            <% product.size.forEach((size) => { %>
+    
+    
+                            <span class="label_span" style="margin-bottom: 20px;">
+                             <input id="<%= size %>" value="<%= size %>" name="size" type="radio" >
+                            <label for="<%= size %>" ><%= size %></label>
+                            </span>
+                            
+                            <% }) %>
+    
+                         </li>
+                         <%}%>
+    
+                         <!-- ======================================== -->
+                         <%if(product.color){%>
+    
+                         <li class="color_li">
+                            <p style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(255, 255, 255, 0.947);">COLOR :</p>
+    
+                            <% product.color.forEach((color) => { %>
+    
+                               <span style="border: 1px solid white;margin-bottom: 20px;background-color:<%= color %>" class="label_span_color">
+                                  <input  id="<%= color %>" name="color" value="<%= color %>" type="radio" >
+                                  <label for="<%= color %>" ></label>
+                                  </span>
+                               
+                               <% }) %>
+    
+                         </li>
+                         <%}%>
+    
+                         <!-- =================================================== -->
+    
+                         <li>
+                            <div style="display: flex; gap: 1rem; align-items: center;">
+                               <select  name="quantity" style="outline: none; padding: .3rem;">
+                                  <option value="1">Qty:1</option>
+                                  <option value="2">Qty:2</option>
+                                  <option value="3">Qty:3</option>
+                                  <option value="4">Qty:4</option>
+                                  <option value="5">Qty:5</option>
+                               </select>
+                               <div class="stock_left">Hurry only <%= product.quantity %> LEFT</div>
+                               <div class="wish_btn_div"><button class="wish_btn" onclick="addToWish(event,'<%= product._id %>')">
+                                  <i class="bi wish_white wish_icon"></i>
+                                  </button></div>
+                            </div>
+                         </li>
+    
+    
+                         <!-- ======================================= -->
+    
+    
+    
+                         <li style="height: 10rem; flex-direction: column; align-items: start; gap: .3rem;">
+                            <p class="disc_p">Description</p>
+                            <div class="discription_frame">
+                               <%= product.description %>
+                            </div>
+                         </li>
+    
+                         <!-- ======================================================= -->
+    
+    
+    
+                         <li style="height: 4rem;">
+                            <p style="font-family:'Times New Roman', Times, serif;color: white;">Delivery Within <span style="color: rgb(0, 179, 0);"><%= product.deliverydate %> Days</span></p>
+                         </li>
+    
+                         <!-- =================================================================== -->
+    
+                         <li class="btn_li" style="display: flex; height: 3rem; justify-content: space-between; width: 90%;">
+                            <button onclick="addToCart(event,'<%= product._id %>')" type="button" class="addto_cart_btn addto_cart_btn<%= product._id %>">
+                                ADD TO CART
+                              <i class="bi"></i>
+                            </button>
+                            <button onclick="checkoutFromProduct('<%= product._id %>')" type="button">BUY NOW</button>
+                         </li>
+    
+                      </ul>
+                   </div>
+                </div>                  
+             </div>
+    </form>
+
+        <!-- ============================================================================================================================ -->
+
+        <div class="product_frame_related">
+
+            <div class="product_top">RELATED PRODUCTS</div>
+            <div class="product_bottom">
+                <div class="product_frame_grid">
+                    <div class="top">
+                        <button class="wish_btn_related">
+                            <i class="bi wish_related_pro_icon wish_icon bi-heart"></i>
+                        </button>
+                        <img src="#" style="width: 85%; height: 90%;" alt="">
+                    </div>
+                    <div class="center">
+                        <div class="name_div">
+                            <p class="product_name">Productname</p>
+                        </div>
+                        <div class="price_div">
+                            <p class="old_price"><i class="bi bi-currency-rupee"></i>oldprice</p>
+                            <p class="new_price"><i class="bi bi-currency-rupee"></i>newprice</p>
+                        </div>
+                    </div>
+                    <div class="bottom">
+                        <button class="addto_cart_btn addto_cart_btn">
+                            ADD TO CART
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="product_frame_related">
+            <div class="product_top">Ratings & Reviews</div>
+            <h4 class="rating_number">4.5</h4>
+            <h6 class="basedon_tex">Based on <span>23</span> Reviews</h6>
+            <div class="product_bottom product_review">
+                <div class="review_frame">
+                    <div class="user_img_div">
+                        <img class="user_img" src="#" alt="">
+                    </div>
+                    <div class="user_review">
+                        <span class="star_rating"><span>5</span><i class="bi bi-star-fill"></i></span>
+                        <p class="rating_para">good Product</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <%- include('../common/footer.ejs') %>
+
+
+    
+
+</div> <!-- Close the productopen_wrapper div -->
+
+
+
+
+
+<script>
+    let currentImgIndex = 0;
+    const mainImg = document.querySelector('.product_image_img');
+    
+    function changeImg(imageSrc){
+        mainImg.src = imageSrc;
+    }
+    
+    function prevImg(){
+        currentImgIndex = (currentImgIndex - 1 + document.querySelectorAll('.pro_img_loop').length) % document.querySelectorAll('.pro_img_loop').length;
+        mainImg.src = "/uploads/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
+    }
+    
+    function nextImg(){
+        currentImgIndex = (currentImgIndex + 1) % document.querySelectorAll('.pro_img_loop').length;
+        mainImg.src = "/uploads/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
+    }
+</script>
+    
+<%- include('../common/end.ejs') %>
