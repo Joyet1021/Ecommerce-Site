@@ -28,3 +28,21 @@ exports.viewProduct=async(req,res)=>{
     }
 
 }
+
+exports.cartGet=async(req,res)=>{
+    try{
+        
+
+    }catch{
+
+    }
+}
+
+exports.buyProduct=async(req,res)=>{
+    try{
+        let id=req.query.id;
+        console.log(id,"this is the id of the product");
+    }catch{
+
+    }
+}

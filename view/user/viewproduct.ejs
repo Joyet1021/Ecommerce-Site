@@ -4,7 +4,7 @@
 
 
     <form action="" style="width: 100%;">
-        <div class="content productopen_content">
+        <div class="productopen_content">
             <div class="main_frame">
                 <div class="product_frame" style="margin-top: 0px;">
                     <div class="img_frame">
@@ -32,7 +32,7 @@
 
                         <li style="font-size: 1.3rem; font-family: 'Poppins',sans-serif; font-weight: 600; color: white;">
                             <%=product.productName%>
-                        </li>
+                        </li><br>
                         <li style="display: flex; gap: .7rem; align-items: center;">
                             <p class="old_price"><i class="bi bi-currency-rupee"></i><%= product.price.toLocaleString() %></p>
                             <p class="new_price" style="color: white;"><i class="bi bi-currency-rupee"></i><%= product.discount.toLocaleString() %></p><br>
@@ -100,11 +100,9 @@
                          <li>
                             <div style="display: flex; gap: 1rem; align-items: center;">
                                <select  name="quantity" style="outline: none; padding: .3rem;">
-                                  <option value="1">Qty:1</option>
-                                  <option value="2">Qty:2</option>
-                                  <option value="3">Qty:3</option>
-                                  <option value="4">Qty:4</option>
-                                  <option value="5">Qty:5</option>
+                                <% for(let i = 1 ;i <= 15; i++){%>
+                                  <option value="1">Qty:<%= i%></option>
+                                  <%}%>
                                </select>
                                <div class="stock_left">Hurry only <%= product.quantity %> LEFT</div>
                                <div class="wish_btn_div"><button class="wish_btn" onclick="addToWish(event,'<%= product._id %>')">
@@ -121,7 +119,7 @@
                          <li style="height: 10rem; flex-direction: column; align-items: start; gap: .3rem;">
                             <p class="disc_p">Description</p>
                             <div class="discription_frame">
-                               <pre><%= product.description %></pre>
+                               <pre class="discription_frame1"><%= product.description %></pre>
                             </div>
                          </li>
     
@@ -157,12 +155,12 @@
             <div class="product_bottom">
                 <% relatedProducts.forEach((relatedProduct) => { %>
                     <% if (relatedProduct._id != product._id) { %>
-                        <div class="product_frame_grid">
+                        <div class="product_frame_grid" onclick="window.location.href='/user/viewproduct?id=<%= relatedProduct._id %>'">
                             <div class="top">
                                 <button class="wish_btn_related">
                                     <i class="bi wish_related_pro_icon wish_icon bi-heart"></i>
                                 </button>
-                                <img src="/uploads/products/<%= relatedProduct.productImage[0] %>" style="width: 85%; height: 90%;" alt="">
+                                <img src="/uploads/products/<%= relatedProduct.productImage[0] %>" style="width: 75%; height: 90%;" alt="">
                             </div>
                             <div class="center">
                                 <div class="name_div">
@@ -175,8 +173,7 @@
                             </div>
                             <div class="bottom">
                                 <button class="addto_cart_btn addto_cart_btn">
-                                    ADD TO CART
-                                    <i class="bi bi-plus-lg"></i>
+                                    BUY NOW
                                 </button>
                             </div>
                         </div>

@@ -28,6 +28,10 @@ router.post("/resetlogin/:mail",authController.resetpasswordPost)
 router.get("/userhome",userController.userhomeGet)
 router.get("/viewproduct",userController.viewProduct)
 
+router.get("/cart",userController.cartGet)
+
+router.get("/buyproduct",userController.buyProduct)
+
 
 
 module.exports=router

@@ -9,7 +9,7 @@ const verifysid = process.env.verifysId;
 const client =twilio(accountsid, authToken);
 var nodemailer = require('nodemailer');
 const flash=require('connect-flash');
-const { render } = require('ejs');
+
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -138,8 +138,10 @@ exports.userloginPost = async (req, res) => {
             if (comparePassword) {
                 if (userExist.verified === true) {
                     if (userExist.role === "admin") {
+                        req.session.admin =adminExist
                         res.render("admin/adminhome");
                     } else {
+                        req.session.user =userExist
                         res.redirect("/user/userhome");
                     }
                 } else {

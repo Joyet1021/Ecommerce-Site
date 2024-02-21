@@ -2943,6 +2943,13 @@ word-wrap: break-word;
         border-radius: .5rem;
         overflow-y: scroll;
     }
+    .discription_frame1{
+        font-weight: light;
+        color: white;
+        font-family: 'Poppins',sans-serif;
+        font-size: 0.9em;;
+        
+    }
     .bi-check{
         color: rgb(0, 255, 0);
         font-size: 2rem;
@@ -3107,7 +3114,7 @@ word-wrap: break-word;
             align-items: center;
             flex-direction: column;
             width: 90%;
-            height: 70rem;
+            height: 80rem;
             margin-top: 4.5rem;
         }
         .product_frame{
@@ -3374,6 +3381,7 @@ word-wrap: break-word;
    .product_top{
     display: flex;
     align-items: center;
+    justify-content: center;
     font-family: 'Poppins',sans-serif;
     width: 100%;
     font-size: 1.2rem;
