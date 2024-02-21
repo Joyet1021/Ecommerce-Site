@@ -2933,10 +2933,12 @@ word-wrap: break-word;
     }
     .discription_frame{
         padding:  .5rem .8rem;
-        width: 90%;
+        width: 80%;
         height: 90%;
+        font-weight: light;
+        color: white;
         font-family: 'Poppins',sans-serif;
-        font-size: .7rem;
+        font-size: 0.9em;;
         border: 1px solid rgba(255, 255, 255, 0.237);
         border-radius: .5rem;
         overflow-y: scroll;

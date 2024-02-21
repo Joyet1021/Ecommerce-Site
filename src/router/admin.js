@@ -6,17 +6,17 @@ const categoryController=require("../controller/category")
 const authController=require("../controller/auth")
 const couponController=require("../controller/Coupons")
 const bannerController=require("../controller/banner")
-const upload = require('../middlewares/multerMiddleware')
+const multer = require('../middlewares/multerMiddleware')
 
 
 router.get("/adminhome",authController.adminhomeGet)
 
 router.get("/addproduct",adminProductController.addproductGet)
-router.post("/addproductpost",upload.array("productImage",99),adminProductController.addproductPost)
+router.post("/addproductpost",multer.setUploadType('products'),multer.upload.array("productImage",99),adminProductController.addproductPost)
 
 router.get("/products",adminProductController.productsGet)
 router.get("/editproduct/:id",adminProductController.editproductGet)
-router.post("/editproductpost/:id",upload.array("image",99),adminProductController.editproductPost)
+router.post("/editproductpost/:id",multer.setUploadType('products'),multer.upload.array("image",99),adminProductController.editproductPost)
 router.delete("/deleteproduct",adminProductController.deleteproduct)
 
 router.get("/categories",categoryController.categoriesGet)
@@ -37,9 +37,9 @@ router.delete("/deletecoupon",couponController.deleteCoupon)
 
 router.get("/bannerlist",bannerController.bannerlistGet)
 router.get("/addbannerGet",bannerController.addbannerGet)
-router.post('/addbannerPost',upload.single("bannerImage"),bannerController.addbannerPost)
+router.post('/addbannerPost',multer.setUploadType('banners'),multer.upload.single("bannerImage"),bannerController.addbannerPost)
 router.get("/editbanner",bannerController.editbannerGet)
-router.post("/editbannerPost",upload.single("bannerImage"),bannerController.editbannerPost)
+router.post("/editbannerPost",multer.setUploadType('banners'),multer.upload.single("bannerImage"),bannerController.editbannerPost)
 router.delete("/deletebanner",bannerController.deletebanner)
 
 router.get("/blockedusers",adminController.blockedusersGet)

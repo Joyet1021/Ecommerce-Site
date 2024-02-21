@@ -17,7 +17,7 @@ submit.addEventListener("click", async (e) => {
         const description = document.getElementsByName("description")[0].value.trim();
  
         const productImageFile = document.querySelector('input[name="productImage"]').files[0];
-        form.append('productImage', productImageFile);
+        
         if (!productName ||productName==""|| !price || !quantity || !category || !subCategory || !deliverydate|| !description||!productImageFile) {
             message.textContent = "Please fill out all fields";
             setTimeout(() => {

@@ -70,7 +70,7 @@
           <% bannerDetails.forEach((banner) => { %>
 
           <div class="banner_sub_div">
-          <img src="/uploads/<%= banner.bannerImage %>"  style="width: 45%;">
+          <img src="/uploads/banners/<%= banner.bannerImage %>"  style="width: 45%;">
           <div class="banner_text_frame">
                <h2><%= banner.bannerHeading.toUpperCase() %></h2>
                <h4><%= banner.bannerName.toUpperCase() %></h4>
@@ -102,7 +102,7 @@
                     <button class="wish_btn" onclick="addToWish(event, '')">
                       <i class="bi bi-heart bi_top_heart"></i>
                     </button>
-                    <img src="/uploads/<%=  product.productImage[0]%>" style="width: 75%; height: 90%" alt="" />
+                    <img src="/uploads/products/<%=  product.productImage[0]%>" style="width: 75%; height: 90%" alt="" />
                   </div>
                   <div class="center">
                     <div class="name_div">

@@ -16,6 +16,7 @@ exports.addproductGet = async (req, res) => {
 
 exports.addproductPost = async (req, res) => {
     try {
+        
         if(!req.files||req.files.length>5){
             return res.status(230).json({message:"Please provide a image",success:false});
         }

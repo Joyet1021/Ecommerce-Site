@@ -98,7 +98,7 @@ rel="stylesheet">
                             <% productDetails.forEach((product)=>{ %>
                                 <tr class="row<%=product._id%>">
                                     
-                                    <td style="padding-left: 50px;"><img src="/uploads/<%= product.productImage[0] %>" class="card-img-top" style="aspect-ratio: 1 / 1;height: 60px; width: 50px;" /></td>
+                                    <td style="padding-left: 50px;"><img src="/uploads/products/<%= product.productImage[0] %>" class="card-img-top" style="aspect-ratio: 1 / 1;height: 60px; width: 50px;" /></td>
                                     <td style="padding-top: 30px;"><h5 class="card-title"><%= product.productName %></h5></td>
                                     <td style="padding-top: 30px;"><p class="card-text">₹<%= product.discount %></p></td>
                                     <td style="padding-top: 30px;"><a href="javascript:void(0);"  class="btn btn-light border px-2 pt-2 icon-hover" onclick="confirmDelete('<%=product._id%>','<%= product.productName %>') ;"><i class="fas fa-trash fa-lg text-secondary px-1"></i></a></td>

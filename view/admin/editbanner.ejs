@@ -100,23 +100,23 @@ rel="stylesheet">
 		</nav>
 		
 		<main>
-            <h1 class="title" style="padding-left: 10px;">Add Banner</h1>
+            <h1 class="title" style="padding-left: 10px;">Edit Banner</h1>
 			<ul class="breadcrumbs"style="padding-left: 10px;">
 				<li><a href="/admin/adminhome">Home</a></li>
 				<li class="divider">/</li>
 				<li><a href="/admin/bannerlist" > Bannerlist</a></li>
 				<li class="divider">/</li>
-				<li><a href="" class="active"> Add Banner</a></li>
+				<li><a href="" class="active"> Edit Banner</a></li>
 			</ul>
 			<form class="banner" action="/admin/editbannerPost?id=<%=bannerData._id %>"  method="post" enctype="multipart/form-data">
 				<div class="data3" >
 					<div class="content-data3" >
-						<label for="categoryName" style="font-weight: bold; font-size: larger;padding-bottom: 20px; padding-left: 35%;">Add Banner</label ><br><br>
+						<label for="categoryName" style="font-weight: bold; font-size: larger;padding-bottom: 20px; padding-left: 35%;">Edit Banner</label ><br><br>
 							<!-- Display success messages -->
                             <div class="imagefull1">
                                 
                                 <div class="profileimgbox1">
-                                    <img  src="/uploads/<%=bannerData.bannerImage %>" alt="submit" name="image" id="imagePreview" class="bannerimage" width="100%" height="100%"  >
+                                    <img  src="/uploads/banners/<%=bannerData.bannerImage %>" alt="submit" name="image" id="imagePreview" class="bannerimage" width="100%" height="100%"  >
                                     
                                     
                                 </div>

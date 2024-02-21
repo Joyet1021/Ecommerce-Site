@@ -135,7 +135,7 @@ rel="stylesheet">
                             <% bannerData.forEach((banner)=>{ %>
                                 <tr class="row<%=banner._id%>">
                                     
-                                    <td style="padding-left: 50px;"><img src="/uploads/<%= banner.bannerImage %>" class="card-img-top" style="aspect-ratio: 1 / 1;height: 50px; width: 70px;" /></td>
+                                    <td style="padding-left: 50px;"><img src="/uploads/banners/<%= banner.bannerImage %>" class="card-img-top" style="aspect-ratio: 1 / 1;height: 50px; width: 70px;" /></td>
                                     <td style="padding-top: 30px;"><h5 class="card-title"><%= banner.bannerName %></h5></td>
 									<td style="padding-top: 30px;"><p class="card-text">₹<%= banner.offerPrice %></p></td>
                                     <td style="padding-top: 30px;"><p class="card-text"><%= banner.startDate.toISOString().substring(0, 10) %></p></td>

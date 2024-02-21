@@ -12,7 +12,7 @@
                             <i class="bi left_right_icon bi-caret-left"></i>
                         </button>
                         <div>
-                            <img src="/uploads/<%=product.productImage[0]%>" class="product_image_img" style="height: 300px; width: 100%;" alt="">
+                            <img src="/uploads/products/<%=product.productImage[0]%>" class="product_image_img" style="height: 300px; width: 100%;" alt="">
                         </div>
                         <button type="button" class="prev_next_btn" onclick="nextImg()">
                             <i class="bi left_right_icon bi-caret-right"></i>
@@ -21,7 +21,7 @@
                     <div class="img_position" style="display: flex; width: 100%; justify-content: space-evenly; margin-bottom: 1rem;">
                         <% product.productImage.forEach((img) => { %>
                             <div style="width: 4rem;height: 6rem; border-radius: 0%; cursor: pointer; border: 1px solid rgba(115, 115, 115, 0.277); border-radius: .2rem; overflow: hidden;">
-                                <img onmouseover="changeImg('/uploads/<%= img %>')" class="pro_img_loop" src="/uploads/<%= img %>" style="width: 100%; height: 100%;" alt="">
+                                <img onmouseover="changeImg('/uploads/products/<%= img %>')" class="pro_img_loop" src="/uploads/products/<%= img %>" style="width: 100%; height: 100%;" alt="">
                             </div>
                         <% }) %>
                     </div>
@@ -155,30 +155,36 @@
 
             <div class="product_top">RELATED PRODUCTS</div>
             <div class="product_bottom">
-                <div class="product_frame_grid">
-                    <div class="top">
-                        <button class="wish_btn_related">
-                            <i class="bi wish_related_pro_icon wish_icon bi-heart"></i>
-                        </button>
-                        <img src="#" style="width: 85%; height: 90%;" alt="">
-                    </div>
-                    <div class="center">
-                        <div class="name_div">
-                            <p class="product_name">Productname</p>
+                <% relatedProducts.forEach((relatedProduct) => { %>
+                    <% if (relatedProduct._id !== product._id) { %>
+                        <div class="product_frame_grid">
+                            <div class="top">
+                                <button class="wish_btn_related">
+                                    <i class="bi wish_related_pro_icon wish_icon bi-heart"></i>
+                                </button>
+                                <img src="#" style="width: 85%; height: 90%;" alt="">
+                            </div>
+                            <div class="center">
+                                <div class="name_div">
+                                    <p class="product_name"><%= relatedProduct.productName %><%=product._id%><br><%=relatedProduct._id%></p>
+                                </div>
+                                <div class="price_div">
+                                    <p class="old_price"><i class="bi bi-currency-rupee"></i><%= relatedProduct.price %></p>
+                                    <p class="new_price"><i class="bi bi-currency-rupee"></i><%= relatedProduct.discount %></p>
+                                </div>
+                            </div>
+                            <div class="bottom">
+                                <button class="addto_cart_btn addto_cart_btn">
+                                    ADD TO CART
+                                    <i class="bi bi-plus-lg"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="price_div">
-                            <p class="old_price"><i class="bi bi-currency-rupee"></i>oldprice</p>
-                            <p class="new_price"><i class="bi bi-currency-rupee"></i>newprice</p>
-                        </div>
-                    </div>
-                    <div class="bottom">
-                        <button class="addto_cart_btn addto_cart_btn">
-                            ADD TO CART
-                            <i class="bi bi-plus-lg"></i>
-                        </button>
-                    </div>
-                </div>
+                    <% } %>
+                <% }); %>
+                
             </div>
+            
         </div>
 
 
@@ -220,12 +226,12 @@
     
     function prevImg(){
         currentImgIndex = (currentImgIndex - 1 + document.querySelectorAll('.pro_img_loop').length) % document.querySelectorAll('.pro_img_loop').length;
-        mainImg.src = "/uploads/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
+        mainImg.src = "/uploads/products/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
     }
     
     function nextImg(){
         currentImgIndex = (currentImgIndex + 1) % document.querySelectorAll('.pro_img_loop').length;
-        mainImg.src = "/uploads/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
+        mainImg.src = "/uploads/products/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
     }
 </script>
     
