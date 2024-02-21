@@ -121,7 +121,7 @@
                          <li style="height: 10rem; flex-direction: column; align-items: start; gap: .3rem;">
                             <p class="disc_p">Description</p>
                             <div class="discription_frame">
-                               <%= product.description %>
+                               <pre><%= product.description %></pre>
                             </div>
                          </li>
     
@@ -156,17 +156,17 @@
             <div class="product_top">RELATED PRODUCTS</div>
             <div class="product_bottom">
                 <% relatedProducts.forEach((relatedProduct) => { %>
-                    <% if (relatedProduct._id !== product._id) { %>
+                    <% if (relatedProduct._id != product._id) { %>
                         <div class="product_frame_grid">
                             <div class="top">
                                 <button class="wish_btn_related">
                                     <i class="bi wish_related_pro_icon wish_icon bi-heart"></i>
                                 </button>
-                                <img src="#" style="width: 85%; height: 90%;" alt="">
+                                <img src="/uploads/products/<%= relatedProduct.productImage[0] %>" style="width: 85%; height: 90%;" alt="">
                             </div>
                             <div class="center">
                                 <div class="name_div">
-                                    <p class="product_name"><%= relatedProduct.productName %><%=product._id%><br><%=relatedProduct._id%></p>
+                                    <p class="product_name"><%= relatedProduct.productName %></p>
                                 </div>
                                 <div class="price_div">
                                     <p class="old_price"><i class="bi bi-currency-rupee"></i><%= relatedProduct.price %></p>
