@@ -27,6 +27,7 @@ router.post("/resetlogin/:mail",authController.resetpasswordPost)
 
 router.get("/userhome",userController.userhomeGet)
 router.get("/viewproduct",userController.viewProduct)
+router.post("/addToCart",userController.addtoCart)
 
 router.get("/cart",userController.cartGet)
 router.delete("/deletecartproduct",userController.deleteCartProduct)

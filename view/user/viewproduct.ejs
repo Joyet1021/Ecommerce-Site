@@ -130,6 +130,7 @@
                          <li style="height: 4rem;">
                             <p style="font-family:'Times New Roman', Times, serif;color: white;">Delivery Within <span style="color: rgb(0, 179, 0);"><%= product.deliverydate %> Days</span></p>
                          </li>
+                         <div class="message" style="color: rgb(183, 21, 21);margin-bottom: 10px; font-weight: bold;"></div>
     
                          <!-- =================================================================== -->
     
@@ -233,13 +234,31 @@
         mainImg.src = "/uploads/products/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
     }
 
-    function addtocart(id) {
-    document.getElementById('add-to-cart-btn-' + id).setAttribute('href', '/user/cart?productId=' + id);
-    document.getElementById('add-to-cart-btn-' + id).innerText = 'GO TO CART';
+    async function addtocart(id) {
+        event.preventDefault(); 
+    try {
+        const response = await fetch(`/user/addToCart?productid=${id}`, { method: 'POST',headers:{
+                 'Content-Type':"application/json"
+                } });
+            if (!response.ok) {
+                window.location.href='/user/login'
+            } 
+            const result = await response.json();
+            console.log(result);
+            if (result.success == true) {
+                document.getElementById('add-to-cart-btn-' + id).innerText = 'GO TO CART';
+            } else {
+                message.innerHTML = result.error || "Unknown error";
+            }
+    } catch (error) {
+        console.log();
+        console.error('Error adding product:', error);
     }
+}
+
 
     function gotocart(id) {
-    document.getElementById('add-to-cart-btn-' + id).setAttribute('href', '/user/cart?productId=' + id);
+    document.getElementById('add-to-cart-btn-' + id).setAttribute('href', '/user/cart');
     
     }
 

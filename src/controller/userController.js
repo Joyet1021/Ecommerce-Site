@@ -45,17 +45,46 @@ exports.viewProduct = async (req, res) => {
         res.status(500).render('error', { message: 'Internal Server Error' });
     }
 }
+
+exports.addtoCart = async (req, res) => {
+    try {
+        const userId = req.session?.user._id;
+        if (!userId) {
+            res.status(401).json('not')
+        }
+
+        const productId = req.query?.productid;
+
+        let userExistCart = await cartModel.findOne({ userid: userId });
+
+        if (!userExistCart) {
+            userExistCart = await new cartModel({
+                userid: userId,
+                productid: []
+            }).save();
+        }
+
+        if (productId) {
+            const productIndex = userExistCart.productid.indexOf(productId);
+            if (productIndex === -1) {
+                userExistCart.productid.unshift(productId);
+                await userExistCart.save();
+            }
+        }
+        return res.status(200).json({ success: true, message: 'Added To Cart Successfully' });
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        return res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+};
+
 exports.cartGet = async (req, res) => {
     try {
         let nouser = false;
-
-        // Redirect unauthenticated users to login
         if (!req.session.user) {
             nouser = true;
             return res.render('user/cart', { nouser });
         }
-
-        const productId = req.query.productId;
         const userId = req.session.user._id;
 
         let userexistCart = await cartModel.findOne({ userid: userId });
@@ -67,13 +96,7 @@ exports.cartGet = async (req, res) => {
             }).save();
         }
 
-        if (productId) {
-            const productIndex = userexistCart.productid.indexOf(productId);
-            if (productIndex === -1) {
-                userexistCart.productid.unshift(productId);
-                await userexistCart.save();
-            }
-        }
+        
 
         const cartProducts = await cartModel.findOne({ userid: userId });
         const productIds = cartProducts.productid;
