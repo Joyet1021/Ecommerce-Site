@@ -86,6 +86,24 @@ exports.cartGet = async (req, res) => {
     }
 };
 
+
+exports.deleteCartProduct = async (req, res) => {
+    try {
+        const product = req.query.id;
+        const userId = req.session.user._id;
+        await cartModel.findOneAndUpdate(
+            { userid: userId },
+            { $pull: { productid: product } }, 
+            { new: true }
+        );
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error deleting product from cart:', error);
+        res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+};
+
+
 exports.buyProduct=async(req,res)=>{
     try{
         let id=req.query.id;

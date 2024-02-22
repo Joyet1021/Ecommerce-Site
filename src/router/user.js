@@ -29,6 +29,7 @@ router.get("/userhome",userController.userhomeGet)
 router.get("/viewproduct",userController.viewProduct)
 
 router.get("/cart",userController.cartGet)
+router.delete("/deletecartproduct",userController.deleteCartProduct)
 
 router.get("/buyproduct",userController.buyProduct)
 

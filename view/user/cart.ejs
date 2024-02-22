@@ -32,6 +32,7 @@
             
             <!-- CART  -->
             <% products.forEach((product)=>{ %>
+                <div class="row<%=product._id%>">
             <div class="product">
                 <div class="image_sec">
                     <img src="/uploads/products/<%=product.productImage[0]%>" style="width: 6rem; height: 7.2rem;" alt="">
@@ -63,12 +64,14 @@
                 </div>
                 <div class="delete_section">
                     <div style="margin-bottom: 1rem;">
-                        <button>
-                            <i class="bi bi-trash"></i>
+                        <button  >
+                            <a   onclick="confirmDelete('<%=product._id%>') ;">
+                            <i class="bi bi-trash"></i></a>
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
             <% }) %>
             <%}%>
         </div>
@@ -125,4 +128,20 @@
     <%- include('../common/footer.ejs') %>
 
 </div>
+<script>
+    async function confirmDelete(id) {
+        try {
+            const response = await fetch(`/user/deletecartproduct?id=${id}`, { method: "delete" });
+            if (!response.ok) {
+                throw new Error("Error deleting product: " + response.statusText);
+            }
+            document.querySelector('.row'+id).remove()
+            
+        } catch (error) {
+            console.error('Error deleting product:', error);
+        }
+    }
+</script>
+
+
 <%- include('../common/end.ejs') %>
