@@ -1402,8 +1402,8 @@ word-wrap: break-word;
         gap: 1rem;
         top: 12%;
         left: 30%;
-        width: 40em;
-        height: 30rem;
+        width: 100%;
+        height: 100%;
         box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.141);
     }
     .log_frame h3{
@@ -1447,18 +1447,41 @@ word-wrap: break-word;
         height: 100%;
         background-color: white;
     }
-    .empty_frame{
+    .gologin_frame{
+        height: 100%;
+        width: 100%;
        display: flex;
-       flex-direction: column;
        align-items: center;
-       gap: 1.2rem;
-       width: 20rem;
-       position: absolute;
-       top: 25%;
-       left: 36%;
+       justify-content: center;
+       flex-direction: column;
+      
+       
+    }
+    .gologin_frame h3{
+        font-size: 1.4rem;
+        font-weight: bold;
+        font-family: 'Poppins',sans-serif;
+        color: rgba(0, 0, 0, 0.821);
+        letter-spacing: .1rem;
+    }
+    .gologin_frame p{
+        text-align: center;
+        font-size: .9rem;
+        font-family: 'Poppins',sans-serif;
+        color: rgba(0, 0, 0, 0.821);
+    }
+    .empty_frame{
+        height: 100%;
+        width: 100%;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+      
+       
     }
     .empty_frame h3{
         font-size: 1.4rem;
+        font-weight: bold;
         font-family: 'Poppins',sans-serif;
         color: rgba(0, 0, 0, 0.821);
         letter-spacing: .1rem;
@@ -1538,7 +1561,7 @@ word-wrap: break-word;
     .product_name{
         font-size: 1.2rem;
         font-family: 'roboto',sans-serif;
-        font-weight: 700;
+        font-weight: bold;
         margin: .3rem 0;
     }
     .old_price{
@@ -1702,30 +1725,7 @@ word-wrap: break-word;
     .cart_png{
         width: 14rem;
     }
-    .log_frame{
-        position: absolute;
-        display: flex;
-        align-items: center;
-        padding-top: 3rem;
-        flex-direction: column;
-        gap: 1rem;
-        top: 12%;
-        left: 30%;
-        width: 40em;
-        height: 30rem;
-        box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.141);
-    }
-    .log_frame h3{
-        font-size: 1.4rem;
-        font-family: 'Poppins',sans-serif;
-        color: rgba(0, 0, 0, 0.821);
-        letter-spacing: .1rem;
-    }
-    .log_frame p{
-        font-size: 1rem;
-        font-family: 'Poppins',sans-serif;
-        color: rgba(0, 0, 0, 0.821);
-    }
+    
     .login_from_wish_btn{
         padding: .5rem 1.8rem;
         font-family: 'Poppins',sans-serif;
@@ -2994,7 +2994,28 @@ word-wrap: break-word;
         transition: all 1s;
         text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.501);
     }
+    .btn_li a{
+        width: 45%;
+        height: 3.5rem;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Poppins',sans-serif;
+        font-size: .9rem;
+        background-color:#0176a82d;
+        color: white;
+        border: none;
+        border-radius: .2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 1s;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.501);
+    }
     .btn_li button:active{
+        transform: scale(.9);
+    }
+    .btn_li a:active{
         transform: scale(.9);
     }
     .wish_btn{

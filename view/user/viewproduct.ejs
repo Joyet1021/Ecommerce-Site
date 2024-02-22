@@ -133,11 +133,13 @@
     
                          <!-- =================================================================== -->
     
-                         <li class="btn_li" style="display: flex; height: 3rem; justify-content: space-between; width: 90%;">
-                            <button onclick="addToCart(event,'<%= product._id %>')" type="button" class="addto_cart_btn addto_cart_btn<%= product._id %>">
-                                ADD TO CART
-                              <i class="bi"></i>
-                            </button>
+                         <li class="btn_li" style="display: flex; height: 3rem; justify-content: space-between; width: 90%;">    
+                            <%productExist%>
+                            <% if(productExist==false){ %>                                                                                
+                            <a  href="" id="add-to-cart-btn-<%= product._id %>" onclick="addtocart('<%= product._id %>')">ADD TO CART</a>
+                            <% }else{ %>
+                            <a  href="" id="add-to-cart-btn-<%= product._id %>" onclick="gotocart('<%= product._id %>')">GO TO CART</a>
+                            <% } %>
                             <button onclick="checkoutFromProduct('<%= product._id %>')" type="button">BUY NOW</button>
                          </li>
     
@@ -230,6 +232,19 @@
         currentImgIndex = (currentImgIndex + 1) % document.querySelectorAll('.pro_img_loop').length;
         mainImg.src = "/uploads/products/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
     }
+
+    function addtocart(id) {
+    document.getElementById('add-to-cart-btn-' + id).setAttribute('href', '/user/cart?productId=' + id);
+    document.getElementById('add-to-cart-btn-' + id).innerText = 'GO TO CART';
+    }
+
+    function gotocart(id) {
+    document.getElementById('add-to-cart-btn-' + id).setAttribute('href', '/user/cart?productId=' + id);
+    
+    }
+
+
+
 </script>
     
 <%- include('../common/end.ejs') %>
