@@ -4,9 +4,13 @@ const schema={
     userid:{
         type:String,
     },
-    productid:{
-        type:Array
-    }
+    productsid:[{
+        productid:String,
+        quantity:{
+            type:Number,
+            default:1
+        }
+    }]
 
 }
 

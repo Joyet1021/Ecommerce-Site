@@ -26,7 +26,12 @@ exports.viewProduct = async (req, res) => {
             const userExist = await cartModel.findOne({ userid: userId });
             if (userExist) {
                 const product = await productModel.findById(productId);
-                const productExist = userExist.productid.includes(productId);
+                let productExist = false;
+                userExist.productsid.forEach((product) => {
+                if (product.productid === productId) {
+                    productExist = true;
+                }
+            });
                 const relatedProducts = await productModel.find({ category: product.category }).limit(15);
                 res.render('user/viewproduct', { product, relatedProducts, productExist });
                 return;
@@ -48,6 +53,7 @@ exports.viewProduct = async (req, res) => {
 
 exports.addtoCart = async (req, res) => {
     try {
+        console.log(req.body);
         const userId = req.session?.user._id;
         if (!userId) {
             res.status(401).json('not')
@@ -60,17 +66,24 @@ exports.addtoCart = async (req, res) => {
         if (!userExistCart) {
             userExistCart = await new cartModel({
                 userid: userId,
-                productid: []
+                productsid:[]
             }).save();
         }
 
         if (productId) {
-            const productIndex = userExistCart.productid.indexOf(productId);
-            if (productIndex === -1) {
-                userExistCart.productid.unshift(productId);
+            let productFound = false;
+            userExistCart.productsid.forEach((product) => {
+                if (product.productid === productId) {
+                    productFound = true;
+                }
+            });
+        
+            if (!productFound) {
+                userExistCart.productsid.unshift({ productid: productId, quantity: 1 });
                 await userExistCart.save();
             }
         }
+        
         return res.status(200).json({ success: true, message: 'Added To Cart Successfully' });
     } catch (error) {
         console.error('Error adding product to cart:', error);

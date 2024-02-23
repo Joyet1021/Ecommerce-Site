@@ -60,7 +60,7 @@
                          <div class="top_rating"><span style="font-size: 1.3rem;">5</span><i class="bi top_star bi-star-fill"></i><span style="font-size: .7rem; font-family: 'Poppins',sans-serif;">Out of <span>4</span> Reviews</span></div><BR>
                          
                          <!-- =========================================================== -->
-                         <%if(product.size){%>
+                         <%if(product.size=='undefined'){%>
                          <li class="size_li">
                             <p style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgb(255, 255, 255);">SIZE :</p>
     
@@ -99,11 +99,6 @@
     
                          <li>
                             <div style="display: flex; gap: 1rem; align-items: center;">
-                               <select  name="quantity" style="outline: none; padding: .3rem;">
-                                <% for(let i = 1 ;i <= 15; i++){%>
-                                  <option value="1">Qty:<%= i%></option>
-                                  <%}%>
-                               </select>
                                <div class="stock_left">Hurry only <%= product.quantity %> LEFT</div>
                                <div class="wish_btn_div"><button class="wish_btn" onclick="addToWish(event,'<%= product._id %>')">
                                   <i class="bi wish_white wish_icon"></i>
@@ -233,34 +228,48 @@
         currentImgIndex = (currentImgIndex + 1) % document.querySelectorAll('.pro_img_loop').length;
         mainImg.src = "/uploads/products/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
     }
-
     async function addtocart(id) {
-        event.preventDefault(); 
+    event.preventDefault(); 
     try {
-        const response = await fetch(`/user/addToCart?productid=${id}`, { method: 'POST',headers:{
-                 'Content-Type':"application/json"
-                } });
-            if (!response.ok) {
-                window.location.href='/user/login'
-            } 
-            const result = await response.json();
-            console.log(result);
-            if (result.success == true) {
-                document.getElementById('add-to-cart-btn-' + id).innerText = 'GO TO CART';
-            } else {
-                message.innerHTML = result.error || "Unknown error";
-            }
+        const path = document.getElementById('add-to-cart-btn-' + id).innerText;
+        let response;
+
+        if (path == 'ADD TO CART') {
+            response = await fetch(`/user/addToCart?productid=${id}`, { method: 'GET', headers: { 'Content-Type': "application/json" } });
+        } else if (path == 'GO TO CART') {
+            window.location.href = '/user/cart'; // Redirect to the cart page
+            return;
+        } else {
+            alert("This item is already in your cart.");
+            return;
+        }
+
+        if (!response.ok) {
+            window.location.href = '/user/login';
+            return;
+        } 
+
+        const result = await response.json();
+        console.log(result);
+
+        if (result.success == true) {
+            const cartLink = document.getElementById('add-to-cart-btn-' + id);
+            cartLink.setAttribute('href', '/user/cart');
+            cartLink.innerText = "GO TO CART";
+        } else {
+            message.innerHTML = result.error || "Unknown error";
+        }
     } catch (error) {
-        console.log();
         console.error('Error adding product:', error);
     }
+};
+
+
+function gotocart(id) {
+    event.preventDefault(); 
+    window.location.href = '/user/cart';
 }
 
-
-    function gotocart(id) {
-    document.getElementById('add-to-cart-btn-' + id).setAttribute('href', '/user/cart');
-    
-    }
 
 
 
