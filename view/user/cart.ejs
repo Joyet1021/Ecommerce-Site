@@ -19,43 +19,42 @@
                     <button onclick="location.href = '/user/login' " class="login_from_wish_btn">LOGIN</button>
                 </div>
             </div>
-            <%}else if(products.length==0){%>
-
-            <div class="login_to_view">
-                <div class="empty_frame">
-                    <h3>YOUR CART IS EMPTY</h3>
-                    
-                </div>
-            </div>
-            <%}else{%>
+            <%}else if(products==0){%>
     
             
             <!-- CART  -->
-            <% products.forEach((product)=>{ %>
-                <div class="row<%=product._id%>">
+            <div id="empty-cart" style="padding-left: 42%;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
+                Your Cart is Empty! </div>
+
+                <%}else{%>
+                    <div id="empty-cart" style="padding-left: 42%;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
+                        Your Cart List </div>
+            <% productIds.productsid.forEach((product)=>{ %>
+                
+                <div class="row<%=product.productid._id%>">
             <div class="product">
                 <div class="image_sec">
-                    <img src="/uploads/products/<%=product.productImage[0]%>" style="width: 6rem; height: 7.2rem;" alt="">
+                    <img src="/uploads/products/<%=product.productid.productImage[0]%>" style="width: 6rem; height: 7.2rem;" alt="">
                 </div>
                 <div class="discription_sec">
-                    <p class="product_name" style="font-weight: bold;"><%= product.productName %></p>
+                    <p class="product_name" style="font-weight: bold;"><%= product.productid.productName %></p>
                     <div style="display: flex; gap: 1rem; align-items: center;">
-                        <select  name="quantity" style="outline: none; padding: .3rem;">
-                            <option value="1">Qty:1</option>
-                            <option value="2">Qty:2</option>
-                            <option value="3">Qty:3</option>
-                            <option value="4">Qty:4</option>
-                            <option value="5">Qty:5</option>
+                        <select class="quantity" name="quantity" style="outline: none; padding: .3rem;">
+                            <option value="<%=product.quantity%>">Qty:<%=product.quantity%></option>
+                            <%  for (let i = 1; i < product.productid.quantity  ; i++) { %>
+                            <option value="<%=i%>,<%=product.productid.price%>,<%=product.productid.discount%>,<%=product.productid%>">Qty:<%=i%></option>
+                            <% if (i === 5) break; %>
+                            <% } %>
                         </select>
-                        <div class="stock_left"> <%=product.quantity%> Stock Left</div>
+                        <div class="stock_left"> <%=product.productid.quantity%> Stock Left</div>
                     </div>
                     <div style="display: flex; gap: .7rem; align-items: center;">
-                        <p class="old_price"><%=product.price%></p>
-                        <p class="new_price"><%=product.discount%></p>
-                        <p class="discount"><%= Math.round(100-(product.discount / product.price * 100)) %> % Off</p>
+                        <p class="old_price"><%=product.productid.price%></p>
+                        <p class="new_price"><%=product.productid.discount%></p>
+                        <p class="discount"><%= Math.round(100-(product.productid.discount / product.productid.price * 100)) %> % Off</p>
                     </div>
                     <p class="return_status">Return policy 
-                        <% if(product.return==true) { %>
+                        <% if(product.productid.return==true) { %>
                         <i class="bi bi-check"></i>
                         <% } else{ %>
                         <i class="bi bi-x"></i>
@@ -65,7 +64,7 @@
                 <div class="delete_section">
                     <div style="margin-bottom: 1rem;">
                         <button  >
-                            <a   onclick="confirmDelete('<%=product._id%>') ;">
+                            <a   onclick="confirmDelete('<%=product.productid._id%>')">
                             <i class="bi bi-trash"></i></a>
                         </button>
                     </div>
@@ -135,13 +134,47 @@
             if (!response.ok) {
                 throw new Error("Error deleting product: " + response.statusText);
             }
-            document.querySelector('.row'+id).remove()
-            
+            const data = await response.json();
+            if (data.success) {
+            console.log("Product deleted successfully");
+            document.querySelector(`.row${id}`).remove();
+            if(data.productExist==false){
+                const nocart=document.getElementById('empty-cart');
+                nocart.innerHTML="Your Cart is Empty!";
+            }
+        } else {
+            console.log("Failed to delete product");
+        }
         } catch (error) {
             console.error('Error deleting product:', error);
         }
     }
+
+    const changes = document.querySelectorAll(".quantity");
+changes.forEach(change => {
+    change.addEventListener("change", async (e) => {
+        try {
+            e.preventDefault();
+            const qty = e.target.value;
+            const values=qty.split(",");
+            const [quantity,price,discount,productid] =values;
+            const newprice=quantity*price;
+            const newdiscount=quantity*discount;
+            console.log(newprice);
+            const response = await fetch(`/user/updateCartqty?qty=${quantity},id=${productid}`, { method: "GET" });
+            
+            console.log(values);
+        } catch (error) {
+            console.error(error);
+        }
+    });
+});
+
+
+
+
 </script>
+
 
 
 <%- include('../common/end.ejs') %>

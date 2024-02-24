@@ -28,7 +28,7 @@ exports.viewProduct = async (req, res) => {
                 const product = await productModel.findById(productId);
                 let productExist = false;
                 userExist.productsid.forEach((product) => {
-                if (product.productid === productId) {
+                if (product.productid == productId) {
                     productExist = true;
                 }
             });
@@ -53,7 +53,6 @@ exports.viewProduct = async (req, res) => {
 
 exports.addtoCart = async (req, res) => {
     try {
-        console.log(req.body);
         const userId = req.session?.user._id;
         if (!userId) {
             res.status(401).json('not')
@@ -73,11 +72,11 @@ exports.addtoCart = async (req, res) => {
         if (productId) {
             let productFound = false;
             userExistCart.productsid.forEach((product) => {
-                if (product.productid === productId) {
+                if (product.productid == productId) {
                     productFound = true;
                 }
             });
-        
+       
             if (!productFound) {
                 userExistCart.productsid.unshift({ productid: productId, quantity: 1 });
                 await userExistCart.save();
@@ -90,7 +89,6 @@ exports.addtoCart = async (req, res) => {
         return res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 };
-
 exports.cartGet = async (req, res) => {
     try {
         let nouser = false;
@@ -100,27 +98,36 @@ exports.cartGet = async (req, res) => {
         }
         const userId = req.session.user._id;
 
-        let userexistCart = await cartModel.findOne({ userid: userId });
+        let userCart = await cartModel.findOne({ userid: userId });
 
-        if (!userexistCart) {
-            userexistCart = await new cartModel({
+        if (!userCart) {
+            userCart = await new cartModel({
                 userid: userId,
-                productid: []
+                productsid: []
             }).save();
         }
 
+        const productIds = await cartModel.findOne({ userid: userId }).populate('productsid.productid');
         
-
-        const cartProducts = await cartModel.findOne({ userid: userId });
-        const productIds = cartProducts.productid;
-        const products = await productModel.find({ _id: { $in: productIds } });
-        res.render('user/cart', { products, nouser });
+        const products = productIds.productsid;
+        
+        
+        res.render('user/cart', { nouser, productIds ,products});
 
     } catch (error) {
         console.error('Error in cartGet', error);
         res.status(500).render('error', { message: 'Internal Server Error' });
     }
 };
+
+exports.updateCartQty=async(req,res)=> {
+    try{
+        console.log(req.query,'KOOL');
+
+    }catch{
+
+    }
+}
 
 
 exports.deleteCartProduct = async (req, res) => {
@@ -129,10 +136,15 @@ exports.deleteCartProduct = async (req, res) => {
         const userId = req.session.user._id;
         await cartModel.findOneAndUpdate(
             { userid: userId },
-            { $pull: { productid: product } }, 
+            { $pull: { productsid: { productid: product } } },
             { new: true }
-        );
-        res.json({ success: true });
+        );        
+        const Product=await  cartModel.findOne({userid:userId})
+        const noproduct=Product.productsid;
+        if(noproduct.length==0){
+            return res.json({ success: true ,productExist:false });
+        }
+        res.json({ success: true ,produtExist:true});
     } catch (error) {
         console.error('Error deleting product from cart:', error);
         res.status(500).json({ success: false, error: "Internal Server Error" });

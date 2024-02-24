@@ -34,8 +34,8 @@
                             <%=product.productName%>
                         </li><br>
                         <li style="display: flex; gap: .7rem; align-items: center;">
-                            <p class="old_price"><i class="bi bi-currency-rupee"></i><%= product.price.toLocaleString() %></p>
-                            <p class="new_price" style="color: white;"><i class="bi bi-currency-rupee"></i><%= product.discount.toLocaleString() %></p><br>
+                            <p class="old_price" id="old-price"><i class="bi bi-currency-rupee"></i><%= product.price.toLocaleString() %></p>
+                            <p class="new_price" id="new-price" style="color: white;"><i class="bi bi-currency-rupee"></i><%= product.discount.toLocaleString() %></p><br>
                             
                         </li>
                         <p class="discount"><%= Math.round(100-(product.discount / product.price * 100)) %> % Off</p>

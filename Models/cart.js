@@ -2,13 +2,13 @@ const mongoose=require('mongoose')
 
 const schema={
     userid:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId
     },
     productsid:[{
-        productid:String,
+        productid:{type:mongoose.Schema.Types.ObjectId,ref:'productdatas' },
         quantity:{
             type:Number,
-            default:1
+            _id:false
         }
     }]
 
