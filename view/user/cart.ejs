@@ -1,105 +1,113 @@
 <%- include('../common/head.ejs') %>
     
 <div class="wrapper cart_wrapper">
-
-
-    <%- include('../common/top_nav.ejs') %>
-
-
-
-    <div class="cart_content">    
-
-        <div class="product_frame" >
-            <%if(nouser==true){ %>
-            
-            <div class="login_to_view">
-                <div class="gologin_frame">
-                    <h3>PLEASE LOG IN</h3>
-                    <p>Login to view items in your WISHLIST.</p>
-                    <button onclick="location.href = '/user/login' " class="login_from_wish_btn">LOGIN</button>
-                </div>
-            </div>
-            <%}else if(products==0){%>
-    
-            
-            <!-- CART  -->
-            <div id="empty-cart" style="padding-left: 42%;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
-                Your Cart is Empty! </div>
-
-                <%}else{%>
-                    <div id="empty-cart" style="padding-left: 42%;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
-                        Your Cart List </div>
-            <% productIds.productsid.forEach((product)=>{ %>
-                
-                <div class="row<%=product.productid._id%>">
-            <div class="product">
-                <div class="image_sec">
-                    <img src="/uploads/products/<%=product.productid.productImage[0]%>" style="width: 6rem; height: 7.2rem;" alt="">
-                </div>
-                <div class="discription_sec">
-                    <p class="product_name" style="font-weight: bold;"><%= product.productid.productName %></p>
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                        <select class="quantity" name="quantity" style="outline: none; padding: .3rem;">
-                            <option value="<%=product.quantity%>">Qty:<%=product.quantity%></option>
-                            <%  for (let i = 1; i < product.productid.quantity  ; i++) { %>
-                            <option value="<%=i%>,<%=product.productid.price%>,<%=product.productid.discount%>,<%=product.productid%>">Qty:<%=i%></option>
-                            <% if (i === 5) break; %>
-                            <% } %>
-                        </select>
-                        <div class="stock_left"> <%=product.productid.quantity%> Stock Left</div>
-                    </div>
-                    <div style="display: flex; gap: .7rem; align-items: center;">
-                        <p class="old_price"><%=product.productid.price%></p>
-                        <p class="new_price"><%=product.productid.discount%></p>
-                        <p class="discount"><%= Math.round(100-(product.productid.discount / product.productid.price * 100)) %> % Off</p>
-                    </div>
-                    <p class="return_status">Return policy 
-                        <% if(product.productid.return==true) { %>
-                        <i class="bi bi-check"></i>
-                        <% } else{ %>
-                        <i class="bi bi-x"></i>
-                        <%} %>
-                    </p>
-                </div>
-                <div class="delete_section">
-                    <div style="margin-bottom: 1rem;">
-                        <button  >
-                            <a   onclick="confirmDelete('<%=product.productid._id%>')">
-                            <i class="bi bi-trash"></i></a>
-                        </button>
-                    </div>
-                </div>
+    <div class="top_nav">
+        <div class="web_logo"><i class="bi bi-list"></i><span class="labio_text">MITMAT</span></div>
+        <div class="search_div">
+            <div class="search_bar">
+                <input class="search_input" placeholder="Search..." type="text" />
+                <button class="search_btn"><i class="bi bi-search"></i></button>
             </div>
         </div>
-            <% }) %>
-            <%}%>
+        <div class="page_links">
+            <ul>
+                <li><a class="page_links home_li " href="/home">Home</a></li>
+                <li><a class="page_links" href="/wishlist"><i class="bi bi-heart bi_top_heart"></i><span class="product_count wish_count_top"></span></a></li>
+                <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span id="cart-Count1" class="product_count cart_count"><%= locals.cartCount %></span></a></li>
+                <li><a class="page_links " href="/account/address">Account</a></li>
+                <li><a class="page_links" href=""><i class="bi bi-box-arrow-right"></i></a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="cart-Full" class="cart_content">    
+        <div class="product_frame" >
+            <% let totalPrice = 0; %>
+            <% let Discount = 0; %>
+            <% let totalDiscount = 0; %>
+            <% if(nouser==true){ %>
+                <div class="login_to_view">
+                    <div class="gologin_frame">
+                        <h3>PLEASE LOG IN</h3>
+                        <p>Login to view items in your WISHLIST.</p>
+                        <button onclick="location.href = '/user/login' " class="login_from_wish_btn">LOGIN</button>
+                    </div>
+                </div>
+            <% } else if(products==0){ %>
+                <div id="empty-cart" style="padding-left: 42%;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
+                    Your Cart is Empty! 
+                </div>
+            <% } else { %>
+                <div id="empty-cart" style="padding-left: 42%;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
+                    Your Cart List 
+                </div>
+                <% productIds.productsid.forEach((product) => { %>
+                    <% totalPrice += (product.productid.price * product.quantity); %>
+                    <% Discount += (product.productid.discount * product.quantity); %>
+                    <div class="row<%=product.productid._id%>">
+                        <div class="product">
+                            <div class="image_sec">
+                                <img src="/uploads/products/<%=product.productid.productImage[0]%>" style="width: 6rem; height: 7.2rem;" alt="">
+                            </div>
+                            <div class="discription_sec">
+                                <p class="product_name" style="font-weight: bold;"><%= product.productid.productName %></p>
+                                <div style="display: flex; gap: 1rem; align-items: center;">
+                                    <select class="quantities" name="quantities" style="outline: none; padding: .3rem;">
+                                        <option value="<%= product.quantity %>">Qty:<%= product.quantity %></option>
+                                        <% for (let i = 1; i < product.productid.quantity; i++) { %>
+                                            <option value="<%=i%>,<%=product.productid.price%>,<%=product.productid.discount%>,<%=product.productid._id%>">Qty:<%=i%></option>
+                                            <% if (i === 5) break; %>
+                                        <% } %>
+                                    </select>
+                                    <div class="stock_left"> <%=product.productid.quantity%> Stock Left</div>
+                                </div>
+                                <div style="display: flex; gap: .7rem; align-items: center;">
+                                    <p id="old-price" class="old_price"><%=(product.productid.price*product.quantity)%></p>
+                                    <p id="new-price" class="new_price"><%=(product.productid.discount*product.quantity)%></p>
+                                    <p class="discount"><%= Math.round(100-(product.productid.discount / product.productid.price * 100)) %> % Off</p>
+                                </div>
+                                <p class="return_status">Return policy 
+                                    <% if(product.productid.return==true) { %>
+                                        <i class="bi bi-check"></i>
+                                    <% } else{ %>
+                                        <i class="bi bi-x"></i>
+                                    <% } %>
+                                </p>
+                            </div>
+                            <div class="delete_section">
+                                <div style="margin-bottom: 1rem;">
+                                    <button>
+                                        <a onclick="confirmDelete('<%=product.productid._id%>')">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
         </div>
                 
         <div class="price_frame">
             <div class="price_sub_frame">
                 <div class="cart_details"> 
                     <p>Cart Items</p>
-                    <p class="cartCount">cartCount </p>
+                    <p id="cart-Count" class="cartCount"><%= locals.cartCount %> </p>
                 </div>
                 <div class="cart_details"> 
-                    <p>Cart Total</p>
+                    <p>Cart Total </p>
                     <p>
                         <i class="bi bi-currency-rupee"></i>
-                        <span class="cart_total">cartTotal</span>
+                        <span id="total-price" class="total-price"><%= totalPrice %></span>
                     </p>
                 </div>
                 <div class="cart_details"> 
                     <p>Discount </p>
                     <p>
+                        <% totalDiscount = totalPrice-Discount; %>
                         <i class="bi bi-currency-rupee"></i>-
-                        <span class="productDiscount">discount </span>
-                    </p>
-                </div>
-                <div class="cart_details"> 
-                    <p>GST</p>
-                    <p>
-                        <i class="bi bi-currency-rupee"></i>
-                        <span class="gst"> gst </span>
+                        <span class="productDiscount"><%= totalDiscount %></span>
                     </p>
                 </div>
                 <div class="cart_details"> 
@@ -111,22 +119,18 @@
                 <p>Total Amount</p>
                 <p>
                     <i class="bi bi-currency-rupee"></i>
-                    <span class="cartTotalAmount">cartTotal - discount</span>
+                    <% grandTotal= totalPrice - totalDiscount %>
+                    <span id="cart-total" class="cartTotalAmount"><%= grandTotal %></span>
                 </p>
             </div>
             <div class="btn_div">
-                <button class="place_order_btn">PLACE ORDER</button>
+                <button type="button" class="place_order_btn">PLACE ORDER</button>
             </div>
-
         </div>
-
     </div>
-
-
-
     <%- include('../common/footer.ejs') %>
-
 </div>
+
 <script>
     async function confirmDelete(id) {
         try {
@@ -136,45 +140,114 @@
             }
             const data = await response.json();
             if (data.success) {
-            console.log("Product deleted successfully");
-            document.querySelector(`.row${id}`).remove();
-            if(data.productExist==false){
-                const nocart=document.getElementById('empty-cart');
-                nocart.innerHTML="Your Cart is Empty!";
+                console.log("Product deleted successfully");
+                document.querySelector(`.row${id}`).remove();
+                const count = data.count;
+                const cartCount = document.getElementById('cart-Count');
+                if (cartCount) {
+                    cartCount.innerHTML = count;
+                } else { 
+                    console.error("Element with ID 'cart-Count' not found.");
+                }
+                const cartCount1 = document.getElementById('cart-Count1');
+                if (cartCount1) {
+                    cartCount1.innerHTML = count;
+                } else {
+                    console.error("Element with ID 'cart-Count1' not found.");
+                }
+
+                // Recalculate the total price and discount for all products
+                let totalPrice = 0;
+                let Discount = 0;
+                document.querySelectorAll('.product').forEach(product => {
+                    const productPrice = parseInt(product.querySelector('.old_price').innerHTML);
+                    const discount = parseInt(product.querySelector('.new_price').innerHTML);
+                    const productDiscount = productPrice - discount;
+                    totalPrice += productPrice;
+                    Discount += productDiscount;
+                });
+                const totalDiscount = totalPrice - Discount;
+
+                // Update the total price and discount in the cart
+                const cartTotalAmount = document.querySelector('.productDiscount');
+                const cartdiscount = totalPrice - totalDiscount;
+                cartTotalAmount.innerHTML = cartdiscount;
+
+                const cartcount = document.getElementById('total-price');
+                cartcount.innerHTML = totalPrice;
+
+                const cartTotal = document.getElementById('cart-total');
+                cartTotal.innerHTML = totalPrice - cartdiscount;
+
+                if (data.productExist == false) {
+                    const nocart = document.getElementById('empty-cart');
+                    nocart.innerHTML = "Your Cart is Empty!";
+                }
+            } else {
+                console.log("Failed to delete product");
             }
-        } else {
-            console.log("Failed to delete product");
-        }
+
         } catch (error) {
             console.error('Error deleting product:', error);
         }
     }
 
-    const changes = document.querySelectorAll(".quantity");
-changes.forEach(change => {
-    change.addEventListener("change", async (e) => {
-        try {
-            e.preventDefault();
-            const qty = e.target.value;
-            const values=qty.split(",");
-            const [quantity,price,discount,productid] =values;
-            const newprice=quantity*price;
-            const newdiscount=quantity*discount;
-            console.log(newprice);
-            const response = await fetch(`/user/updateCartqty?qty=${quantity},id=${productid}`, { method: "GET" });
-            
-            console.log(values);
-        } catch (error) {
-            console.error(error);
-        }
+    const changes = document.querySelectorAll(".quantities");
+
+    changes.forEach(async (change) => {
+        change.addEventListener("change", async (e) => {
+            try {
+                e.preventDefault();
+                let totalPrice = 0;
+                let Discount = 0;
+
+                const qty = e.target.value;
+                const values = qty.split(",");
+                const [quantity, price, discount, productid] = values;
+
+                const newprice = quantity * price;
+                const newdiscount = quantity * discount;
+
+                const response = await fetch(`/user/updateCartqty?qty=${quantity}&id=${productid}`, { method: "GET" });
+                const data = await response.json();
+                if (data.success) {
+
+                    const productContainer = e.target.closest('.product');
+                    const oldPrice = productContainer.querySelector('.old_price');
+                    const newPrice = productContainer.querySelector('.new_price');
+                    newPrice.innerHTML = newdiscount;
+                    oldPrice.innerHTML = newprice;
+
+                    // Recalculate the total price and discount for all products
+                    document.querySelectorAll('.product').forEach(product => {
+                        const productPrice = parseInt(product.querySelector('.old_price').innerHTML);
+                        const discount=parseInt(product.querySelector('.new_price').innerHTML);
+                        const productDiscount = productPrice-discount;
+                        totalPrice += productPrice;
+                        Discount += productDiscount;
+                    });
+                    const totalDiscount = totalPrice - Discount;
+
+                    // Update the total price and discount in the cart
+                    const cartTotalAmount = document.querySelector('.productDiscount');
+                    const cartdiscount=totalPrice - totalDiscount;
+                    cartTotalAmount.innerHTML = cartdiscount;
+
+                    const cartCount = document.getElementById('total-price');
+                    cartCount.innerHTML = totalPrice;
+
+                    const cartTotal = document.getElementById('cart-total');
+                    cartTotal.innerHTML = totalPrice - cartdiscount;
+
+                } else {
+                    console.log("Failed to add quantity");
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        });
     });
-});
-
-
-
-
 </script>
-
 
 
 <%- include('../common/end.ejs') %>
