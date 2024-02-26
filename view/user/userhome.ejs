@@ -63,9 +63,13 @@
               <div class="product_frame_grid">
                   <a onclick="window.location.href='/user/viewproduct?id=<%= productDetails[i]._id %>'">
                       <div class="top">
-                          <button class="wish_btn" onclick="addToWish(event, '')">
-                              <i class="bi bi-heart bi_top_heart"></i>
-                          </button>
+                        <button class="wish_btn" onclick="addtowishlist(event, '<%= productDetails[i]._id %>')">
+                        <i class="bi wish_icon<%= productDetails[i]._id %> <%= (() => {
+                          const productIdObjectId = productDetails[i]._id.toString();
+                          const isProductInWishList = wishlist && wishlist.productsid && wishlist.productsid.find(product => product.productid == productIdObjectId);
+                          return isProductInWishList ? 'bi-heart-fill' : 'bi-heart';
+                        })() %>"></i>
+                      </button>
                           <img src="/uploads/products/<%= productDetails[i].productImage[0] %>" style="width: 75%; height: 90%" alt="" />
                       </div>
                       <div class="center">
@@ -93,31 +97,27 @@
             <div class="product_bottom">
               <% const products = productDetails.filter(product => product.category == category.categoryName); %>
               <% products.forEach((product) => { %>
-                <div class="product_frame_grid" >
+                <div class="product_frame_grid">
                   <a onclick="window.location.href='/user/viewproduct?id=<%= product._id %>'">
-                  <div class="top">
-                    <button class="wish_btn" onclick="addToWish(event, '')">
-                      <i class="bi bi-heart bi_top_heart"></i>
-                    </button>
-                    <img src="/uploads/products/<%=  product.productImage[0]%>" style="width: 75%; height: 90%" alt="" />
-                  </div>
-                  <div class="center">
-                    <div class="name_div">
-                      <p class="product_name"><%= product.productName %></p>
+                    <div class="top">
+                      <button class="wish_btn" onclick="addtoWishlist(event,'<%= product._id %>')">
+                        <i class="bi wish_icon<%= product._id %> <%= (() => {
+                          const productIdObjectId = product._id.toString();
+                          const isProductInWishList = wishlist && wishlist.productsid && wishlist.productsid.find(product => product.productid == productIdObjectId);
+                          return isProductInWishList ? 'bi-heart-fill' : 'bi-heart';
+                        })() %>"></i>
+                      </button>
+                      <img src="/uploads/products/<%= product.productImage[0] %>" style="width: 75%; height: 90%" alt="" />
                     </div>
-                    <div class="price_div">
-                      <p class="old_price"><i class="bi bi-currency-rupee"></i><%= product.price %></p>
-                      <p class="new_price"><i class="bi bi-currency-rupee"></i><%= product.discount %></p>
-                    </div>
-                  </div>
-                </a>
+                    <!-- Other product details here... -->
+                  </a>
                   <div class="bottom">
-                    <button onclick="window.location.href='/user/buyproduct?id=<%= product._id %>'" class="addto_cart_btn addto_cart_btn">BUY NOW
-                      
-                    </button>
+                    <button onclick="window.location.href='/user/buyproduct?id=<%= product._id %>'" class="addto_cart_btn addto_cart_btn">BUY NOW</button>
                   </div>
                 </div>
               <% }); %>
+              
+              
             </div>
           </div>
         <% }); %>
@@ -137,7 +137,31 @@
         <%- include('../common/footer.ejs') %>
       </div>
     </div>
-    <script src="/javascript/addtowish.js"></script>
+
+    <script>
+      async function addtowishlist(event, id) {
+        event.preventDefault();
+        event.stopPropagation(); 
+        try {
+          const response = await fetch(`/user/addtowishlist?productid=${id}`, { method: 'GET', headers: { 'Content-Type': "application/json" } });
+          const result = await response.json();
+          if(result.success){
+            const path = document.querySelector('.bi.wish_icon'+id);
+            if(path.classList.contains('bi-heart')){
+              path.classList.replace('bi-heart','bi-heart-fill');
+            }else{
+              path.classList.replace('bi-heart-fill','bi-heart');
+            }
+          }else{
+            window.location.href="/user/login";
+          }
+        } catch (error) {
+          console.error('Error adding product:', error);
+        }
+      }
+
+    </script>
+
     <script src="/javascript/addtocart.js"></script>
     <script src="/javascript/product-open.js"></script>
     <script src="/javascript/btnsearch.js"></script>

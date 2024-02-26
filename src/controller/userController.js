@@ -3,6 +3,7 @@ const categoryModel = require("../../Models/categories");
 const productModel=require("../../Models/productdetails")
 const bannerModel=require("../../Models/bannermodel");
 const cartModel=require("../../Models/cart");
+const wishlistModel=require("../../Models/wishlist")
 const { Redirect } = require("twilio/lib/twiml/VoiceResponse");
 
 exports.userhomeGet = async (req, res) => {
@@ -12,10 +13,10 @@ exports.userhomeGet = async (req, res) => {
         const bannerDetails = await bannerModel.find();
         let noUser = false;
         const userId = req.session.user ? req.session.user._id : null;
-        let productCount = 0; // Initialize productCount variable
-
-       
-        res.render('user/userhome', { productDetails, categoryDetails, bannerDetails, productCount });
+        let productCount = 0;
+        const { ObjectId } = require('mongoose');
+        let wishlist=await wishlistModel.findOne(({userid:userId}));
+        res.render('user/userhome', { productDetails, categoryDetails, bannerDetails,wishlist, productCount,userId,ObjectId });
     } catch (error) {
         console.log('Error in home Page', error);
         res.status(404).json({ success: false });
@@ -174,7 +175,101 @@ exports.deleteCartProduct = async (req, res) => {
 };
 
 
+exports.addtowishlist = async (req, res) => {
+    try {
+        const userId = req.session?.user?._id;
 
+        if (!userId) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const productId = req.query?.productid;
+        let userExistCart = await wishlistModel.findOne({ userid: userId });
+
+        if (!userExistCart) {
+            userExistCart = await new wishlistModel({
+                userid: userId,
+                productsid: []
+            }).save();
+        }
+
+        let productFound = false;
+        for (let i = 0; i < userExistCart.productsid.length; i++) {
+            if (userExistCart.productsid[i].productid == productId) {
+                userExistCart.productsid.splice(i, 1);
+                productFound = true;
+                break;
+            }
+        }
+        if (!productFound) {
+            userExistCart.productsid.unshift({ productid: productId });
+        }
+        await userExistCart.save();
+
+        return res.status(200).json({ success: true, message: 'Added To Wishlist Successfully' });
+    } catch (error) {
+        console.error('Error adding product to wishlist:', error);
+        return res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+}
+
+
+
+
+exports.wishlistGet = async (req, res) => {
+    try {
+        let nouser = false;
+        if (!req.session.user) {
+            nouser = true;
+            return res.render('user/wishlist', { nouser });
+        }
+        const userId = req.session.user._id;
+
+        let userwishlist = await wishlistModel.findOne({ userid: userId });
+
+        if (!userwishlist) {
+            userwishlist = await new wishlistModel({
+                userid: userId,
+                productsid: []
+            }).save();
+        }
+
+        const productIds = await wishlistModel.findOne({ userid: userId }).populate('productsid.productid');
+        
+        const products = productIds.productsid;
+        const wishlistCount = products.length;
+        
+        res.render('user/wishlist', { nouser, productIds, products, wishlistCount });
+
+    } catch (error) {
+        console.error('Error in wishlistGet', error);
+        res.status(500).render('error', { message: 'Internal Server Error' });
+    }
+};
+
+
+exports.deleteWishlist = async (req, res) => {
+    try {
+        const product = req.query.id;
+        const userId = req.session.user._id;
+        await wishlistModel.findOneAndUpdate(
+            { userid: userId },
+            { $pull: { productsid: { productid: product } } },
+            { new: true }
+        );        
+        const Product=await  wishlistModel.findOne({userid:userId})
+        const noproduct=Product.productsid;
+        const wishlistCount=noproduct?noproduct.length:0;
+        
+        if(wishlistCount==0){
+            return res.json({ success: true ,productExist:false,count:wishlistCount });
+        }
+        res.json({ success: true ,produtExist:true,count:wishlistCount});
+    } catch (error) {
+        console.error('Error deleting product from cart:', error);
+        res.status(500).json({ success: false, error: "Internal Server Error" });
+    }
+};
 
 
 exports.buyProduct=async(req,res)=>{

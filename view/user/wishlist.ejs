@@ -11,9 +11,9 @@
         </div>
         <div class="page_links">
             <ul>
-                <li><a class="page_links home_li " href="/home">Home</a></li>
+                <li><a class="page_links home_li " href="/user/userhome">Home</a></li>
                 <li><a class="page_links" href="/wishlist"><i class="bi bi-heart bi_top_heart"></i><span class="product_count wish_count_top"></span></a></li>
-                <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span id="cart-Count1" class="product_count cart_count"><%= locals.cartCount %></span></a></li>
+                <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span id="cart-Count1" class="product_count cart_count"><%= locals.wishlistCount %></span></a></li>
                 <li><a class="page_links " href="/account/address">Account</a></li>
                 <li><a class="page_links" href=""><i class="bi bi-box-arrow-right"></i></a></li>
             </ul>
@@ -35,11 +35,11 @@
                 </div>
             <% } else if(products==0){ %>
                 <div id="empty-cart" style="display: flex;align-items: center;justify-content: center;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
-                    Your Cart is Empty! 
+                    Your Wishlist is Empty! 
                 </div>
             <% } else { %>
                 <div id="empty-cart" style="display: flex;align-items: center;justify-content: center;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
-                    Your Cart List 
+                    Your Wishlist List 
                 </div>
                 <% productIds.productsid.forEach((product) => { %>
                     <% totalPrice += (product.productid.price * product.quantity); %>
@@ -89,44 +89,7 @@
             <% } %>
         </div>
                 
-        <div class="price_frame">
-            <div class="price_sub_frame">
-                <div class="cart_details"> 
-                    <p>Cart Items</p>
-                    <p id="cart-Count" class="cartCount"><%= locals.cartCount %> </p>
-                </div>
-                <div class="cart_details"> 
-                    <p>Cart Total </p>
-                    <p>
-                        <i class="bi bi-currency-rupee"></i>
-                        <span id="total-price" class="total-price"><%= totalPrice %></span>
-                    </p>
-                </div>
-                <div class="cart_details"> 
-                    <p>Discount </p>
-                    <p>
-                        <% totalDiscount = totalPrice-Discount; %>
-                        <i class="bi bi-currency-rupee"></i>-
-                        <span class="productDiscount"><%= totalDiscount %></span>
-                    </p>
-                </div>
-                <div class="cart_details"> 
-                    <p>Delivery Charge</p>
-                    <p style="color: rgb(0, 158, 0); font-weight: 600;">FREE DELIVERY</p>
-                </div>
-            </div>
-            <div class="total_amount"> 
-                <p>Total Amount</p>
-                <p>
-                    <i class="bi bi-currency-rupee"></i>
-                    <% grandTotal= totalPrice - totalDiscount %>
-                    <span id="cart-total" class="cartTotalAmount"><%= grandTotal %></span>
-                </p>
-            </div>
-            <div class="btn_div">
-                <button type="button" class="place_order_btn">PLACE ORDER</button>
-            </div>
-        </div>
+        
     </div>
     <%- include('../common/footer.ejs') %>
 </div>
@@ -156,33 +119,6 @@
                     console.error("Element with ID 'cart-Count1' not found.");
                 }
 
-                // Recalculate the total price and discount for all products
-                let totalPrice = 0;
-                let Discount = 0;
-                document.querySelectorAll('.product').forEach(product => {
-                    const productPrice = parseInt(product.querySelector('.old_price').innerHTML);
-                    const discount = parseInt(product.querySelector('.new_price').innerHTML);
-                    const productDiscount = productPrice - discount;
-                    totalPrice += productPrice;
-                    Discount += productDiscount;
-                });
-                const totalDiscount = totalPrice - Discount;
-
-                // Update the total price and discount in the cart
-                const cartTotalAmount = document.querySelector('.productDiscount');
-                const cartdiscount = totalPrice - totalDiscount;
-                cartTotalAmount.innerHTML = cartdiscount;
-
-                const cartcount = document.getElementById('total-price');
-                cartcount.innerHTML = totalPrice;
-
-                const cartTotal = document.getElementById('cart-total');
-                cartTotal.innerHTML = totalPrice - cartdiscount;
-
-                if (data.productExist == false) {
-                    const nocart = document.getElementById('empty-cart');
-                    nocart.innerHTML = "Your Cart is Empty!";
-                }
             } else {
                 console.log("Failed to delete product");
             }
@@ -192,61 +128,9 @@
         }
     }
 
-    const changes = document.querySelectorAll(".quantities");
 
-    changes.forEach(async (change) => {
-        change.addEventListener("change", async (e) => {
-            try {
-                e.preventDefault();
-                let totalPrice = 0;
-                let Discount = 0;
 
-                const qty = e.target.value;
-                const values = qty.split(",");
-                const [quantity, price, discount, productid] = values;
-
-                const newprice = quantity * price;
-                const newdiscount = quantity * discount;
-
-                const response = await fetch(`/user/updateCartqty?qty=${quantity}&id=${productid}`, { method: "GET" });
-                const data = await response.json();
-                if (data.success) {
-
-                    const productContainer = e.target.closest('.product');
-                    const oldPrice = productContainer.querySelector('.old_price');
-                    const newPrice = productContainer.querySelector('.new_price');
-                    newPrice.innerHTML = newdiscount;
-                    oldPrice.innerHTML = newprice;
-
-                    // Recalculate the total price and discount for all products
-                    document.querySelectorAll('.product').forEach(product => {
-                        const productPrice = parseInt(product.querySelector('.old_price').innerHTML);
-                        const discount=parseInt(product.querySelector('.new_price').innerHTML);
-                        const productDiscount = productPrice-discount;
-                        totalPrice += productPrice;
-                        Discount += productDiscount;
-                    });
-                    const totalDiscount = totalPrice - Discount;
-
-                    // Update the total price and discount in the cart
-                    const cartTotalAmount = document.querySelector('.productDiscount');
-                    const cartdiscount=totalPrice - totalDiscount;
-                    cartTotalAmount.innerHTML = cartdiscount;
-
-                    const cartCount = document.getElementById('total-price');
-                    cartCount.innerHTML = totalPrice;
-
-                    const cartTotal = document.getElementById('cart-total');
-                    cartTotal.innerHTML = totalPrice - cartdiscount;
-
-                } else {
-                    console.log("Failed to add quantity");
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        });
-    });
+    
 </script>
 
 
