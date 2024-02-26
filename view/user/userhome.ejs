@@ -2,7 +2,24 @@
  
   
     <div class="home_wrapper">
-      <%- include('../common/top_nav.ejs') %>
+      <div class="top_nav">
+        <div class="web_logo"><i class="bi bi-list"></i><span class="labio_text">MITMAT</span></div>
+        <div class="search_div">
+          <div class="search_bar">
+            <input class="search_input" placeholder="Search..." type="text" />
+            <button class="search_btn"><i class="bi bi-search"></i></button>
+          </div>
+        </div>
+        <div class="page_links">
+          <ul>
+            <li><a class="page_links home_li " href="/home">Home</a></li>
+            <li><a class="page_links" href="/user/wishlist"><i class="bi bi-heart bi_top_heart"></i><span id="wish-Count" class="product_count wish_count_top"><%= locals.wishlistCount %></span></a></li>
+            <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span class="product_count cart_count"><%= locals.cartCount %></span></a></li>
+            <li><a class="page_links " href="/account/address">Account</a></li>
+            <li><a class="page_links" href=""><i class="bi bi-box-arrow-right"></i></a></li>
+          </ul>
+        </div>
+      </div>
       <div class="home_content">
         <!-- =============================================================================================================== -->
 
@@ -151,6 +168,13 @@
               path.classList.replace('bi-heart','bi-heart-fill');
             }else{
               path.classList.replace('bi-heart-fill','bi-heart');
+            }
+            const count = result.count;
+            const wishCount = document.getElementById('wish-Count');
+            if (wishCount) {
+              wishCount.innerHTML = count;
+            } else {
+              console.error("Element with ID 'wish-count' not found.");
             }
           }else{
             window.location.href="/user/login";

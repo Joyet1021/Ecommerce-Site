@@ -16,7 +16,15 @@ exports.userhomeGet = async (req, res) => {
         let productCount = 0;
         const { ObjectId } = require('mongoose');
         let wishlist=await wishlistModel.findOne(({userid:userId}));
-        res.render('user/userhome', { productDetails, categoryDetails, bannerDetails,wishlist, productCount,userId,ObjectId });
+        let cartCount=0;
+        let wishlistCount=0;
+        if(userId){
+            const productids = await cartModel.findOne({ userid: userId })
+            const productIds = await wishlistModel.findOne({ userid: userId })
+            wishlistCount = productIds.productsid.length;
+            cartCount = productids.productsid.length;
+        }
+        res.render('user/userhome', { productDetails, categoryDetails, bannerDetails,wishlist, productCount,userId,ObjectId,cartCount,wishlistCount });
     } catch (error) {
         console.log('Error in home Page', error);
         res.status(404).json({ success: false });
@@ -38,7 +46,16 @@ exports.viewProduct = async (req, res) => {
                 }
             });
                 const relatedProducts = await productModel.find({ category: product.category }).limit(15);
-                res.render('user/viewproduct', { product, relatedProducts, productExist });
+                let cartCount=0;
+                let wishlistCount=0;
+                if(userExist){
+                    const productids = await cartModel.findOne({ userid: userId })
+                    const productIds = await wishlistModel.findOne({ userid: userId })
+                    wishlistCount = productIds.productsid.length;
+                    cartCount = productids.productsid.length;
+                }
+                
+                res.render('user/viewproduct', { product, relatedProducts, productExist,cartCount,wishlistCount });
                 return;
             }
         }
@@ -113,11 +130,14 @@ exports.cartGet = async (req, res) => {
         }
 
         const productIds = await cartModel.findOne({ userid: userId }).populate('productsid.productid');
-        
+        let cartCount=0;
+        let wishlistCount=0;
         const products = productIds.productsid;
-        const cartCount = products.length;
-        
-        res.render('user/cart', { nouser, productIds, products, cartCount });
+        cartCount = products.length;
+        const productids = await wishlistModel.findOne({ userid: userId })
+        wishlistCount = productids.productsid.length;
+            
+        res.render('user/cart', { nouser, productIds, products, cartCount,wishlistCount });
 
     } catch (error) {
         console.error('Error in cartGet', error);
@@ -205,8 +225,10 @@ exports.addtowishlist = async (req, res) => {
             userExistCart.productsid.unshift({ productid: productId });
         }
         await userExistCart.save();
-
-        return res.status(200).json({ success: true, message: 'Added To Wishlist Successfully' });
+        const Product=await  wishlistModel.findOne({userid:userId})
+        const noproduct=Product.productsid;
+        const wishlistCount=noproduct?noproduct.length:0;
+        return res.status(200).json({ success: true,count:wishlistCount, message: 'Added To Wishlist Successfully' });
     } catch (error) {
         console.error('Error adding product to wishlist:', error);
         return res.status(500).json({ success: false, error: 'Internal Server Error' });
@@ -235,11 +257,14 @@ exports.wishlistGet = async (req, res) => {
         }
 
         const productIds = await wishlistModel.findOne({ userid: userId }).populate('productsid.productid');
-        
+        let cartCount=0;
+        let wishlistCount=0;
         const products = productIds.productsid;
-        const wishlistCount = products.length;
+        wishlistCount = products.length;
+        const productids = await cartModel.findOne({ userid: userId })
+        cartCount = productids.productsid.length;
         
-        res.render('user/wishlist', { nouser, productIds, products, wishlistCount });
+        res.render('user/wishlist', { nouser, productIds, products, wishlistCount,cartCount });
 
     } catch (error) {
         console.error('Error in wishlistGet', error);

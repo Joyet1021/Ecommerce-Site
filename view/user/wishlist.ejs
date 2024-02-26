@@ -12,8 +12,8 @@
         <div class="page_links">
             <ul>
                 <li><a class="page_links home_li " href="/user/userhome">Home</a></li>
-                <li><a class="page_links" href="/wishlist"><i class="bi bi-heart bi_top_heart"></i><span class="product_count wish_count_top"></span></a></li>
-                <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span id="cart-Count1" class="product_count cart_count"><%= locals.wishlistCount %></span></a></li>
+                <li><a class="page_links" href="/wishlist"><i class="bi bi-heart bi_top_heart"></i><span id="wish-Count"  class="product_count wish_count_top"><%= locals.wishlistCount %></span></a></li>
+                <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span id="cart-Count1" class="product_count cart_count"><%= locals.cartCount %></span></a></li>
                 <li><a class="page_links " href="/account/address">Account</a></li>
                 <li><a class="page_links" href=""><i class="bi bi-box-arrow-right"></i></a></li>
             </ul>
@@ -45,25 +45,20 @@
                     <% totalPrice += (product.productid.price * product.quantity); %>
                     <% Discount += (product.productid.discount * product.quantity); %>
                     <div class="row<%=product.productid._id%>">
-                        <div class="product">
+                        <div class="product" onclick="window.location.href='/user/viewproduct?id=<%= product.productid._id %>'">
+                            
                             <div class="image_sec">
                                 <img src="/uploads/products/<%=product.productid.productImage[0]%>" style="width: 6rem; height: 7.2rem;" alt="">
                             </div>
                             <div class="discription_sec">
                                 <p class="product_name" style="font-weight: bold;"><%= product.productid.productName %></p>
                                 <div style="display: flex; gap: 1rem; align-items: center;">
-                                    <select class="quantities" name="quantities" style="outline: none; padding: .3rem;">
-                                        <option value="<%= product.quantity %>">Qty:<%= product.quantity %></option>
-                                        <% for (let i = 1; i < product.productid.quantity; i++) { %>
-                                            <option value="<%=i%>,<%=product.productid.price%>,<%=product.productid.discount%>,<%=product.productid._id%>">Qty:<%=i%></option>
-                                            <% if (i === 5) break; %>
-                                        <% } %>
-                                    </select>
+                                    
                                     <div class="stock_left"> <%=product.productid.quantity%> Stock Left</div>
                                 </div>
                                 <div style="display: flex; gap: .7rem; align-items: center;">
-                                    <p id="old-price" class="old_price"><%=(product.productid.price*product.quantity)%></p>
-                                    <p id="new-price" class="new_price"><%=(product.productid.discount*product.quantity)%></p>
+                                    <p id="old-price" class="old_price"><%=product.productid.price%></p>
+                                    <p id="new-price" class="new_price"><%=product.productid.discount%></p>
                                     <p class="discount"><%= Math.round(100-(product.productid.discount / product.productid.price * 100)) %> % Off</p>
                                 </div>
                                 <p class="return_status">Return policy 
@@ -77,12 +72,13 @@
                             <div class="delete_section">
                                 <div style="margin-bottom: 1rem;">
                                     <button>
-                                        <a onclick="confirmDelete('<%=product.productid._id%>')">
+                                        <a onclick="confirmDelete(event,'<%=product.productid._id%>')">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                     </button>
                                 </div>
                             </div>
+                        
                         </div>
                     </div>
                 <% }) %>
@@ -95,9 +91,11 @@
 </div>
 
 <script>
-    async function confirmDelete(id) {
+    async function confirmDelete(event,id) {
+        event.preventDefault();
+        event.stopPropagation();
         try {
-            const response = await fetch(`/user/deletecartproduct?id=${id}`, { method: "delete" });
+            const response = await fetch(`/user/deletewishlist?id=${id}`, { method: "delete" });
             if (!response.ok) {
                 throw new Error("Error deleting product: " + response.statusText);
             }
@@ -106,17 +104,12 @@
                 console.log("Product deleted successfully");
                 document.querySelector(`.row${id}`).remove();
                 const count = data.count;
-                const cartCount = document.getElementById('cart-Count');
-                if (cartCount) {
-                    cartCount.innerHTML = count;
-                } else { 
-                    console.error("Element with ID 'cart-Count' not found.");
-                }
-                const cartCount1 = document.getElementById('cart-Count1');
-                if (cartCount1) {
-                    cartCount1.innerHTML = count;
+                
+                const wishCount = document.getElementById('wish-Count');
+                if (wishCount) {
+                    wishCount.innerHTML = count;
                 } else {
-                    console.error("Element with ID 'cart-Count1' not found.");
+                    console.error("Element with ID 'wish-count' not found.");
                 }
 
             } else {
