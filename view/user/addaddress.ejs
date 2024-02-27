@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/user/user.css">
+</head>
+<body>
+    
+   <div class="wrapper address_wrapper">
+    <div class="top_nav">
+        <div class="web_logo"><i class="bi bi-list"></i><span class="labio_text">MITMAT</span></div>
+        <div class="search_div">
+          <div class="search_bar">
+            <input class="search_input" placeholder="Search..." type="text" />
+            <button class="search_btn"><i class="bi bi-search"></i></button>
+          </div>
+        </div>
+        <div class="page_links">
+          <ul>
+            <li><a class="page_links home_li  " href="/user/home">Home</a></li>
+            <li><a class="page_links" href="/user/wishlist"><i class="bi bi-heart bi_top_heart "></i><span class="product_count wish_count_top"></span></a></li>
+            <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span class="product_count cart_count"></span></a></li>
+            <li><a class="page_links " href="/account/address">Account</a></li>
+            <li><a class="page_links" href=""><i class="bi bi-box-arrow-right"></i></a></li>
+          </ul>
+        </div>
+      </div>
+         <div class="content address_content">
+            <div class="frame">
+                <div class="left_bar">
+                    <ul>
+                        <li class="left_profile_li">
+                            <%if(img=='false'){%>
+                            <img src="/uploads/profiles/altimage-removebg-preview.png" alt="">
+                            <%}else{%>
+                                <img src="/uploads/profiles/<%=profiledata.userImage%>" alt="">
+                                <%}%>
+                            <h3>HELLO</h3>
+                        </li>
+                        <li onclick="location.href='/account/address' " class=""><i class="bi bi_left_bar bi-person-circle"></i>Profile</li>
+                        <li onclick="location.href='/account/update_password' " class=""><i class="bi bi_left_bar bi-shield-lock-fill"></i>Update Password</li>
+                        <li onclick="location.href='/account/orders' " class=""><i class="bi bi_left_bar bi-gift-fill"></i>Orders</li>
+                        <li onclick="location.href='/user/cart'"><i class="bi bi_left_bar bi-cart-fill"></i>Cart</li>
+                        <li onclick="location.href='/user/wishlist' " ><i class="bi bi_left_bar bi-heart-fill"></i>Wishlist</li>
+                        <li onclick="location.href='/account/aboutus' " class=""><i class="bi bi_left_bar bi-info-circle-fill"></i>About Us</li>
+                        <li onclick="location.href='/account/contactus' " class=""><i class="bi bi_left_bar bi-telephone-fill"></i>Contact Us</li>
+                    </ul>
+                </div>
+                </div>
+            <div class="right_content">
+               <div class="address_frame">
+                  <div class="pro_top">
+                     <h3>Profile Details</h3>                     
+                 </div>
+               <div class="form_frame">
+                   <form id="form" spellcheck="false" enctype="multipart/form-data">
+                   <div class="top">
+                       <div class="top_left">
+                           <label for="username">User Name</label>
+                           <input type="text"   value="<%=profiledata.userName%>" name="username">
+   
+                           <div style="display: flex; gap: 1rem; width: 96%; padding: .5rem 0;">
+                               <span style="display: flex; flex-direction: column; gap: .2rem; width: 50%;">
+                                   <label for="firstName" >First Name</label>
+                                   <input type="text" value="<%=profiledata.firstName%>" name="firstName" style="width: 100%;" >
+                               </span>
+                               <span style="display: flex; flex-direction: column; gap: .2rem;  width: 50%;">
+                                   <label for="lastName">Last Name</label>
+                                   <input  value="<%=profiledata.lastName%>" type="text" name="lastName" style="width: 110%; padding-left: 1rem; " >
+                               </span>
+                           </div>
+   
+                           <label for="email">Email</label>
+                           <input  value="<%=profiledata.email%>" type="text" name="email" >
+   
+                       </div>
+                       <div class="top_right">
+                           <div class="img_div"><img src="/uploads/profiles/<%=profiledata.userImage%>" id="imagePreview" class="product_img" alt=""></div>
+                           <span style="display: flex; flex-direction: column; gap: .2rem;  width: 25%;">
+                                <div class="file_div" ><span class="choose_file">CHOOSE</span><input type="file" onchange="previewImage(this)"  name="profileImage" class="input_file"></div>
+                           </span>
+                       </div>
+                   </div>
+                   <div class="bottom" style="padding: 0 1rem;">
+
+
+                    <div style="display: flex; gap: 1rem; width: 96%; padding: .5rem 0;">
+
+
+                     <span style="display: flex; flex-direction: column; gap: .2rem; margin-top: .5rem; width: 55%;">
+                        <label for="dob">Mobile</label>
+                        <input   value="<%=profiledata.phoneNumber%>" type="number" name="phoneNumber">
+                    </span>
+
+                     <span style="display: flex; flex-direction: column; gap: .2rem; margin-top: .5rem; width: 40%;">
+                        <label for="dob">DOB</label>
+                        <input value="<%= profiledata.dateofBirth ? profiledata.dateofBirth.toISOString().substring(0, 10) : '' %>" type="date" name="dateofBirth">
+                    </span>
+                    
+                    </div>
+
+                       <div style="display: flex; gap: 1rem; width: 94%; margin-top: .4rem;">
+                           <span style="display: flex; flex-direction: column; gap: .2rem; width: 27%;">
+                           <label for="country">Country</label>
+                           <input  value="<%=profiledata.country%>" type="text" name="country" style="font-family: 'Poppisn',sans-serif; height: 2.5rem; outline: none; font-size: .9rem; width: 100%; padding: .4rem;">
+                       </span>
+                       
+                       <span style="display: flex; flex-direction: column; gap: .2rem;  width: 25%;">
+                       <label for="state">State</label>
+                       <input  value="<%=profiledata.state%>" type="text" name="state" style="font-family: 'Poppisn',sans-serif; height: 2.5rem; outline: none; font-size: .9rem; width: 100%; padding: .4rem;">
+                       </span>
+   
+   
+                       
+                       
+                       <span style="display: flex; flex-direction: column; gap: .2rem;  width: 25%;">
+                           <label for="district">District</label>
+                           <input  value="<%=profiledata.district%>" type="text" name="district" style="font-family: 'Poppisn',sans-serif; height: 2.5rem; outline: none; font-size: .9rem; width: 100%; padding: .4rem;">
+                       </span>
+   
+                       <span style="display: flex; flex-direction: column; gap: .2rem; width: 19%;">
+                       <label for="pin">Pin-Code</label>
+                       <input  value="<%=profiledata.zip%>" type="text" maxlength="8" name="zip" style="font-family: 'Poppisn',sans-serif; height: 2.5rem; outline: none; font-size: .9rem; width: 100%; padding: .4rem;">
+                       
+                       </span>
+   
+                       </div>
+   
+                       <span style="display: flex; flex-direction: column; gap: .2rem; margin-top: .5rem; width: 94%;">
+                           <label for="landmark">Landmark</label>
+                           <input  value="<%=profiledata.landMark%>" type="text" name="landMark">
+                       </span>
+
+                    
+                       <span style="display: flex; flex-direction: column; gap: .2rem; margin-top: .5rem;">
+                           <label for="address">Address</label>
+                           <textarea name="Address"   id="text_area"><%=profiledata.Address%></textarea>
+                       </span>
+                       <p class="error_msg"></p>
+                       <span style="display: flex; flex-direction: column; gap: .2rem; margin-top: .5rem;">
+                        <%if(data=='false'){%>
+                           <button  type="button" id="update_profile_btn" class="update_profile_btn">Add Profile</button>
+                           <%}else{%>
+                            <button  type="button" id="update_profile_btn" class="update_profile_btn">Edit Profile</button>
+                            <%}%>
+                       </span>
+                   </div>
+               </form>
+               </div>
+           </div>
+         </div>
+        </div>
+        <!-- include footer -->
+   </div>
+   <script src="/javascript/btnsearch.js"></script>
+
+<script>
+
+
+function previewImage(input) {   
+    var file = input.files[0];
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('imagePreview').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+
+        // Append image preview to a container
+        var imgContainer = document.getElementById('imageContainer');
+        imgContainer.innerHTML = ''; // Clear previous image
+        var img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        imgContainer.appendChild(img);
+    }
+}
+
+
+
+const submitBtn = document.querySelector('.update_profile_btn')
+
+submitBtn.addEventListener('click', async (e) => {
+
+    try {
+        const userName = document.getElementsByName('username')[0].value
+        const firstName = document.getElementsByName('firstName')[0].value
+        const lastName = document.getElementsByName('lastName')[0].value
+        const email = document.getElementsByName('email')[0].value
+        const phoneNumber = document.getElementsByName('phoneNumber')[0].value
+        const DOB = document.getElementsByName('dateofBirth')[0].value
+        const country = document.getElementsByName('country')[0].value
+        const state = document.getElementsByName('state')[0].value
+        const district = document.getElementsByName('district')[0].value
+        const zip = document.getElementsByName('zip')[0].value
+        const landmark = document.getElementsByName('landMark')[0].value
+        const address = document.getElementsByName('Address')[0].value
+console.log(firstName,lastName,DOB,country,state,district,zip,landmark,address,userName,email,phoneNumber, 'llll');
+        const errMsg = document.querySelector('.error_msg')
+        const profile_form = document.getElementById('form')
+        const form = new FormData(profile_form)
+
+        if (!firstName || !lastName || !DOB || !country || !state || !district || !zip || !landmark || !address) {
+            errMsg.innerHTML = 'Please Fill all Fields'
+            setTimeout(() => {
+                errMsg.innerHTML = ''
+            }, 2000);
+        } else {
+
+            const response = await fetch('/user/addAddress', {
+                method: 'POST',
+                body: form
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const result = await response.json();
+            const path=document.getElementById('update_profile_btn')
+
+            if (result.success) {
+                path.innerText="Edit Profile"
+                errMsg.innerHTML = 'Profile Update Success';
+                errMsg.classList.add('success');
+                setTimeout(() => {
+                    window.location.href = '/user/userhome';
+                }, 400);
+            } else {
+                errMsg.innerHTML = result.err;
+                setTimeout(() => {
+                    errMsg.innerHTML = '';
+                }, 2000);
+            }
+        }
+    } catch (error) {
+        console.log('Error in profile address', error.message);
+    }
+})
+
+</script>
+
+<!-- include footer -->
+</body>
+</html>

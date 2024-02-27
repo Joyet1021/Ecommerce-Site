@@ -12,6 +12,9 @@ const storage = multer.diskStorage({
         }else if(req.uploadType==='banners'){
             uploadPath='public/uploads/banners'
             
+        }else if(req.uploadType==='profiles'){
+            uploadPath='public/uploads/profiles'
+            
         }
         cb(null,uploadPath);
     },

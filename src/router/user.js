@@ -1,9 +1,11 @@
 const express=require('express')
 const router=express.Router()
+const multer = require('../middlewares/multerMiddleware')
 
 
 const authController=require("../controller/auth")
 const userController=require("../controller/userController")
+const accountController=require("../controller/account")
 
 router.get("/signup",authController.usersignupGet)
 router.post("/sendotp",authController.usersignupPost)
@@ -36,6 +38,9 @@ router.get("/updateCartqty",userController.updateCartQty)
 router.get("/addtowishlist",userController.addtowishlist)
 router.get("/wishlist",userController.wishlistGet)
 router.delete("/deleteWishlist",userController.deleteWishlist)
+
+router.get("/Address",accountController.addressGet)
+router.post("/addAddress",multer.setUploadType('profiles'),multer.upload.single("profileImage"),accountController.addAddressPost)
 
 router.get("/buyproduct",userController.buyProduct)
 
