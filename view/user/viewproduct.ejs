@@ -3,7 +3,7 @@
     <%- include('../common/top_nav.ejs') %>
 
 
-    <form action="" style="width: 100%;">
+    <form id="buy-now-form" action="/user/buyNow?id=<%= product._id %>" method="post" style="width: 100%;">
         <div class="productopen_content">
             <div class="main_frame">
                 <div class="product_frame" style="margin-top: 0px;">
@@ -60,25 +60,25 @@
                          <div class="top_rating"><span style="font-size: 1.3rem;">5</span><i class="bi top_star bi-star-fill"></i><span style="font-size: .7rem; font-family: 'Poppins',sans-serif;">Out of <span>4</span> Reviews</span></div><BR>
                          
                          <!-- =========================================================== -->
-                         <%if(product.size=='undefined'){%>
-                         <li class="size_li">
-                            <p style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgb(255, 255, 255);">SIZE :</p>
-    
-                            <% product.size.forEach((size) => { %>
-    
-    
-                            <span class="label_span" style="margin-bottom: 20px;">
-                             <input id="<%= size %>" value="<%= size %>" name="size" type="radio" >
-                            <label for="<%= size %>" ><%= size %></label>
-                            </span>
-                            
-                            <% }) %>
-    
-                         </li>
-                         <%}%>
+                         <% if (Array.isArray(product.size) && product.size.length > 0) { %>
+                            <li class="size_li">
+                                <p style="font-family: 'Poppins', sans-serif; font-weight: 600; color: rgb(255, 255, 255);">SIZE :</p>
+                        
+                                <% product.size.forEach((size) => { %>
+                        
+                                    <span class="label_span" style="margin-bottom: 20px;">
+                                        <input id="<%= size %>" value="<%= size %>" name="size" type="radio">
+                                        <label for="<%= size %>"><%= size %></label>
+                                    </span>
+                        
+                                <% }) %>
+                        
+                            </li>
+                        <% } %>
+                        
     
                          <!-- ======================================== -->
-                         <%if(product.color){%>
+                         <% if (Array.isArray(product.color) && product.color.length > 0) { %>
     
                          <li class="color_li">
                             <p style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(255, 255, 255, 0.947);">COLOR :</p>
@@ -99,6 +99,13 @@
     
                          <li>
                             <div style="display: flex; gap: 1rem; align-items: center;">
+                                <select  name="quantity" style="outline: none; padding: .3rem;">
+                                    <option value="1">Qty:1</option>
+                                    <option value="2">Qty:2</option>
+                                    <option value="3">Qty:3</option>
+                                    <option value="4">Qty:4</option>
+                                    <option value="5">Qty:5</option>
+                                 </select>
                                <div class="stock_left">Hurry only <%= product.quantity %> LEFT</div>
                                <div class="wish_btn_div"><button class="wish_btn" onclick="addToWish(event,'<%= product._id %>')">
                                   <i class="bi wish_white wish_icon"></i>
@@ -132,11 +139,11 @@
                          <li class="btn_li" style="display: flex; height: 3rem; justify-content: space-between; width: 90%;">    
                             <%productExist%>
                             <% if(productExist==false){ %>                                                                                
-                            <a  href="" id="add-to-cart-btn-<%= product._id %>" onclick="addtocart('<%= product._id %>')">ADD TO CART</a>
+                            <a  href="" id="add-to-cart-btn-<%= product._id %>" class="submit" onclick="addtocart('<%= product._id %>')">ADD TO CART</a>
                             <% }else{ %>
                             <a  href="" id="add-to-cart-btn-<%= product._id %>" onclick="gotocart('<%= product._id %>')">GO TO CART</a>
                             <% } %>
-                            <button onclick="checkoutFromProduct('<%= product._id %>')" type="button">BUY NOW</button>
+                            <button class="submit"  type="button" onclick="submitBuyNowForm()">BUY NOW</button>
                          </li>
     
                       </ul>
@@ -153,6 +160,7 @@
             <div class="product_bottom">
                 <% relatedProducts.forEach((relatedProduct) => { %>
                     <% if (relatedProduct._id != product._id) { %>
+                        
                         <div class="product_frame_grid" onclick="window.location.href='/user/viewproduct?id=<%= relatedProduct._id %>'">
                             <div class="top">
                                 <button class="wish_btn_related">
@@ -170,9 +178,8 @@
                                 </div>
                             </div>
                             <div class="bottom">
-                                <button class="addto_cart_btn addto_cart_btn">
-                                    BUY NOW
-                                </button>
+                                <button class="submit" type="button" onclick="submitBuyNowForm()">BUY NOW</button>
+
                             </div>
                         </div>
                     <% } %>
@@ -228,6 +235,8 @@
         currentImgIndex = (currentImgIndex + 1) % document.querySelectorAll('.pro_img_loop').length;
         mainImg.src = "/uploads/products/" + document.querySelectorAll('.pro_img_loop')[currentImgIndex].src.split("/").pop();
     }
+
+
     async function addtocart(id) {
     event.preventDefault(); 
     try {
@@ -235,7 +244,27 @@
         let response;
 
         if (path == 'ADD TO CART') {
-            response = await fetch(`/user/addToCart?productid=${id}`, { method: 'GET', headers: { 'Content-Type': "application/json" } });
+            const sizeElement = document.querySelector('input[name="size"]:checked');
+            const colorElement = document.querySelector('input[name="color"]:checked');
+            const quantityElement = document.querySelector('select[name="quantity"]');
+            
+            let size = '';
+            let color = '';
+            let quantity = '';
+
+            if (sizeElement) {
+                size = sizeElement.value;
+            }
+
+            if (colorElement) {
+                color = colorElement.value;
+            }
+
+            if (quantityElement) {
+                quantity = quantityElement.value;
+            }
+
+            response = await fetch(`/user/addToCart?productid=${id}&size=${size}&color=${color}&quantity=${quantity}`, { method: 'GET', headers: { 'Content-Type': "application/json" } });
         } else if (path == 'GO TO CART') {
             window.location.href = '/user/cart'; // Redirect to the cart page
             return;
@@ -250,7 +279,6 @@
         } 
 
         const result = await response.json();
-       
 
         if (result.success == true) {
             const cartLink = document.getElementById('add-to-cart-btn-' + id);
@@ -262,17 +290,20 @@
     } catch (error) {
         console.error('Error adding product:', error);
     }
-};
-
-
-function gotocart(id) {
-    event.preventDefault(); 
-    window.location.href = '/user/cart';
 }
 
 
+function submitBuyNowForm() {
+        document.getElementById('buy-now-form').submit();
+    }
 
 
+
+
+    function gotocart(id) {
+    event.preventDefault(); 
+    window.location.href = '/user/cart';
+}
 </script>
     
 <%- include('../common/end.ejs') %>

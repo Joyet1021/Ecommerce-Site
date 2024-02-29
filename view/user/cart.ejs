@@ -88,8 +88,9 @@
                 <% }) %>
             <% } %>
         </div>
-                
+             
         <div class="price_frame">
+            
             <div class="price_sub_frame">
                 <div class="cart_details"> 
                     <p>Cart Items</p>
@@ -124,9 +125,10 @@
                 </p>
             </div>
             <div class="btn_div">
-                <button type="button" class="place_order_btn">PLACE ORDER</button>
+                <button type="button" class="place_order_btn" onclick="submitPlaceOrder(event,'<%= grandTotal %>')">PLACE ORDER</button>
             </div>
         </div>
+      
     </div>
     <%- include('../common/footer.ejs') %>
 </div>
@@ -247,6 +249,13 @@
             }
         });
     });
+
+
+    function submitPlaceOrder(event,total){
+        event.preventDefault();
+        window.location.href='/user/checkout?total='+total;
+    }
+
 </script>
 
 

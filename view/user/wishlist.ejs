@@ -38,7 +38,7 @@
                     Your Wishlist is Empty! 
                 </div>
             <% } else { %>
-                <div id="empty-cart" style="display: flex;align-items: center;justify-content: center;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
+                <div id="empty-cart1" style="display: flex;align-items: center;justify-content: center;width: 100%;padding-top: 1%;padding-bottom: 1%;font-size:large;font-weight: bold;border-bottom: 2px solid rgba(145, 144, 144, 0.229);">
                     Your Wishlist List 
                 </div>
                 <% productIds.productsid.forEach((product) => { %>
@@ -106,8 +106,13 @@
                 const count = data.count;
                 
                 const wishCount = document.getElementById('wish-Count');
+                const empty=document.getElementById('empty-cart1');
                 if (wishCount) {
                     wishCount.innerHTML = count;
+                    if(count==0){
+                        empty.innerText="You Wishlist is Empty"
+
+                    }
                 } else {
                     console.error("Element with ID 'wish-count' not found.");
                 }

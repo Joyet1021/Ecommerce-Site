@@ -59,17 +59,13 @@ exports.addAddressPost = async (req, res) => {
         const { firstName, lastName, dateofBirth, country, state, district, zip, landMark, Address, username, phoneNumber, email } = req.body;
         const address = Address + ' Pin ' + zip;
 
-        const ggg = await signupModel.findOneAndUpdate({ _id: userId }, {
+        await signupModel.findOneAndUpdate({ _id: userId }, {
             $set: {
                 username: username,
                 email,
                 phonenumber: phoneNumber
             }
         });
-
-        console.log(ggg);
-        console.log("Request Body:", req.body);
-        console.log(userId);
 
         const oldProfile = await profileModel.findOne({ userId });
 
@@ -90,20 +86,20 @@ exports.addAddressPost = async (req, res) => {
             newAddress: [address]
         };
 
-        if (req.file && req.file.filename && !req.file.filename == ' ') {
-            console.log('hii');
+
+        if (req.file && req.file.filename && req.file.filename !== ' ') {
             const img = oldProfile.userImage;
-            console.log(img,'inmg');
-            const imagePath = './public/'+'uploads/' +'profiles/'+ img;
-console.log(imagePath,'path');
-            if (fs.existsSync(imagePath)) {
-                fs.unlinkSync(imagePath);
+            if (!img == ' ') {
+                
+                const imagePath = './public/'+'uploads/' +'profiles/'+ img;
+                if (fs.existsSync(imagePath)) {
+                    fs.unlinkSync(imagePath);
+                }
             }
         }
+        
 
         await profileModel.updateOne({ userId }, { $set: updatedProfileData });
-
-        console.log("Updated Profile:", updatedProfileData);
 
         res.status(200).json({ success: true, message: "Address added successfully", data: updatedProfileData });
 

@@ -1,0 +1,309 @@
+<%- include('../common/head.ejs') %>
+
+    <div class="checkout_wrapper" >
+        <%- include('../common/top_nav.ejs') %>
+    <div class="checkout_content">
+
+            <div class="checkout_left">
+
+                <!-- ----------------------------------- -->
+
+                <div class="checkout_left_top">
+
+                <%order.forEach((product)=>{%>
+                    
+
+                    <div class="product product"  >
+                        <div class="image_sec"><img src="/uploads/products/<%=product.productid.productImage[0]%>" style="width: 8rem;height:10rem;" alt=""></div>
+                        <div class="discription_sec">
+                           <p class="product_name"><%=product.productid.productName%></p>
+                           <div style="display: flex; gap: 1rem; align-items: center;">
+                              <div class="qty1" style="width: 10%;height: 100%;display: flex;align-items: center;justify-content: center;border:1px solid black" >
+                                Qty: <%=product.quantity%></div>
+                              <div class="stock_left"> <%=product.productid.quantity%>Left</div>
+                            </div>
+                            <div style="display: flex; gap: .7rem; align-items: center;">
+                                <p class="old_price"><%= product.productid.price * product.quantity %><i class="bi bi-currency-rupee"></i></p>
+                                <p class="new_price"><%= product.productid.discount * product.quantity %><i class="bi bi-currency-rupee"></i></p>
+                                <% let discountPercentage = Math.round(100 - (product.productid.discount / product.productid.price * 100)) %>
+                                <p class="discount"><%= discountPercentage %> % Off</p>
+                            </div>
+                            
+                        <div >
+
+                            <% if (product.size!=='') { %>
+                                <div class="size_div">
+                                <li class="size_li">
+                                    <p style="font-family: 'Poppins', sans-serif;  color: rgb(5, 5, 5);">SIZE :</p>
+                                        <span class="label_span" style="margin-bottom: 20px;">
+                                            <input id="<%= product.size %>" value="<%= product.size %>" name="size" type="radio">
+                                            <label for="<%= product.size %>"><%= product.size %></label>
+                                        </span>
+                                </li>
+                            </div>
+                            <% } %>
+                            
+
+                            <!-- ------------------------------------- -->
+
+                    <% if (product.color !=='' ) { %>       
+                     <div class="color_li">
+                         <p style="font-family: 'Poppins',sans-serif;color: black;font-size: .93rem;">COLOR :</p>
+
+                         
+
+                           <span style="background-color:<%= product.color %>" class="label_span_color"  >
+                            <input  id="<%= product.color %>" name="color" value="<%= product.color%>" type="radio" >
+                           
+                              </span>
+                           
+                              
+                           
+                     </div>
+                     <%}%>
+
+                           </div>
+
+                           <li style="display: flex; gap: .7rem; align-items: center; height: 2rem;">
+                            <div style="display: flex; align-items: center; font-family: 'sans-serif'; ">Return
+                                <% if(product.return==true) { %>
+                                  <i class="bi bi-check"></i>
+                                  <% } else{ %>
+                                  <i class="bi bi-x"></i>
+                                  <% } %>
+                            </div>
+                         </li>                     
+                        </div>
+                        
+                     </div>
+
+                    <%})%>
+
+
+                </div>
+
+
+              <!-- ----------------------------------- -->
+
+
+                <div class="checkout_left_bottom">
+                    <div class="checkouts_frame1" >
+                        <div class="payment_divs1">PAYMENT METHOD</div>
+                        <div class="payment_divs"><div class="payment_icon"><img class="payment_logo_png" src="/images/upi.png" alt=""></div><label for="upi">UPI</label><input id="upi" name="payment" type="radio"></div>
+                        <div class="payment_divs"><div class="payment_icon"><img class="payment_logo_png" src="/images/card.png" alt=""></div><label for="card">CARD</label><input id="card" name="payment" type="radio"></div>
+                        <div class="payment_divs"><div class="payment_icon"><img class="payment_logo_png" src="/images/cashon delivery.png" alt=""></div><label for="cashondelivery">CASH ON DELIVERY</label><input id="cashondelivery" name="payment" type="radio"></div>
+                    </div>
+
+
+                    <div class="checkouts_frame_bottom_frame checkouts_frame_bottom_coupon">
+                        <h3>COUPON</h3>
+                        <div class="coupon_input_frame">
+                            <img src="/images/coupon.png" style="height: 3rem;" alt="">
+                            <input type="text">
+                            <button class="coupon_check_btn">SELECT</button>
+                        </div>
+                        <ul class="coupon_ul">
+                            <li>R47HXD <span>save <i class="bi bi-currency-rupee"></i>399</span></li>
+                            <li>R47HXD <span>save <i class="bi bi-currency-rupee"></i>399</span></li>
+                            <li>R47HXD <span>save <i class="bi bi-currency-rupee"></i>399</span></li>
+                            <li>R47HXD <span>save <i class="bi bi-currency-rupee"></i>399</span></li>
+                            <li>R47HXD <span>save <i class="bi bi-currency-rupee"></i>399</span></li>
+                        </ul>
+                    </div>
+
+                    <div class="checkouts_frame_bottom_frame checkouts_frame_bottom_adress" style="overflow: auto;">
+                        <h3>SELECT ADDRESS</h3>
+                        <div class="payment_divs select_adress_div"><input id="add1" name="payment" type="radio"><label for="add1">thaliyil(h) thavanoor(po)</label></div>
+                        <div class="payment_divs select_adress_div"><input id="add2" name="payment" type="radio"><label for="add2">pallippuraya(h)</label></div>
+                        <div class="payment_divs select_adress_div"><input id="add3" name="payment" type="radio"><label for="add3">parathakaad(h)</label></div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="checkout_right">
+                <div class="checkouts_frame checkout_adress_frame" style="pointer-events: none;">
+                    <h3>ADDRESS</h3>
+                    <div class="adress_frame" style="overflow: auto;">
+
+                        <div style="display: flex;justify-content: space-between; width: 100%;">
+                            <span style="display: flex; flex-direction: column;gap: .2rem; width: 50%;">
+                                <label for="firstname" >First Name</label>
+                                <input type="text"  value=""  name="firstname" style="width: 100%;" >
+                            </span>
+                            <span style="display: flex; flex-direction: column;gap: .2rem;  width: 48%;">
+                                <label for="lastname">Last Name</label>
+                                <input  type="text" value="" name="lastname" style="width: 100%; padding-left: 1rem" >
+                            </span>
+                        </div>
+
+                        <span style="display: flex; flex-direction: column;gap: .2rem;  width: 100%;">
+                           <label for="lastname">Mobile</label>  
+                           <input  type="text" value="" name="mobilenum" style="width: 100%; padding-left: 1rem" >
+                       </span>
+
+                       
+                       <div style="display: flex;justify-content: space-between; width: 100%;">
+                        <span style="display: flex; flex-direction: column;gap: .2rem; width: 50%;">
+                            <label for="firstname" >Country</label>
+                            <input type="text" value=""  name="country" style="width: 100%;" >
+                        </span>
+                        <span style="display: flex; flex-direction: column;gap: .2rem;  width: 48%;">
+                            <label for="lastname">State</label>
+                            <input  type="text" value="" name="state" style="width: 100%; padding-left: 1rem" >
+                        </span>
+                    </div>  
+                    
+                       <div style="display: flex;justify-content: space-between; width: 100%;">
+                        <span style="display: flex; flex-direction: column;gap: .2rem; width: 78%;">
+                            <label for="firstname" >District</label>
+                            <input type="text" value=""  name="district" style="width: 100%;" >
+                        </span>
+                        <span style="display: flex; flex-direction: column;gap: .2rem;  width: 20%;">
+                            <label for="lastname">Zip</label>
+                            <input  type="text" value="" name="zip" style="width: 100%; padding-left: 1rem" >
+                        </span>
+                    </div>  
+
+
+                    <span style="display: flex; flex-direction: column;gap: .2rem;  width: 100%;">
+                     <label for="lastname">Address</label>  
+                     <textarea name="address" class="adress_text_area"></textarea>
+                 </span>
+
+                    </div>
+                    
+                </div>
+                <div class="checkouts_frame checkouts_frame_add_new_address">
+                    <div class="add_new_adress">ADD NEW ADDRESS<button class="droup_right_btn"><i class="bi plus_btn bi-plus"></i></button></div>
+                    <form id="adrress_form" method="post">
+                <div class="adress_frame adrees_add_drop">
+
+                  <div style="display: flex;justify-content: space-between; width: 100%;">
+                      <span style="display: flex; flex-direction: column;gap: .2rem; width: 50%;">
+                          <label for="firstname" >First Name</label>
+                          <input type="text"  name="firstname" style="width: 100%;" >
+                      </span>
+                      <span style="display: flex; flex-direction: column;gap: .2rem;  width: 48%;">
+                          <label for="lastname">Last Name</label>
+                          <input  type="text" name="lastname" style="width: 100%; padding-left: 1rem" >
+                      </span>
+                  </div>
+
+                  <span style="display: flex; flex-direction: column;gap: .2rem;  width: 100%;">
+                     <label for="lastname">Mobile</label>  
+                     <input  type="number" name="mobilenum" style="width: 100%; padding-left: 1rem" >
+                 </span>
+
+                 
+                 <div style="display: flex;justify-content: space-between; width: 100%;">
+                  <span style="display: flex; flex-direction: column;gap: .2rem; width: 50%;">
+                      <label for="firstname">Country</label>
+                      <input type="text"  name="country" style="width: 100%;" >
+                  </span>
+                  <span style="display: flex; flex-direction: column;gap: .2rem;  width: 48%;">
+                      <label for="lastname">State</label>
+                      <input  type="text" name="state" style="width: 100%; padding-left: 1rem" >
+                  </span>
+              </div>  
+              
+                 <div style="display: flex;justify-content: space-between; width: 100%;">
+                  <span style="display: flex; flex-direction: column;gap: .2rem; width: 78%;">
+                      <label for="firstname" >District</label>
+                      <input type="text"  name="district" style="width: 100%;" >
+                  </span>
+                  <span style="display: flex; flex-direction: column;gap: .2rem;  width: 20%;">
+                      <label for="lastname">Zip</label>
+                      <input  type="text" name="zip" style="width: 100%; padding-left: 1rem" >
+                  </span>
+              </div>  
+              
+              
+              <span style="display: flex; flex-direction: column;gap: .2rem;  width: 100%;">
+               <label for="lastname">Address</label>  
+               <textarea name="address" class="adress_text_area"></textarea>
+            </span>
+            <p class="error_msg"></p>
+            <input class="add_new_btn" onclick="addNewAddress()" type="button" value="ADD"> 
+         </div>
+        </form>
+         
+      </div>
+      
+      <div class="checkouts_frame checkout_total_price" style="overflow: auto;">
+         <h3>SUMMARY</h3>
+         <div class="summary_frame">
+            <p>Subtotal <span><i class="bi bi-currency-rupee"></i><span class="sub_total"><%=total%></span></span></p>
+                        <p>Shipping <span style="color: rgb(0, 160, 0);">FREE</span></p>
+                        <p>Coupon <span>Nill</span></p>
+                        <p>Order Total <span><i class="bi bi-currency-rupee"></i><span class="order_total"></span></span></p>
+                        <button onclick="location.href='/order_summary' " class="proceed_btn">PROCEED</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+<%- include('../common/footer.ejs') %>
+    </div>
+    <script>
+        const color = document.querySelectorAll(".color_li");
+color.forEach(async (change) => {
+    change.addEventListener("change", async (e) => {
+        try {
+            e.preventDefault();
+            e.stopPropagation();
+            const value = e.target.value;
+            const ids = value.split(",");
+            const clr = ids[0];
+            const productid = ids[1];
+            const arrid = ids[2];
+            const response = await fetch(`/user/checkoutchoice?color=${clr}&productid=${productid}&arrid=${arrid}`, { method: "GET" });
+
+        } catch {
+
+        }
+    });
+});
+
+
+
+
+const size = document.querySelectorAll(".size_div");
+size.forEach(async (change) => {
+    change.addEventListener("change", async (e) => {
+        try {
+            e.preventDefault();
+            e.stopPropagation();
+            const value = e.target.value;
+            const ids = value.split(",");
+            const siz = ids[0];
+            const productid = ids[1];
+            const arrid = ids[2];
+            const response = await fetch(`/user/checkoutchoice?size=${siz}&productid=${productid}&arrid=${arrid}`, { method: "GET" });
+
+        } catch {
+
+        }
+    });
+});
+
+        
+
+
+const dropBtn = document.querySelector('.droup_right_btn')
+const plusIcon = document.querySelector('.plus_btn')
+const dropFrame = document.querySelector('.adrees_add_drop')
+dropBtn.addEventListener('click',()=>{
+  if(plusIcon.classList.contains('bi-plus')){
+     plusIcon.classList.replace('bi-plus','bi-dash-lg')
+     dropFrame.style.bottom = '2.2rem'
+  }
+  else{
+     plusIcon.classList.replace('bi-dash-lg','bi-plus')
+     dropFrame.style.bottom = '27rem'
+  }
+})
+
+    </script>
+
+<%- include('../common/end.ejs') %>

@@ -139,14 +139,16 @@
 
                     
                        <span style="display: flex; flex-direction: column; gap: .2rem; margin-top: .5rem;">
-                           <label for="address">Address</label>
-                           <textarea name="Address"   id="text_area"><%=profiledata.Address%></textarea>
+                           <label for="address">Full Address </label>
+                           <textarea name="Address" placeholder="House No,Post"  id="text_area"><%=profiledata.Address%></textarea>
                        </span>
                        <p class="error_msg"></p>
                        <span style="display: flex; flex-direction: column; gap: .2rem; margin-top: .5rem;">
                         <%if(data=='false'){%>
+                            <div class="add" name="add" value="true"></div>
                            <button  type="button" id="update_profile_btn" class="update_profile_btn">Add Profile</button>
                            <%}else{%>
+                            <div class="add" name="add" value="false"></div>
                             <button  type="button" id="update_profile_btn" class="update_profile_btn">Edit Profile</button>
                             <%}%>
                        </span>

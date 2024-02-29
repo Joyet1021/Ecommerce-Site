@@ -9,6 +9,12 @@ const schema={
         quantity:{
             type:Number,
             _id:false
+        },
+        color:{
+            type:String
+        },
+        size:{
+            type:String
         }
     }]
 

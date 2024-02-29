@@ -1551,6 +1551,14 @@ word-wrap: break-word;
         font-size: 1.6rem;
         color: #F80E0E;
     }
+    .qty1{
+        width: 10%; 
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        ;
+    }
     .stock_left{
         padding: .3rem .4rem;
         font-size: .7rem;
@@ -2888,13 +2896,14 @@ word-wrap: break-word;
     .color_li input{
         opacity: 0;
         cursor: pointer;
+        height: 100%;
         width: 100%;
 
     }
     .color_li label{
         position: absolute;
         width: 100%;
-        height: 100%;
+        height: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -4232,10 +4241,14 @@ word-wrap: break-word;
     .checkout_left_bottom{
         display: flex;
         justify-content: space-evenly;
-        align-items: center;
         width: 100%;
         height:33%;
         background-color: rgba(0, 0, 0, 0.023);
+    }
+    .checkouts_frame1{
+        width: 40%;
+        background-color: white;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.184);
     }
     .checkouts_frame{
         width: 90%;
@@ -4250,6 +4263,16 @@ word-wrap: break-word;
     }
     .payment_logo_png{
         width: 1.3rem;
+    }
+    .payment_divs1{
+        height: 24.3%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 0 0 3rem;
+        font-weight: bold;
+        font-size: medium;
+        border-bottom: 1px solid rgba(145, 144, 144, 0.225);
     }
     .payment_divs{
         height: 24.3%;
@@ -4434,11 +4457,7 @@ word-wrap: break-word;
     .label_span:active{
         transform: scale(.93);
     }
-    .size_li input[type=radio]:checked + label{
-        background-color: #fa4a04;
-        color: white;
-        border: none;
-    }
+    
     .color_li{
         display: flex;
         gap: .6rem;
@@ -4447,6 +4466,7 @@ word-wrap: break-word;
         opacity: 0;
         cursor: pointer;
         width: 100%;
+        height: 100%;
 
     }
     .color_li label{
@@ -4943,6 +4963,7 @@ word-wrap: break-word;
     .color_li input{
         opacity: 0;
         cursor: pointer;
+        height: 100%;
         width: 100%;
 
     }
@@ -4978,6 +4999,7 @@ word-wrap: break-word;
         transform: scale(.93);
     }
     .color_li input[type=radio]:checked + label{
+        height: 100%;
         border: 3px solid rgb(255, 0, 119);
     }
     .coupon_input_frame{

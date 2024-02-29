@@ -126,7 +126,15 @@
                       </button>
                       <img src="/uploads/products/<%= product.productImage[0] %>" style="width: 75%; height: 90%" alt="" />
                     </div>
-                    <!-- Other product details here... -->
+                    <div class="center">
+                      <div class="name_div">
+                          <p class="product_name"><%= product.productName %></p>
+                      </div>
+                      <div class="price_div">
+                          <p class="old_price"><i class="bi bi-currency-rupee"></i><%= product.price %></p>
+                          <p class="new_price"><i class="bi bi-currency-rupee"></i><%= product.discount %></p>
+                      </div>
+                  </div>
                   </a>
                   <div class="bottom">
                     <button onclick="window.location.href='/user/buyproduct?id=<%= product._id %>'" class="addto_cart_btn addto_cart_btn">BUY NOW</button>

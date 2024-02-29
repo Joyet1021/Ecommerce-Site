@@ -19,12 +19,21 @@ exports.userhomeGet = async (req, res) => {
         let cartCount=0;
         let wishlistCount=0;
         if(userId){
-            const productids = await cartModel.findOne({ userid: userId })
-            const productIds = await wishlistModel.findOne({ userid: userId })
-            wishlistCount = productIds.productsid.length;
-            cartCount = productids.productsid.length;
+            const productids = await cartModel.findOne({ userid: userId });
+            console.log(productids,"puo");
+            if(productids !== null){ // Corrected check for null
+                cartCount = productids.productsid.length;
+            } else {
+                cartCount = 0;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if(productIds !== null){ // Corrected check for null
+                wishlistCount = productIds.productsid.length; // Changed from productids to productIds
+            } else {
+                wishlistCount = 0;
+            }
         }
-        res.render('user/userhome', { productDetails, categoryDetails, bannerDetails,wishlist, productCount,userId,ObjectId,cartCount,wishlistCount });
+        res.render('user/userhome', { productDetails, categoryDetails, bannerDetails, wishlist, productCount, userId, ObjectId, cartCount, wishlistCount });        
     } catch (error) {
         console.log('Error in home Page', error);
         res.status(404).json({ success: false });
@@ -72,7 +81,6 @@ exports.viewProduct = async (req, res) => {
         res.status(500).render('error', { message: 'Internal Server Error' });
     }
 }
-
 exports.addtoCart = async (req, res) => {
     try {
         const userId = req.session?.user._id;
@@ -81,13 +89,17 @@ exports.addtoCart = async (req, res) => {
         }
 
         const productId = req.query?.productid;
+        const color = req.query?.color || ''; 
+        const size = req.query?.size || ''; 
 
         let userExistCart = await cartModel.findOne({ userid: userId });
 
         if (!userExistCart) {
             userExistCart = await new cartModel({
                 userid: userId,
-                productsid:[]
+                productsid:[],
+                color:color,
+                size:size
             }).save();
         }
 
@@ -100,7 +112,7 @@ exports.addtoCart = async (req, res) => {
             });
        
             if (!productFound) {
-                userExistCart.productsid.unshift({ productid: productId, quantity: 1 });
+                userExistCart.productsid.unshift({ productid: productId, quantity: 1, color: color, size: size });
                 await userExistCart.save();
             }
         }
@@ -111,6 +123,21 @@ exports.addtoCart = async (req, res) => {
         return res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 };
+
+exports.buynowpost = async (req, res) => {
+    try {
+        const quantity = req.body.quantity;
+        const productid = req.query.id;
+        const color = req.body?.color || ''; 
+        const size = req.body?.size || '';
+        res.redirect(`/user/checkout?productid=${productid}&quantity=${quantity}&size=${size}&color=${color}`);
+    } catch (error) {
+        console.error("Error in buynowpost:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+
 exports.cartGet = async (req, res) => {
     try {
         let nouser = false;
@@ -296,12 +323,3 @@ exports.deleteWishlist = async (req, res) => {
     }
 };
 
-
-exports.buyProduct=async(req,res)=>{
-    try{
-        let id=req.query.id;
-        console.log(id,"this is the id of the product");
-    }catch{
-
-    }
-}
