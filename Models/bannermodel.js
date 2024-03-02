@@ -27,7 +27,10 @@ const schema={
     }
 }
 
+
+
 const bannerSchema=new mongoose.Schema(schema)
+bannerSchema.index({endDate:1},{expireAfterSeconds:0});
 const bannerModel=mongoose.model("Bannerdatas",bannerSchema)
 
 module.exports=bannerModel;

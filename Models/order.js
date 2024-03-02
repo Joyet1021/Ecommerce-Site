@@ -5,13 +5,12 @@ const schema={
         type:String,
         required:true
     },
-    productsid:[{
-        productid:{type:mongoose.Schema.Types.ObjectId,ref:'productdatas' },
-        quantity:{
-            type:Number,
-            _id:false
-        }
-    }],
+    productsid:{
+        type:String
+    },
+    address:{
+        type:String
+    },
     total:{
         type:String
     }

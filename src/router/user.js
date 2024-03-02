@@ -45,6 +45,10 @@ router.get("/Address",accountController.addressGet)
 router.post("/addAddress",multer.setUploadType('profiles'),multer.upload.single("profileImage"),accountController.addAddressPost)
 
 router.get("/checkout",orderController.checkoutGet)
+router.get("/addresschoice",orderController.addressChoiceGet)
+// router.post("/newaddress",orderController.newaddressPost)
+router.get("/applyCoupon",orderController.applyCouponGet)
+router.post("/checkoutPost",orderController.checkoutPost)
 
 
 

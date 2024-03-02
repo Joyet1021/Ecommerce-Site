@@ -20,7 +20,6 @@ exports.userhomeGet = async (req, res) => {
         let wishlistCount=0;
         if(userId){
             const productids = await cartModel.findOne({ userid: userId });
-            console.log(productids,"puo");
             if(productids !== null){ // Corrected check for null
                 cartCount = productids.productsid.length;
             } else {

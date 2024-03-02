@@ -83,7 +83,16 @@ exports.addAddressPost = async (req, res) => {
             landMark,
             zip,
             Address,
-            newAddress: [address]
+            newAddress: [{
+                firstName,
+                lastName,
+                phoneNumber,
+                country,
+                district,
+                state,
+                zip,
+                Address,
+            }]
         };
 
 

@@ -54,7 +54,33 @@ const schema={
     Address:{
         type:String,
         
-    },newAddress:[]
+    },
+    newAddress:[{
+        firstName:{
+            type:String
+        },
+        lastName:{
+            type:String
+        },
+        phoneNumber:{
+            type:String
+        },
+        country:{
+            type:String
+        },
+        state:{
+            type:String
+        },
+        district:{
+            type:String
+        },
+        zip:{
+            type:String
+        },
+        Address:{
+            type:String
+        }
+    }]
 
 }
 
