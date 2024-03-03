@@ -2287,6 +2287,15 @@ word-wrap: break-word;
         background-color:#02395031;
         border: 1px solid rgba(0, 0, 0, 0.084);
     }
+    .form_frame12{
+        width: 80%;
+        height: 100%;
+        padding: 1rem;
+        overflow: scroll;
+        color: rgba(0, 0, 0, 0.739);
+        background-color:#02395031;
+        border: 1px solid rgba(0, 0, 0, 0.084);
+    }
     .error_msg{
         text-align: center;
         font-family: 'Poppins',sans-serif;
@@ -5406,8 +5415,12 @@ word-wrap: break-word;
    transform: scale(.99);
 }
 }
-
-
+.adress_add{
+    font-size: x-large;
+    font-weight: bold;
+    color: white;
+    padding-top: 5%;
+}
 
 
 

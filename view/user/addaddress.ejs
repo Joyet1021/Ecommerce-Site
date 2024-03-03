@@ -1,17 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Commerce</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="/css/user/user.css">
-</head>
-<body>
-    
+<%- include('../common/head.ejs') %>
    <div class="wrapper address_wrapper">
     <div class="top_nav">
         <div class="web_logo"><i class="bi bi-list"></i><span class="labio_text">MITMAT</span></div>
@@ -23,7 +10,7 @@
         </div>
         <div class="page_links">
           <ul>
-            <li><a class="page_links home_li  " href="/user/home">Home</a></li>
+            <li><a class="page_links home_li  " href="/user/userhome">Home</a></li>
             <li><a class="page_links" href="/user/wishlist"><i class="bi bi-heart bi_top_heart "></i><span class="product_count wish_count_top"></span></a></li>
             <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span class="product_count cart_count"></span></a></li>
             <li><a class="page_links " href="/account/address">Account</a></li>
@@ -41,9 +28,10 @@
                             <%}else{%>
                                 <img src="/uploads/profiles/<%=profiledata.userImage%>" alt="">
                                 <%}%>
-                            <h3>HELLO</h3>
+                            <h3 style="color: white;">HELLO</h3>
                         </li>
                         <li onclick="location.href='/account/address' " class=""><i class="bi bi_left_bar bi-person-circle"></i>Profile</li>
+                        <li onclick="location.href='/user/altaddress' " class=""><p class="adress_add" >+</p>Add Address</li>
                         <li onclick="location.href='/account/update_password' " class=""><i class="bi bi_left_bar bi-shield-lock-fill"></i>Update Password</li>
                         <li onclick="location.href='/account/orders' " class=""><i class="bi bi_left_bar bi-gift-fill"></i>Orders</li>
                         <li onclick="location.href='/user/cart'"><i class="bi bi_left_bar bi-cart-fill"></i>Cart</li>
@@ -82,7 +70,7 @@
                        </div>
                        <div class="top_right">
                            <div class="img_div"><img src="/uploads/profiles/<%=profiledata.userImage%>" id="imagePreview" class="product_img" alt=""></div>
-                           <span style="display: flex; flex-direction: column; gap: .2rem;  width: 25%;">
+                           <span style="display: flex; ; gap: .2rem;  width: 45%;">
                                 <div class="file_div" ><span class="choose_file">CHOOSE</span><input type="file" onchange="previewImage(this)"  name="profileImage" class="input_file"></div>
                            </span>
                        </div>

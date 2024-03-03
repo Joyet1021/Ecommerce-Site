@@ -117,3 +117,49 @@ exports.addAddressPost = async (req, res) => {
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 }
+
+exports.altaddressGet=async (req,res)=>{
+    try{
+        const userId = req.session.user ? req.session.user._id : null;
+        const profiledata = await profileModel.findOne({ userId: userId });
+        let img='false';
+        if(!profiledata.userImage==' '){
+            img='true';
+        }
+        res.render("user/altaddress",{profiledata,img})
+
+    }catch{
+
+    }
+}
+exports.altaddressPost = async (req, res) => {
+    try {
+        console.log(req.body);
+        const userId = req.session.user ? req.session.user._id : null;
+        const { firstName, lastName, phoneNumber, dateofBirth, country, state, district, zip, landMark, Address } = req.body;
+
+        const data = await profileModel.findOne({ userId });
+
+        // Push the new address to the existing addresses array
+        data.newAddress.push({
+            firstName,
+            lastName,
+            phoneNumber,
+            dateofBirth,
+            country,
+            state,
+            district,
+            zip,
+            landMark,
+            Address
+        });
+
+        // Save the updated user profile
+        await data.save();
+        res.redirect('/user/Address')
+    } catch (error) {
+        console.error('Error adding address:', error);
+        res.status(500).json({ success: false, message: 'Failed to add address' });
+    }
+}
+

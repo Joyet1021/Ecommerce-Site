@@ -160,7 +160,7 @@ exports.cartGet = async (req, res) => {
         let wishlistCount=0;
         const products = productIds.productsid;
         cartCount = products.length;
-        const productids = await wishlistModel.findOne({ userid: userId })
+        const productids = await wishlistModel.findOne({ userid: userId });
         wishlistCount = productids.productsid.length;
             
         res.render('user/cart', { nouser, productIds, products, cartCount,wishlistCount });

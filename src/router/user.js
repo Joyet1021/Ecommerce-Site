@@ -43,6 +43,8 @@ router.delete("/deleteWishlist",userController.deleteWishlist)
 
 router.get("/Address",accountController.addressGet)
 router.post("/addAddress",multer.setUploadType('profiles'),multer.upload.single("profileImage"),accountController.addAddressPost)
+router.get("/altaddress",accountController.altaddressGet)
+router.post("/altAddressPost",accountController.altaddressPost)
 
 router.get("/checkout",orderController.checkoutGet)
 router.get("/addresschoice",orderController.addressChoiceGet)
