@@ -6,13 +6,24 @@ const schema={
         required:true
     },
     productsid:{
-        type:String
+        type:Array
+    },
+    paymentmethod:{
+        type:String,
     },
     address:{
-        type:String
+        type:Object
     },
     total:{
         type:String
+    },
+    orderdate:{
+        type:Date,
+        default:new Date()
+    },
+    status:{
+        type:String,
+        default:'pending'
     }
 
 }

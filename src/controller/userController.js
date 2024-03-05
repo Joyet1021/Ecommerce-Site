@@ -125,6 +125,10 @@ exports.addtoCart = async (req, res) => {
 
 exports.buynowpost = async (req, res) => {
     try {
+        const userId = req.session.user ? req.session.user._id : null;
+        if (!userId) {
+            return res.redirect('/user/login');
+        }
         const quantity = req.body.quantity;
         const productid = req.query.id;
         const color = req.body?.color || ''; 

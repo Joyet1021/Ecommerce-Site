@@ -32,7 +32,7 @@ router.get("/userhome",userController.userhomeGet)
 router.get("/viewproduct",userController.viewProduct)
 router.get("/addToCart",userController.addtoCart)
 router.post("/buyNow",userController.buynowpost)
-
+   
 router.get("/cart",userController.cartGet)
 router.delete("/deletecartproduct",userController.deleteCartProduct)
 router.get("/updateCartqty",userController.updateCartQty)
@@ -51,6 +51,12 @@ router.get("/addresschoice",orderController.addressChoiceGet)
 // router.post("/newaddress",orderController.newaddressPost)
 router.get("/applyCoupon",orderController.applyCouponGet)
 router.post("/checkoutPost",orderController.checkoutPost)
+router.get("/codConfirm",orderController.codConfirmGet)
+router.post("/codconfirmpost",orderController.codconfirmPost)
+router.get("/orderplaced",orderController.orderPlacedGet)
+router.get("/orders",accountController.ordersGet)
+
+
 
 
 

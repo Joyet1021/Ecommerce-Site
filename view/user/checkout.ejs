@@ -2,7 +2,7 @@
 
     <div class="checkout_wrapper" >
         <%- include('../common/top_nav.ejs') %>
-        <form id="full_form" >
+        <form id="full_form" method="post" >
     <div class="checkout_content">
             <div class="checkout_left">
                 <!-- ----------------------------------- -->
@@ -18,8 +18,8 @@
                               <div class="stock_left"> <%=product.productid.quantity%>Left</div>
                             </div>
                             <div style="display: flex; gap: .7rem; align-items: center;">
-                                <p class="old_price"><%= product.productid.price * product.quantity %><i class="bi bi-currency-rupee"></i></p>
-                                <p class="new_price"><%= product.productid.discount * product.quantity %><i class="bi bi-currency-rupee"></i></p>
+                                <p class="old_price"><i class="bi bi-currency-rupee"></i><%= product.productid.price * product.quantity %></p>
+                                <p class="new_price"><i class="bi bi-currency-rupee"></i><%= product.productid.discount * product.quantity %></p>
                                 <% let discountPercentage = Math.round(100 - (product.productid.discount / product.productid.price * 100)) %>
                                 <p class="discount"><%= discountPercentage %> % Off</p>
                             </div>
@@ -123,6 +123,10 @@
                            <label for="lastname">Mobile</label>  
                            <input  type="text" id="mobilenumber" value="" name="mobilenum" style="width: 100%; padding-left: 1rem" >
                        </span>
+                       <span style="display: flex; flex-direction: column;gap: .2rem;  width: 100%;">
+                        <label for="email">Email</label>  
+                        <input  type="text" id="email" value="" name="email" style="width: 100%; padding-left: 1rem" >
+                    </span>
                        <div style="display: flex;justify-content: space-between; width: 100%;">
                         <span style="display: flex; flex-direction: column;gap: .2rem; width: 50%;">
                             <label for="firstname" >Country</label>
@@ -145,7 +149,7 @@
                     </div>  
                     <span style="display: flex; flex-direction: column;gap: .2rem;  width: 100%;">
                      <label for="lastname">Address</label>  
-                     <textarea name="address" id="address"  class="adress_text_area"></textarea>
+                     <textarea name="address" id="address"  class="adress_text_area1"></textarea>
                  </span>
                     </div>
                 </div>
@@ -153,23 +157,25 @@
       <div class="checkouts_frame checkout_total_price" style="overflow: auto;padding-bottom: 10px;">
          <h3>SUMMARY</h3>
          <div class="summary_frame">
-            <p>Subtotal <span><i class="bi bi-currency-rupee"></i><span class="sub_total"><%=total%></span></span></p>
+           
+            <p>Subtotal <span><i class="bi bi-currency-rupee"></i><span id="sub_total" class="sub_total"><%=total%></span></span></p>
                         <p>Shipping <span style="color: rgb(0, 160, 0);">FREE</span></p>
                         <p>Coupon <span class="discount_percentage"><i class="bi bi-currency-rupee"></i>0</span></p>
                         <p>Order Total <span><i class="bi bi-currency-rupee"></i><span id="order_total" class="order_total"><%=total%></span></span></p>
-                        <button type="submit" class="proceed_btn">PROCEED</button>
+                        <button type="button" class="proceed_btn">PROCEED</button>
                     </div>
                 </div>
             </div>
           </div>
         </form>
-
+<button id="rzp-button1"></button>
 <%- include('../common/footer.ejs') %>
     </div>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-
+let subtotal=<%=total%>;
 document.querySelector(".coupon_check_btn").addEventListener("click", (event) => {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault(); // Prevent   default form submission
     applyCoupon(event, '<%=total%>'); // Pass the event object to the function
 });
 
@@ -189,6 +195,7 @@ addressRadios.forEach(async(radio) => {
             const firstname=document.getElementById('firstname');
             const laststname=document.getElementById('lastname');
             const mobilenumber=document.getElementById('mobilenumber');
+            const email=document.getElementById('email');
             const country=document.getElementById('country');
             const state=document.getElementById('state');
             const district=document.getElementById('district');
@@ -198,6 +205,7 @@ addressRadios.forEach(async(radio) => {
             firstname.value=fulladdress.firstName;
             lastname.value=fulladdress.lastName;
             mobilenumber.value=fulladdress.phoneNumber;
+            email.value=fulladdress.email;
             country.value=fulladdress.country;
             state.value=fulladdress.state;
             district.value=fulladdress.district;
@@ -218,6 +226,7 @@ function selectCoupon(event,code) {
 }
 
 let finalPrice=0;
+
 
 async function applyCoupon(event, total) {
     event.preventDefault();
@@ -264,10 +273,12 @@ document.querySelector(".proceed_btn").addEventListener("click", async (e) => {
     // Serialize form data
     const formData = new FormData(document.getElementById("full_form"));
     const data = {};
-    const total=document.getElementById("order_total").value;
     formData.forEach((value, key) => {
         data[key] = value;
     });
+    if(finalPrice==0){
+        finalPrice=subtotal;
+    }
     // Send the fetch request
     try {
         const response = await fetch(`/user/checkoutPost?finalPrice=${finalPrice}`, {
@@ -278,10 +289,51 @@ document.querySelector(".proceed_btn").addEventListener("click", async (e) => {
             body: JSON.stringify(data)
         });
 
+        const datas=await response.json();
+        if(datas.cod){
+            window.location.href="/user/codConfirm";
+        }else {  
+        
+        const total=datas.total;
+        const orderid=datas.orders.id;
+        
+var options = {
+    "key": "rzp_test_kDJlUf5zkr81oQ", // Enter the Key ID generated from the Dashboard
+    "amount": total, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Acme Corp",                
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": orderid, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler":function (response){
+        
+        window.location.href='/user/orderplaced'
+                       
+    },
+    
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+rzp1.on('payment.failed', function (response){
+    Swal.fire({
+                            title: "Failed",
+                            text: `Faled to place order`,
+                            icon: "success"
+                        });
+});
+    rzp1.open();
+            console.log(finalPrice);
+        }
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        // Handle the response
+        
         const result = await response.json();
         console.log(result);
     } catch (error) {

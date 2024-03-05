@@ -1,0 +1,62 @@
+<%- include('../common/head.ejs') %>
+    
+    
+   <div class="wrapper otp_wrapper">
+      <%- include('../common/top_nav.ejs') %>
+       <div class="otp_content">
+            <form action="/user/codconfirmpost" spellcheck="false" method="post">
+            <div class="login_frame">
+               <div class="left">
+                  <img class="phone_otp_img" src="/images/preview.jpg" alt="">
+                  <h3 class="login_text"><span style="font-family: sans-serif; font-weight: 550; color: rgba(0, 0, 0, 0.774);">OTP</span> Verification</h3>
+                  <p class="num_show">Please enter the verification code send to  <%=email%> </p>
+                  <div class="input_frame">
+                    <div class="otp_input-div">
+                      <input type="number" class="otp_input"  name="D1" maxlength="1">
+                      <input type="number" class="otp_input"  name="D2" maxlength="1">
+                      <input type="number" class="otp_input"  name="D3" maxlength="1">
+                      <input type="number" class="otp_input"  name="D4" maxlength="1">
+                    </div>
+                    <input type="submit">
+                    <div id="flash-message" style="color: rgb(207, 0, 0);">
+                     <%= error %>
+                 </div>
+                  </div>
+               </div>
+               
+            </div>
+         </form>
+          </div>
+          <%- include('../common/footer.ejs') %>
+        
+        
+        
+   </div>
+   <script>
+      const inputs = document.querySelectorAll(".otp_input");
+
+      inputs.forEach((input, index) => {
+          input.addEventListener("input", (g) => {
+              if (g.target.value.length === 1) {
+                  if (index < inputs.length - 1) {
+                      inputs[index + 1].removeAttribute("disabled");
+                      inputs[index + 1].focus();
+                  }
+              }
+          });
+
+          input.addEventListener("keydown", (g) => {
+              if (g.key === "Backspace" && index > 0 && !input.value) {
+                  inputs[index - 1].focus();
+              }
+          });
+      });
+
+      
+
+      
+  </script>
+   <script src="/javascript/btnsearch.js"></script>
+
+</body>
+</html>

@@ -268,8 +268,10 @@ body::-webkit-scrollbar-thumb {
     }
     .login_frame{
         display: flex;
-        width: 50rem;
-        height: 32rem;
+        width: 25rem;
+        height: 27rem;
+        margin-top: 30px;
+        margin-bottom: 20px;
         box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.284);
         background-color: white;
     }
@@ -278,22 +280,9 @@ body::-webkit-scrollbar-thumb {
         flex-direction: column;
         align-items: center;
         height: 100%;
-        width: 50%;
+        width: 100%;
         background-color: rgba(128, 128, 128, 0.072) !important;
 
-    }
-    .right{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'Poppins',sans-serif;
-        font-size: 2rem;
-        border-left: 1px solid rgba(63, 63, 63, 0.195);
-        font-weight: 700;
-        letter-spacing: .4rem;
-        color: rgb(124, 123, 123);
-        height: 100%;
-        width: 50%;
     }
     .otp_input-div{
         width: 100%;
@@ -4631,6 +4620,17 @@ word-wrap: break-word;
         font-family: 'Poppins',sans-serif;
         font-size: .75rem;
         height: 4.3rem;
+        color: rgba(0, 0, 0, 0.864);
+        width: 100%;
+        outline: none;
+        padding-left: .4rem;
+        border: 1px solid rgba(0, 0, 0, 0.263);
+        resize: none;
+    }
+    .adress_text_area1{
+        font-family: 'Poppins',sans-serif;
+        font-size: .75rem;
+        height: 2.3rem;
         color: rgba(0, 0, 0, 0.864);
         width: 100%;
         outline: none;

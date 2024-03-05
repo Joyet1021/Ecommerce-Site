@@ -1,0 +1,60 @@
+<%- include('../common/head.ejs') %>
+    
+<div class="wrapper otp_wrapper">
+    <%- include('../common/top_nav.ejs') %>
+
+    <div class="placed">
+        <h4>Order Placed Successfully</h4>
+        <p>Your order has been placed successfully. Thank you for shopping with us.</p>
+        <div class="tick"></div>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    .placed {
+        height: 90%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    .tick {
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        border: 3px solid #4CAF50;
+        border-radius: 50%;
+        position: relative;
+        animation: tickAnimation 0.5s ease-in-out;
+    }
+    .tick::before {
+        content: '\2713';
+        color: #4CAF50;
+        font-size: 30px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    @keyframes tickAnimation {
+        0% {
+            transform: scale(0);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+
+<script>
+    setTimeout(function () {
+        window.location.href = '/user/userhome';
+    }, 3000); // Redirect after 3 seconds
+</script>
+
+<%- include('../common/footer.ejs') %>

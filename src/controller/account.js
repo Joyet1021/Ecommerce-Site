@@ -1,6 +1,7 @@
 const profileModel = require('../../Models/userprofile');
 const signupModel = require('./../../Models/signupmodel');
 const fs=require( "fs");
+const orderModel = require("../../Models/order");
 
 exports.addressGet = async (req, res) => {
     try {
@@ -87,6 +88,7 @@ exports.addAddressPost = async (req, res) => {
                 firstName,
                 lastName,
                 phoneNumber,
+                email,
                 country,
                 district,
                 state,
@@ -121,6 +123,9 @@ exports.addAddressPost = async (req, res) => {
 exports.altaddressGet=async (req,res)=>{
     try{
         const userId = req.session.user ? req.session.user._id : null;
+        if (!userId) {
+            return res.redirect('/user/login');
+        }
         const profiledata = await profileModel.findOne({ userId: userId });
         let img='false';
         if(!profiledata.userImage==' '){
@@ -135,8 +140,8 @@ exports.altaddressGet=async (req,res)=>{
 exports.altaddressPost = async (req, res) => {
     try {
         console.log(req.body);
-        const userId = req.session.user ? req.session.user._id : null;
-        const { firstName, lastName, phoneNumber, dateofBirth, country, state, district, zip, landMark, Address } = req.body;
+        const userId = req.session.user ? req.session.user._id : null;console.log(req.body);
+        const { firstName, lastName, phoneNumber, dateofBirth, email, country, state, district, zip, landMark, Address } = req.body;
 
         const data = await profileModel.findOne({ userId });
 
@@ -145,6 +150,7 @@ exports.altaddressPost = async (req, res) => {
             firstName,
             lastName,
             phoneNumber,
+            email,
             dateofBirth,
             country,
             state,
@@ -162,4 +168,28 @@ exports.altaddressPost = async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to add address' });
     }
 }
+exports.ordersGet = async (req, res) => {
+    try {
+        let userId = req.session.user ? req.session.user._id : null;
+        if (!userId) {
+            return res.redirect('/user/login');
+        }
+        userId = userId.toString();
+        console.log('userId:', userId);
+        const orders = await orderModel.find({ userid: userId });
+       
 
+        // Uncomment the following lines to render the orders view with the retrieved orders
+        const profiledata = await profileModel.findOne({ userId: userId });
+        let img = 'false';
+        if (!profiledata.userImage == ' ') {
+            img = 'true';
+        }
+        res.render('user/orders', { orders, profiledata, img });
+
+    } catch (error) {
+        console.error('Error:', error);
+        // Handle the error, e.g., render an error page
+        res.status(500).render('error', { error: 'An unexpected error occurred.' });
+    }
+};

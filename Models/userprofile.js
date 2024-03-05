@@ -65,6 +65,9 @@ const schema={
         phoneNumber:{
             type:String
         },
+        email:{
+            type:String
+        },
         country:{
             type:String
         },

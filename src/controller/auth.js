@@ -120,7 +120,9 @@ exports.sendotpPost = async (req, res) => {
 };
 
 exports.userloginGet = function (req, res) {
-    res.render('user/login');
+    const error = req.flash('error');
+    res.render('user/login',{error});
+    
 };
 exports.userloginPost = async (req, res) => {
     try {

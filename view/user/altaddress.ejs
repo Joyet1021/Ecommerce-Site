@@ -1,24 +1,7 @@
 <%- include('../common/head.ejs') %>
     
    <div class="wrapper address_wrapper">
-    <div class="top_nav">
-        <div class="web_logo"><i class="bi bi-list"></i><span class="labio_text">MITMAT</span></div>
-        <div class="search_div">
-          <div class="search_bar">
-            <input class="search_input" placeholder="Search..." type="text" />
-            <button class="search_btn"><i class="bi bi-search"></i></button>
-          </div>
-        </div>
-        <div class="page_links">
-          <ul>
-            <li><a class="page_links home_li  " href="/user/userhome">Home</a></li>
-            <li><a class="page_links" href="/user/wishlist"><i class="bi bi-heart bi_top_heart "></i><span class="product_count wish_count_top"></span></a></li>
-            <li><a class="page_links" href="/user/cart"><i class="bi bi-cart3  "></i><span class="product_count cart_count"></span></a></li>
-            <li><a class="page_links " href="/account/address">Account</a></li>
-            <li><a class="page_links" href=""><i class="bi bi-box-arrow-right"></i></a></li>
-          </ul>
-        </div>
-      </div>
+    <%- include('../common/top_nav.ejs') %>
          <div class="content address_content">
             <div class="frame">
                 <div class="left_bar">
@@ -34,7 +17,7 @@
                         <li onclick="location.href='/user/Address' " class=""><i class="bi bi_left_bar bi-person-circle"></i>Profile</li>
                         <li onclick="location.href='/account/address' " class=""><p class="adress_add" >+</p>Add Address</li>
                         <li onclick="location.href='/account/update_password' " class=""><i class="bi bi_left_bar bi-shield-lock-fill"></i>Update Password</li>
-                        <li onclick="location.href='/account/orders' " class=""><i class="bi bi_left_bar bi-gift-fill"></i>Orders</li>
+                        <li onclick="location.href='/user/orders' " class=""><i class="bi bi_left_bar bi-gift-fill"></i>Orders</li>
                         <li onclick="location.href='/user/cart'"><i class="bi bi_left_bar bi-cart-fill"></i>Cart</li>
                         <li onclick="location.href='/user/wishlist' " ><i class="bi bi_left_bar bi-heart-fill"></i>Wishlist</li>
                         <li onclick="location.href='/account/aboutus' " class=""><i class="bi bi_left_bar bi-info-circle-fill"></i>About Us</li>
@@ -76,6 +59,10 @@
                     </span>
                     
                     </div>
+                    <span style="display: flex; flex-direction: column; gap: .2rem; width: 95%;">
+                        <label for="email">email</label>
+                        <input  value="" type="text" name="email" style="font-family: 'Poppisn',sans-serif; height: 2.5rem; outline: none; font-size: .9rem; width: 100%; padding: .4rem;">
+                    </span>
                     <span style="display: flex; flex-direction: column; gap: .2rem; width: 95%;">
                         <label for="country">Country</label>
                         <input  value="" type="text" name="country" style="font-family: 'Poppisn',sans-serif; height: 2.5rem; outline: none; font-size: .9rem; width: 100%; padding: .4rem;">
