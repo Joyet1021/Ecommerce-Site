@@ -140,8 +140,7 @@ exports.altaddressGet=async (req,res)=>{
 }
 exports.altaddressPost = async (req, res) => {
     try {
-        console.log(req.body);
-        const userId = req.session.user ? req.session.user._id : null;console.log(req.body);
+        const userId = req.session.user ? req.session.user._id : null;
         const { firstName, lastName, phoneNumber, dateofBirth, email, country, state, district, zip, landMark, Address } = req.body;
 
         const data = await profileModel.findOne({ userId });
@@ -177,10 +176,8 @@ exports.ordersGet = async (req, res) => {
         }
         userId = userId.toString();
         
-        const orders = await orderModel.find({ userid: userId }).populate('productsid.productid');;
-       
+        const orders = await orderModel.find({ userid: userId }).populate('productsid.productid');
 
-        console.log(orders[0],'gfgfgf');
         const profiledata = await profileModel.findOne({ userId: userId });
         let img = 'false';
         if (!profiledata.userImage == ' ') {
@@ -212,5 +209,18 @@ exports.deleteorder = async (req, res) => {
     } catch (error) {
         console.log('Error in deleting product', error);
         res.status(500).send('Internal Server Error');
+    }
+}
+
+exports.orderopenGet=async(req,res)=>{
+    try{
+        const orderid=req.query.id;
+        let order = await orderModel.find({ _id: orderid }).populate('productsid.productid');
+        order=order[0];
+        res.render('user/orderopen',{order})
+
+    }catch{
+
+
     }
 }

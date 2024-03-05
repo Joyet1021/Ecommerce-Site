@@ -56,6 +56,7 @@ router.post("/codconfirmpost",orderController.codconfirmPost)
 router.get("/orderplaced",orderController.orderPlacedGet)
 router.get("/orders",accountController.ordersGet)
 router.delete("/deleteorder",accountController.deleteorder)
+router.get("/orderopen",accountController.orderopenGet)
 
 
 

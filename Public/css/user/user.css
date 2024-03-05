@@ -5297,13 +5297,31 @@ word-wrap: break-word;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 10rem;
+    width: 20%;
     border-right:1px solid rgba(0, 0, 0, 0.247) ;
   }
   .product_details_div{
     display: flex;
-    width: calc(100% - 10rem);
+    width:100%;
     padding: 0 1rem;
+  }
+  .cancelOrder{
+    height: 100%;
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cancelbtn{
+    height: 20%;
+    width: 50%;
+    font-size:medium;
+    font-weight: bold;
+    background-color: rgb(32, 100, 9);
+    color: white;
+    border: none;
+    border-radius: 5px; 
+    cursor: pointer;
   }
   .details_div{
     display: flex;
@@ -5369,11 +5387,13 @@ word-wrap: break-word;
 .review_div{
     margin-bottom: 1rem;
     padding: 1rem;
+    width: 100%;
     padding-bottom: none;
     transition: all 1s;
 
 }
 .reviewproduct{
+
     font-family: 'Poppins',sans-serif;
     cursor: pointer;
     transition: all 1s;

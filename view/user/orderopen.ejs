@@ -1,0 +1,110 @@
+<%- include('../common/head.ejs') %>
+    
+    <div class="wrapper orderopen_wrapper">
+
+      <%- include('../common/top_nav.ejs') %>
+      
+
+      <div class="content order_open_content">
+
+        <h3 class="order_id">ORDER ID : <span><%=order._id%></span></h3>
+
+        <div class="order_frames order_adress_frame">
+           <div class="delivery_adress_text">Delivery Address</div>
+           <div class="adrress_details">
+            <%const name=order.address.firstname+ ' ' +order.address.lastname;%>
+             <h4 class="user_name"><%=name%></h4>
+             <div class="user_address">
+                <p><%=order.address.post%></p>
+                <p><%=order.address.district%>,<%=order.address.state%></p>
+                <p><%=order.address.country%></p>
+                <p>Pin:<%=order.address.zip%></p>
+             </div>
+             <h4 class="user_phone">Phone number</h4>
+             <p><%=order.address.mobilenumber%></p>
+           </div>
+        </div>
+
+        <div class="order_frames order_product_frame">
+              <div class="product_img_div"><img src="/uploads/products/<%=order.productsid[0].productid.productImage[0]%>" style="height: 8.5rem;"></div>
+              <div class="product_details_div">
+                  <div class="details_div">
+                    <p class="product_name"><%=order.productsid[0].productid.productName%></p>
+                    <p class="color_size">SIZE : <span><%=order.productsid[0].size%></span></p>
+                    <p class="color_size">COLOR : <span><%=order.productsid[0].color%></span></p>
+                    <div style="display: flex; gap: .7rem; align-items: center;">
+                      <p class="old_price">₹<%=order.productsid[0].productid.price%></p>
+                      <p class="new_price">₹<%=order.productsid[0].productid.discount%></p>
+                      <p class="discount"><%= Math.round(100-(order.productsid[0].productid.discount / order.productsid[0].productid.price * 100)) %> % Off</p>
+                   </div> 
+                   
+                  </div>
+              </div>
+              <div class="cancelOrder"><button class="cancelbtn"><a onclick="confirmDelete('<%=order._id %>','<%=order.productsid[0].productid.productName %>') ;">Cancel</button></div>
+        </div>
+
+
+        <div class="order_frames review_div">
+           <div class="reviewproduct">Rate your Product</div>
+           <div class="review_frame">
+            <textarea class="review_textarea" placeholder="Review your Product here.." spellcheck="false"></textarea>
+            <button class="review_submit_btn" >Submit Review</button>
+           </div>
+        </div>
+
+        </div>
+
+        <%- include('../common/footer.ejs') %>
+
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+     function confirmDelete(id,name) {
+           if(id&&name){
+            Swal.fire({
+               title: "Are you sure?",
+               text: "You won't be able to revert this!",
+               icon: "warning",
+               showCancelButton: true,
+               confirmButtonColor: "#3085d6",
+               cancelButtonColor: "#d33",
+               confirmButtonText: "Yes, cancel it!"
+           }).then(async(result) => {
+               if (result.isConfirmed) {
+                   const response=await fetch(`/user/deleteorder?id=${id}`,{method:"delete"});
+                   if (!response.ok) {
+                       throw new Error("Error deleting product: " + response.statusText);
+                   }
+                   const results = await response.json();
+                   if (results.success) {
+                       window.location.href="/user/orders"
+                   } else {
+                       message.innerHTML = result.error || "Unknown error";
+                   }
+               }
+           });
+           }
+      }
+
+
+const rateProduct = document.querySelector('.reviewproduct')
+const reviewProduct = document.querySelector('.review_frame')
+rateProduct.addEventListener('click', (event) => {
+   event.stopPropagation(); // Prevent click event from propagating to parent elements
+   reviewProduct.style.display = 'block';
+   reviewProduct.style.height = '10rem'; 
+   
+});
+const reviewTextarea = document.querySelector('.review_textarea');
+reviewTextarea.addEventListener('click', (event) => {
+    event.stopPropagation();
+});
+
+
+
+
+
+</script>
+
+<%- include('../common/end.ejs') %>
