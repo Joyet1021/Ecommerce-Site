@@ -287,6 +287,7 @@ exports.wishlistGet = async (req, res) => {
         }
 
         const productIds = await wishlistModel.findOne({ userid: userId }).populate('productsid.productid');
+        
         let cartCount=0;
         let wishlistCount=0;
         const products = productIds.productsid;

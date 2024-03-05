@@ -2,12 +2,22 @@ const mongoose=require('mongoose')
 
 const schema={
     userid:{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
         required:true
     },
-    productsid:{
-        type:Array
-    },
+    productsid:[{
+        productid:{type:mongoose.Schema.Types.ObjectId,ref:'productdatas' },
+        quantity:{
+            type:Number,
+            _id:false
+        },
+        color:{
+            type:String
+        },
+        size:{
+            type:String
+        } 
+    }],
     paymentmethod:{
         type:String,
     },

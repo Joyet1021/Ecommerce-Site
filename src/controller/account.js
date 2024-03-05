@@ -2,6 +2,7 @@ const profileModel = require('../../Models/userprofile');
 const signupModel = require('./../../Models/signupmodel');
 const fs=require( "fs");
 const orderModel = require("../../Models/order");
+const productModel = require('../../Models/productdetails');
 
 exports.addressGet = async (req, res) => {
     try {
@@ -175,11 +176,11 @@ exports.ordersGet = async (req, res) => {
             return res.redirect('/user/login');
         }
         userId = userId.toString();
-        console.log('userId:', userId);
-        const orders = await orderModel.find({ userid: userId });
+        
+        const orders = await orderModel.find({ userid: userId }).populate('productsid.productid');;
        
 
-        // Uncomment the following lines to render the orders view with the retrieved orders
+        console.log(orders[0],'gfgfgf');
         const profiledata = await profileModel.findOne({ userId: userId });
         let img = 'false';
         if (!profiledata.userImage == ' ') {
@@ -193,3 +194,23 @@ exports.ordersGet = async (req, res) => {
         res.status(500).render('error', { error: 'An unexpected error occurred.' });
     }
 };
+exports.deleteorder = async (req, res) => {
+    try {
+        const id = req.query.id;
+        const order = await orderModel.findOne({ _id: id });
+        const productid = order.productsid[0].productid;
+        const quantity = order.productsid[0].quantity;
+        
+        const product = await productModel.findOne({ _id: productid });
+        const oldqty = product.quantity;
+        const totalqty = oldqty + quantity;
+        
+        await product.updateOne({ quantity: totalqty });
+        await orderModel.deleteOne({ _id: id });
+        
+        res.status(203).json({ success: true, message: "Product Deleted Successfully" });
+    } catch (error) {
+        console.log('Error in deleting product', error);
+        res.status(500).send('Internal Server Error');
+    }
+}

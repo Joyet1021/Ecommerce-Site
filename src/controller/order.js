@@ -46,7 +46,6 @@ exports.checkoutGet = async (req, res) => {
 
         const user = await profileModel.findOne({ userId: userId });
         const Address = user.newAddress;
-
         const coupon = await couponModel.find({ minimumPurchase: { $lte: total } });
         res.render('user/checkout', { order, total, Address, coupon });
 
@@ -198,16 +197,32 @@ exports.orderPlacedGet = async (req, res) => {
             zip:req.session.order.address.zip,
             post:req.session.order.address.address
         }
+        const preorder=req.session.preorder;
+        preorder.forEach(async(order)=>{
+
         const newSchema=new orderModel({
             userid,
-            productsid:req.session.preorder,
+            productsid:[{
+                productid:order.productid._id,
+                quantity:order.quantity,
+                color:order.color,
+                size:order.size
+                
+            }],
             paymentmethod,
             address:address,
             total:req.session.order.finalPrice
 
         });
         await newSchema.save();
-        
+        const productid=order.productid._id;
+        await cartModel.findOneAndUpdate(
+            { userid: userid },
+            { $pull: { productsid: { productid: productid } } },
+            { new: true }
+        );
+
+    })
         res.render("user/orderplaced");
 
         

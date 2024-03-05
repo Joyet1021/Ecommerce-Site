@@ -62,8 +62,7 @@
                 <div class="checkout_left_bottom">
                     <div class="checkouts_frame1" >
                         <div class="payment_divs1">PAYMENT METHOD</div>
-                        <div class="payment_divs"><div class="payment_icon"><img class="payment_logo_png" src="/images/upi.png" alt=""></div><label for="upi">UPI</label><input id="upi" value="upi" name="payment" type="radio"></div>
-                        <div class="payment_divs"><div class="payment_icon"><img class="payment_logo_png" src="/images/card.png" alt=""></div><label for="card">CARD</label><input id="card" value="card" name="payment" type="radio"></div>
+                        <div class="payment_divs"><div class="payment_icon"></div><label for="card">RAZORPAY</label><input id="card" value="card" name="payment" type="radio"></div>
                         <div class="payment_divs"><div class="payment_icon"><img class="payment_logo_png" src="/images/cashon delivery.png" alt=""></div><label for="cashondelivery">CASH ON DELIVERY</label><input id="cashondelivery" value="cashondelivery" name="payment" type="radio"></div>
                     </div>
                     <div class="checkouts_frame_bottom_frame checkouts_frame_bottom_coupon">
@@ -79,9 +78,6 @@
                             <%coupon.forEach((coupon)=>{%>
                                 <li onclick="selectCoupon(event,'<%= coupon.couponCode %>')" value="<%= coupon.couponCode %>"> <%= coupon.couponCode %> <span>save <%= coupon.discountPercentage %>%</span></li>
                             <%})%>
-                            <li>R47HXD <span>save <i class="bi bi-currency-rupee"></i>399</span></li>
-                            <li>R47HXD <span>save <i class="bi bi-currency-rupee"></i>399</span></li>
-                            <li>R47HXD <span>save <i class="bi bi-currency-rupee"></i>399</span></li>
                         </ul>
                     </div>
                     <div class="checkouts_frame_bottom_frame checkouts_frame_bottom_adress" style="overflow: auto;">
@@ -93,14 +89,6 @@
                             <label for="add<%= address._id %>" value="<%= index %>"><%= address.Address %></label>
                         </div>
                         <% }) %>
-                        <div class="payment_divs select_adress_div">
-                            <input id="add2" name="payment" type="radio">
-                            <label for="add2" value="2">pallippuraya(h)</label>
-                        </div>
-                        <div class="payment_divs select_adress_div">
-                            <input id="add3" name="payment" type="radio">
-                            <label for="add3" value="3">parathakaad(h)</label>
-                        </div>
                     </div>
                 </div>
             </div>

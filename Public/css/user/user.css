@@ -2060,12 +2060,13 @@ word-wrap: break-word;
         font-size: .9rem;
         word-wrap: break-word;
         text-align: center;
-        height: 9rem;
+        height: 12rem;
     }
     .product_td{
         display: flex;
     }
     .td_tr{
+        overflow: auto;
         border-bottom: 1px solid rgba(97, 97, 97, 0.462);
 
     }

@@ -25,7 +25,9 @@
                </div>
                </div>
             <div class="right_content">
-               <table>
+               <%orders.forEach((order)=>{ %>
+                  
+               <table class="row<%=order._id %>" style="margin-bottom: 20px;">
                   <thead>
                      <tr>
                         <th style="width: 30%;">PRODUCT</th>
@@ -38,27 +40,72 @@
                   </thead>
                
                   <tbody>
-                  <tr class="td_tr">
-                     <td class="product_td">
-                        <div class="img_section"><img src="/images/iphone 15.jpg" style="height: 6rem; width: 5rem;" alt=""></div>
+                  <tr class="td_tr" onclick="window.location.href='/user/orderopen?id=<%=order._id %>'" >
+                     
+                     <td class="product_td"  >
+                        <div class="img_section"><img src="/uploads/products/<%=order.productsid[0].productid.productImage[0] %>" style="height: 6rem; width: 5rem;" alt=""></div>
                         <div class="product_details">
-                           <p class="order_product_name">Iphone 15 pro</p>
-                           <p class="order_size">Size : <span style="font-size: 1.1rem;">s</span></p>
-                           <p class="order_color">Color : <span>black</span></p>
+                           <p class="order_product_name"><%=order.productsid[0].productid.productName %></p>
+                           <p class="order_size">Size : <span style="font-size: 1.1rem;"><%=order.productsid[0].size %></span></p>
+                           <p class="order_color">Color : <span><%=order.productsid[0].color %></span></p>
                         </div>
                      </td>
-                     <td>6345934676874549</td>
-                     <td style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(255, 0, 0, 0.748);"><i class="bi bi-currency-rupee"></i>12,432</td>
-                     <td style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(0, 0, 0, 0.748);">12-04-2024</td>
-                     <td class="status delivered">DELIVERED</td>
-                     <td ><button style="height: 20%;width: 70%; font-size: small;font-weight: bold;background-color: rgb(32, 100, 9);color: white;border: none;border-radius: 5px; cursor: pointer;">Cancel</button></td>
+                     <td><%=order._id %></td>
+                     <td style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(255, 0, 0, 0.748);"><i class="bi bi-currency-rupee"></i><%=order.productsid[0].productid.discount %></td>
+                     <%const date=order.orderdate.toISOString().substring(0, 10)%>
+                     <td style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(0, 0, 0, 0.748);"><%=date %></td>
+                     <td class="status delivered"><%=order.status %></td>
+                     <td ><button style="height: 20%;width: 70%; font-size: small;font-weight: bold;background-color: rgb(32, 100, 9);color: white;border: none;border-radius: 5px; cursor: pointer;"><a href="javascript:void(0);"  style="text-decoration: none ;color: aliceblue;" onclick="confirmDelete('<%=order._id %>','<%=order.productsid[0].productid.productName %>') ;">Cancel</button></td>
 
                   </tr>
                   </tbody>
 
                </table>
+               
+               <% }); %>
+               
             </div>
+            
          </div>
    </div>
    <%- include('../common/footer.ejs') %>
+
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+       
+   <script>
+       function confirmDelete(id,name) {
+           Swal.fire({
+               title: "Are you sure?",
+               text: "You won't be able to revert this!",
+               icon: "warning",
+               showCancelButton: true,
+               confirmButtonColor: "#3085d6",
+               cancelButtonColor: "#d33",
+               confirmButtonText: "Yes, cancel it!"
+           }).then(async(result) => {
+               if (result.isConfirmed) {
+                   const response=await fetch(`/user/deleteorder?id=${id}`,{method:"delete"});
+                   if (!response.ok) {
+                       throw new Error("Error deleting product: " + response.statusText);
+                   }
+                   const result = await response.json();
+                   if (result.success) {
+                       Swal.fire({
+                           title: "Cancelled!",
+                           text: `${name} has been cancelled.`,
+                           icon: "success"
+                       });
+                       document.querySelector('.row'+id).remove()
+                   } else {
+                       message.innerHTML = result.error || "Unknown error";
+                   }
+               }
+           });
+      }
+  
+  
+  </script>
+
 <%- include('../common/end.ejs') %>
