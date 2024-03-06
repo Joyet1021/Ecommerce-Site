@@ -129,10 +129,10 @@ exports.userloginPost = async (req, res) => {
         const { email, password } = req.body;
         const userDatas = await signupModel.find();
         const userExist = userDatas.find((val) => val.email === email);
-
         if (!userExist) {
-            res.render('user/login', { error: "User doesn't exist" });
-            
+            req.flash("error", "User Doesn't Exist");
+            return res.status(400).redirect('/user/login');
+             
         } else {
             const comparePassword = await bcrypt.compare(password, userExist.password);
             const phone = userExist.phonenumber;
@@ -140,17 +140,23 @@ exports.userloginPost = async (req, res) => {
             if (comparePassword) {
                 if (userExist.verified === true) {
                     if (userExist.role === "admin") {
-                        req.session.admin =adminExist
+                        req.session.admin = adminExist;
                         res.render("admin/adminhome");
                     } else {
-                        req.session.user =userExist
-                        res.redirect("/user/userhome");
+                        if (userExist.blocked) {
+                            req.flash("error", "User has been blocked");
+                            return res.status(400).redirect('/user/login');
+                        } else {
+                            req.session.user = userExist;
+                            res.redirect("/user/userhome");
+                        }
                     }
                 } else {
                     res.redirect(`/user/resendotp/${phone}`);
                 }
             } else {
-                res.render('login', { error: 'Invalid Password' });
+                req.flash("error", "Incorrect Password");
+                return res.status(400).redirect('/user/login');
             }
         }
     } catch (error) {

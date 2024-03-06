@@ -84,9 +84,9 @@ rel="stylesheet">
 			<li><a href="/admin/categories"  ><i class='bx bxs-widget icon' ></i> Categories</a></li>
 			<li><a href="/admin/userslist"><i class='bx bx-table icon' ></i> Users List</a></li>
 			<li><a href="/admin/couponlist"><i class='bx bxs-notepad icon' ></i>Couponlist </a></li>
-            <li><a href="/admin/adminorders"><i class='bx bx-table icon' ></i> Orders List</a></li>
+            <li><a href="#" class="active"><i class='bx bx-table icon' ></i> Orders List</a></li>
             <li><a href="/admin/bannerlist"><i class='bx bxs-notepad icon' ></i>Bannerlist </a></li><br>
-            <li><a href="#" style="color: rgb(251, 50, 50);  background-color: rgb(241,240,246);"><i class='bx bx-table icon'  ></i>Blocked Users </a></li>
+            <li><a href="/admin/blockedusers" style="color: red;"><i class='bx bx-table icon'  ></i>Blocked Users </a></li>
 		</ul>
 		
 	</section>
@@ -124,42 +124,50 @@ rel="stylesheet">
 		
 		<main>
             <form >
-            <h1 class="title" style="padding-left: 10px;">Blocked Users</h1>
+            <h1 class="title" style="padding-left: 10px;">Users List</h1>
 			<ul class="breadcrumbs"style="padding-left: 10px;">
 				<li><a href="/admin/adminhome">Home</a></li>
 				<li class="divider">/</li>
-				<li><a href="#" class="active">Blocked Users</a></li>
+				<li><a href="#" class="active">Users List</a></li>
 			</ul>
             <div class="productsfull">
                 <div class="productform">
                     <table class="table">
                         <thead class="thead-dark">
                             <tr>
-                                
-                                
-                                <th style="font-weight: bold;">Username</th>
-                                <th style="font-weight: bold;">Phone Number</th>
-                                
-                                
-                                <th style="font-weight: bold;">Unlock</th>
+                                <th>User id</th>
+                                <th>Order id</th>
+                                <th>Order date</th>
+                                <th>Order Status</th>
                                 
                             </tr>
                         </thead>
                         <tbody>
-                            <% userData.forEach((users)=>{ %>
-                                <tr class="row<%= users._id %>">
-                                    
-                                    
-                                    <td style="padding-top: 30px;"><h5 class="card-title"><%= users.username %></h5></td>
-                                    <td style="padding-top: 30px;"><p class="card-text"><%=users.phonenumber %></p></td>
-                                    <td style="padding-top: 30px;"><a href="javascript:void(0);" class="btn btn-light border px-2 pt-2 icon-hover" onclick="confirmDelete('<%=users._id%>','<%= users.username %>') ;"><i class="fas fa-trash fa-lg text-secondary px-1"></i></a></td>
-                                    
+                            <% orders.forEach((order) => { %>
+                                <tr class="row<%= order._id %>">
+                                    <td data-userid="<%= order.userid %>"><%= order.userid %></td>
+                                    <td><%= order._id %></td>
+                                    <% const date = order.orderdate.toISOString().substring(0, 10) %>
+                                    <td><%= date %></td>
+                                    <td>
+                                        <!-- New td with button for selecting order status -->
+                                        <button type="button" id="select-button<%= order._id %>" class="select-button" onclick="showRadioButtons('<%= order._id %>')"><%= order.status %></button>
+
+                                        <!-- Container for radio buttons (initially hidden) -->
+                                        <div id="radioButtons<%= order._id %>" style="display: none;">
+                                            <input type="radio" id="Confirmed<%= order._id %>" name="orderStatus<%= order._id %>" value="Confirmed" >
+                                            <label for="Confirmed<%= order._id %>" onclick="selectRadioButton('Confirmed<%= order._id %>')">Confirmed</label>
+
+                                            <br>
+                                            <input type="radio" id="Shipped<%= order._id %>" name="orderStatus<%= order._id %>" value="Shipped">
+                                            <label for="shipped<%= order._id %>" onclick="selectRadioButton('Shipped<%= order._id %>')">Shipped</label>
+                                            <br>
+                                            <input type="radio" id="Delivered<%= order._id %>" name="orderStatus<%= order._id %>" value="Delivered">
+                                            <label for="delivered<%= order._id %>" onclick="selectRadioButton('Delivered<%= order._id %>')">Delivered</label>
+                                        </div>
+                                    </td>
                                 </tr>
-                                
-                                <% }) %>
-                                    
-                                
-                               
+                            <% }) %>
                         </tbody>
                     </table>
                 </div>
@@ -169,44 +177,61 @@ rel="stylesheet">
 		</main>
 		<!-- MAIN -->
 	</section>
-	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
        
     <script>
-        function confirmDelete(id,username) {
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You won't be able to revert this!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Yes, delete it!"
-            }).then(async(result) => {
-                if (result.isConfirmed) {
-                    const response=await fetch(`/admin/unblockuser?id=${id}`,{method:"get"});
-                    if (!response.ok) {
-                        throw new Error("Error deleting product: " + response.statusText);
-                    }
-                    const result = await response.json();
-                    if (result.success) {
-                        Swal.fire({
-                            title: "Unlocked!",
-                            text: `${username} has been Unblocked`,
-                            icon: "success"
-                        });
-                        document.querySelector('.row'+id).remove()
-                    } else {
-                        message.innerHTML = result.error || "Unknown error";
-                    }
-                }
-            });
-       }
-   
-   
-   </script>
+        function showRadioButtons(orderId) {
+            const radioButtons = document.getElementById(`radioButtons${orderId}`);
+            if (radioButtons.style.display === "none") {
+                radioButtons.style.display = "block";
+            } else {
+                radioButtons.style.display = "none";
+            }
+        }
 
-       
+
+        document.querySelectorAll('[name^="orderStatus"]').forEach(radioButton => {
+            radioButton.addEventListener('click', function() {
+                const orderId = this.name.replace('orderStatus', '');
+                const userId = this.closest('tr').querySelector('td').dataset.userid;
+                const selectedValue = document.querySelector(`[name="orderStatus${orderId}"]:checked`).value;
+                document.getElementById(`select-button${orderId}`).innerHTML = selectedValue;
+                showRadioButtons(orderId); // Hide the radio buttons after selecting an option
+
+                fetch(`/admin/orderstatus?orderId=${orderId}&userId=${userId}&status=${selectedValue}`, {
+                    method: 'GET'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data); // Handle response data as needed
+                })
+                .catch(error => {
+                    console.error('There was a problem with your fetch operation:', error);
+                });
+            });
+        });
+
+
+        function selectRadioButton(radioButtonId) {
+    const radioButton = document.getElementById(radioButtonId);
+    radioButton.checked = true;
+    radioButton.dispatchEvent(new Event('click')); // Trigger click event to update UI
+}
+
+
+    
+
+
+    </script>
+    
+
 
 
 

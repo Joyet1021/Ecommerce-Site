@@ -33,7 +33,7 @@ const schema={
     },
     status:{
         type:String,
-        default:'pending'
+        default:'Confirmed'
     }
 
 }

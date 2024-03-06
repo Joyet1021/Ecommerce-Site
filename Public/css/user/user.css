@@ -2033,6 +2033,7 @@ word-wrap: break-word;
 
 .order_wrapper{
     .order_content{
+        height: 700px;
         display: flex;
     }
     .right_content{
@@ -2221,6 +2222,7 @@ word-wrap: break-word;
 
 .address_wrapper{
     .address_content{
+        height: 700px;
         display: flex;
     }
     .right_content{

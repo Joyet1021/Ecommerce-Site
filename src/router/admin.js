@@ -6,6 +6,7 @@ const categoryController=require("../controller/category")
 const authController=require("../controller/auth")
 const couponController=require("../controller/Coupons")
 const bannerController=require("../controller/banner")
+const ordersController=require("../controller/adminorders")
 const multer = require('../middlewares/multerMiddleware')
 
 
@@ -27,6 +28,9 @@ router.delete("/deletesubCategory",categoryController.deletesubCategory)
 
 router.get("/userslist",adminController.userslistGet)
 router.get("/blockuser",adminController.blockuser)
+
+router.get("/adminorders",ordersController.ordersGet)
+router.get("/orderstatus",ordersController.orderStatus)
 
 router.get("/couponlist",couponController.couponlistGet)
 router.get("/addCoupon",couponController.addCouponGet)
