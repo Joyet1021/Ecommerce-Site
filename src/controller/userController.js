@@ -140,6 +140,20 @@ exports.buynowpost = async (req, res) => {
     }
 };
 
+exports.categoryGet=async(req,res)=>{
+    try{
+        const categoryName=req.query.catid;
+        const category=await productModel.find({category:categoryName});
+        const categoryDetails = await categoryModel.find();
+        
+        res.render("user/categoryproducts",{category,categoryDetails})
+
+    }catch{
+
+    }
+}
+    
+
 
 exports.cartGet = async (req, res) => {
     try {

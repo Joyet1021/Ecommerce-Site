@@ -203,7 +203,7 @@ exports.deleteorder = async (req, res) => {
         const totalqty = oldqty + quantity;
         
         await product.updateOne({ quantity: totalqty });
-        await orderModel.deleteOne({ _id: id });
+        await orderModel.updateOne({ status:'Cancelled' });
         
         res.status(203).json({ success: true, message: "Product Deleted Successfully" });
     } catch (error) {

@@ -30,15 +30,16 @@
             <li class="category_li">
                <a href="#">ALL CATEGORY&nbsp;<i class="bi bi-chevron-down"></i></a>
                <table class="drop_bar">
-                  <% categoryDetails.forEach((category) => { %>
-                      <tr>
-                          <td><a href="" style="color: red;font-size: large;"><%= category.categoryName %></a></td>
-                          <% category.subCategory.forEach((sub) => { %>
-                              <td><a href=""><%= sub %></a></td>
-                          <% }); %>
-                      </tr>
-                  <% }); %>
-              </table>
+                <% categoryDetails.forEach((category) => { %>
+                    <tr>
+                        <td><a href="/user/categoryget?catid=<%= category.categoryName %>" style="color: red; font-size: large; display: block; text-decoration: none;width: 100%;"><%= category.categoryName %></a></td>
+                        <% category.subCategory.forEach((sub) => { %>
+                            <td><a href=""><%= sub %></a></td>
+                        <% }); %>
+                    </tr>
+                <% }); %>
+            </table>
+            
               
             </li>
             <li class=""><a href="/subcategory/MOBILES">MOBILES</a></li>
@@ -100,7 +101,7 @@
                       </div>
                   
                   <div class="bottom">
-                      <button  class="addto_cart_btn addto_cart_btn">VIEW</button>
+                      <button  class="addto_cart_btn addto_cart_btn">V I E W</button>
                   </div>
                 </a>
               </div>
@@ -138,7 +139,7 @@
                   </div>
                   </a>
                   <div class="bottom">
-                    <button onclick="window.location.href='/user/buyproduct?id=<%= product._id %>'" class="addto_cart_btn addto_cart_btn">BUY NOW</button>
+                    <button onclick="window.location.href='/user/buyproduct?id=<%= product._id %>'" class="addto_cart_btn addto_cart_btn">V I E W</button>
                   </div>
                 </div>
               <% }); %>

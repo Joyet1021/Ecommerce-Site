@@ -1,0 +1,78 @@
+<%- include('../common/head.ejs') %>
+   <div class="wrapper category_products_wrapper">
+    <%- include('../common/top_nav.ejs') %>
+         <div class="content catProducts_content">
+
+
+                     
+            <!-- =============================================================================================================== -->
+   
+
+            <header>
+               <ul>
+                  <li><a href="/home">HOME</a></li>
+                  <li><a href="/all_products">ALL PRODUCTS</a></li>
+                  <li class="category_li">
+                     <a href="#">ALL CATEGORY&nbsp;<i class="bi bi-chevron-down"></i></a>
+                     <table class="drop_bar">
+                      <% categoryDetails.forEach((category) => { %>
+                          <tr>
+                              <td><a href="/user/categoryget?catid=<%= category.categoryName %>" style="color: red; font-size: large; display: block; text-decoration: none;width: 100%;"><%= category.categoryName %></a></td>
+                              <% category.subCategory.forEach((sub) => { %>
+                                  <td><a href=""><%= sub %></a></td>
+                              <% }); %>
+                          </tr>
+                      <% }); %>
+                  </table>
+                  </li>
+                  <li class=""><a href="/subcategory/MOBILES">MOBILES</a></li>
+                  <li class=""><a href="/subcategory/LAPTOPS">LAPTOPS</a></li>
+                  <li class=""><a href="/subcategory/PAINTINGS">PAINTINGS</a></li>
+               </ul>
+            </header>
+
+
+            <!-- ========================================================================================================= -->
+
+      <div class="product_section">
+
+         <%category.forEach((category)=>{%>
+
+                   <div class="product_frame_grid" >
+                     <a onclick="window.location.href='/user/viewproduct?id=<%= category._id %>'">
+                     <div class="top">
+                        <button class="wish_btn" onclick="addToWish(event,'')">
+                           <i class="bi wish_icon"></i>
+                         </button>
+                        <img src="/uploads/products/<%= category.productImage[0] %>" style="width: 85%; height: 90%;" alt="">
+                      </div>
+                      <div class="center">
+                        <div class="name_div">
+                        <p class="product_name"><%=category.productName%></p>
+                        </div>
+                        <div class="price_div">
+                           <p class="old_price"><i class="bi bi-currency-rupee"></i><%=category.price%></p>
+                           <p class="new_price"><i class="bi bi-currency-rupee"></i><%=category.discount%></p>
+                        </div>
+                     </div>
+                     <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button>
+                     </div>  
+                     </a>                   
+                  </div>
+                  <% }) %>
+                  
+                 
+
+               </div>      
+
+         </div>
+         <%- include('../common/footer.ejs') %>
+   </div>
+
+<script src="/javascript/addtowish.js"></script>
+<script src="/javascript/addtocart.js"></script>
+<script src="/javascript/product-open.js"></script>
+<script src="/javascript/btnsearch.js"></script>
+
+
+<%- include('../common/end.ejs') %>    
