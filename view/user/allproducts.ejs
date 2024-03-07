@@ -11,7 +11,7 @@
             <header>
                <ul>
                   <li><a href="/user/userhome">HOME</a></li>
-                  <li><a href="/user/allproducts">ALL PRODUCTS</a></li>
+                  <li><a href="/all_products">ALL PRODUCTS</a></li>
                   <li class="category_li">
                      <a href="#">ALL CATEGORY&nbsp;<i class="bi bi-chevron-down"></i></a>
                      <table class="drop_bar">
@@ -34,34 +34,34 @@
 
 
             <!-- ========================================================================================================= -->
-            <%if(category.length==0){%>
+            <%if(products.length==0){%>
               <h4 style="width: 100%;height: 100%;;display: flex;justify-content: center;align-items: center;">No Products</h4>
     
             <%}else{%>
       <div class="product_section">
         
 
-         <%category.forEach((category)=>{%>
+         <%products.forEach((product)=>{%>
 
                    <div class="product_frame_grid" >
-                     <a onclick="window.location.href='/user/viewproduct?id=<%= category._id %>'">
+                     <a onclick="window.location.href='/user/viewproduct?id=<%= product._id %>'">
                      <div class="top">
-                        <button class="wish_btn" onclick="addtoWishlist(event,'<%= category._id %>')">
-                           <i class="biwish_icon<%= category._id %> <%= (() => {
-                             const productIdObjectId = category._id.toString();
+                        <button class="wish_btn" onclick="addtoWishlist(event,'<%= product._id %>')">
+                           <i class="biwish_icon<%= product._id %> <%= (() => {
+                             const productIdObjectId = product._id.toString();
                              const isProductInWishList = wishlist && wishlist.productsid && wishlist.productsid.find(product => product.productid == productIdObjectId);
                              return isProductInWishList ? 'bi-heart-fill' : 'bi-heart';
                            })() %>"></i>
                         </button>
-                        <img src="/uploads/products/<%= category.productImage[0] %>" style="width: 75%; height: 90%;" alt="">
+                        <img src="/uploads/products/<%= product.productImage[0] %>" style="width: 75%; height: 90%;" alt="">
                       </div>
                       <div class="center">
                         <div class="name_div">
-                        <p class="product_name"><%=category.productName%></p>
+                        <p class="product_name"><%=product.productName%></p>
                         </div>
                         <div class="price_div">
-                           <p class="old_price"><i class="bi bi-currency-rupee"></i><%=category.price%></p>
-                           <p class="new_price"><i class="bi bi-currency-rupee"></i><%=category.discount%></p>
+                           <p class="old_price"><i class="bi bi-currency-rupee"></i><%=product.price%></p>
+                           <p class="new_price"><i class="bi bi-currency-rupee"></i><%=product.discount%></p>
                         </div>
                      </div>
                      <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button>

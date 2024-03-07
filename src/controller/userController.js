@@ -5,7 +5,7 @@ const bannerModel=require("../../Models/bannermodel");
 const cartModel=require("../../Models/cart");
 const wishlistModel=require("../../Models/wishlist")
 const { Redirect } = require("twilio/lib/twiml/VoiceResponse");
-
+ 
 exports.userhomeGet = async (req, res) => {
     try {
         const productDetails = await productModel.find();
@@ -43,6 +43,8 @@ exports.viewProduct = async (req, res) => {
     try {
         let productId = req.query.id;
         const userId = req.session.user ? req.session.user._id : null;
+        let cartCount=0;
+        let wishlistCount=0;
         if(userId){
             const userExist = await cartModel.findOne({ userid: userId });
             if (userExist) {
@@ -54,8 +56,7 @@ exports.viewProduct = async (req, res) => {
                 }
             });
                 const relatedProducts = await productModel.find({ category: product.category }).limit(15);
-                let cartCount=0;
-                let wishlistCount=0;
+                
                 if(userExist){
                     const productids = await cartModel.findOne({ userid: userId })
                     const productIds = await wishlistModel.findOne({ userid: userId })
@@ -74,7 +75,7 @@ exports.viewProduct = async (req, res) => {
         }
         const relatedProducts = await productModel.find({ category: product.category }).limit(15);
         const productExist=false;
-        res.render('user/viewproduct', { product, relatedProducts,productExist });
+        res.render('user/viewproduct', { product, relatedProducts,productExist,cartCount,wishlistCount });
     } catch (error) {
         console.error('Error in viewProduct', error);
         res.status(500).render('error', { message: 'Internal Server Error' });
@@ -140,27 +141,101 @@ exports.buynowpost = async (req, res) => {
     }
 };
 
-exports.categoryGet=async(req,res)=>{
-    try{
-        const categoryName=req.query.catid;
-        const category=await productModel.find({category:categoryName});
+exports.categoryGet = async (req, res) => {
+    try {
+        const userId = req.session.user ? req.session.user._id : null;
+        const categoryName = req.query.catid;
+        const category = await productModel.find({ category: categoryName });
         const categoryDetails = await categoryModel.find();
-        
-        res.render("user/categoryproducts",{category,categoryDetails})
+        let wishlist = await wishlistModel.findOne({ userid: userId });
+        let cartCount = 0;
+        let wishlistCount = 0;
+        if (userId) {
+            const productids = await cartModel.findOne({ userid: userId });
+            if (productids !== null) { 
+                cartCount = productids.productsid.length;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if (productIds !== null) { 
+                wishlistCount = productIds.productsid.length;
+            }
+        }
 
-    }catch{
+        res.render("user/categoryproducts", { category, categoryDetails, wishlist, cartCount, wishlistCount });
 
+    } catch (error) {
+        console.error("Error in categoryGet controller:", error);
+        res.status(500).send("Internal Server Error");
     }
 }
-    
 
+exports.subCategory = async (req, res) => {
+    try {
+        const userId = req.session.user ? req.session.user._id : null;
+        const subcategoryName = req.query.subid;
+        const subcategory = await productModel.find({ subcategory: subcategoryName });
+        const categoryDetails = await categoryModel.find();
+        let wishlist = await wishlistModel.findOne({ userid: userId });
+        let cartCount = 0;
+        let wishlistCount = 0;
+        if (userId) {
+            const productids = await cartModel.findOne({ userid: userId });
+            if (productids !== null) {
+                cartCount = productids.productsid.length;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if (productIds !== null) {
+                wishlistCount = productIds.productsid.length;
+            }
+        }
+
+        res.render("user/subcategory", { subcategory, categoryDetails, wishlist, cartCount, wishlistCount });
+
+    } catch (error) {
+        console.error("Error in subCategory controller:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
+
+    
+exports.allProducts = async (req, res) => {
+    try {
+        const userId = req.session.user ? req.session.user._id : null;
+        let wishlist = await wishlistModel.findOne({ userid: userId });
+        const categoryDetails = await categoryModel.find();
+        const products = await productModel.find();
+        let cartCount = 0;
+        let wishlistCount = 0;
+        if (userId) {
+            const productids = await cartModel.findOne({ userid: userId });
+            if (productids !== null) {
+                cartCount = productids.productsid.length;
+            } else {
+                cartCount = 0;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if (productIds !== null) {
+                wishlistCount = productIds.productsid.length;
+            } else {
+                wishlistCount = 0;
+            }
+        }
+        res.render('user/allproducts', { products, categoryDetails, wishlist, cartCount, wishlistCount });
+
+    } catch (error) {
+        console.error("Error in allProducts controller:", error);
+        res.status(500).send("Internal Server Error");
+    }
+}
 
 exports.cartGet = async (req, res) => {
     try {
+        let cartCount=0;
+        let wishlistCount=0;
         let nouser = false;
         if (!req.session.user) {
             nouser = true;
-            return res.render('user/cart', { nouser });
+            return res.render('user/cart', { nouser,cartCount,wishlistCount });
         }
         const userId = req.session.user._id;
 
@@ -172,10 +247,7 @@ exports.cartGet = async (req, res) => {
                 productsid: []
             }).save();
         }
-
         const productIds = await cartModel.findOne({ userid: userId }).populate('productsid.productid');
-        let cartCount=0;
-        let wishlistCount=0;
         const products = productIds.productsid;
         cartCount = products.length;
         const productids = await wishlistModel.findOne({ userid: userId });
@@ -209,11 +281,6 @@ exports.updateCartQty = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
-
-
-    
-
-
 
 exports.deleteCartProduct = async (req, res) => {
     try {
@@ -279,15 +346,14 @@ exports.addtowishlist = async (req, res) => {
     }
 }
 
-
-
-
 exports.wishlistGet = async (req, res) => {
     try {
+        let cartCount=0;
+        let wishlistCount=0;
         let nouser = false;
         if (!req.session.user) {
             nouser = true;
-            return res.render('user/wishlist', { nouser });
+            return res.render('user/wishlist', { nouser, wishlistCount,cartCount });
         }
         const userId = req.session.user._id;
 
@@ -301,9 +367,6 @@ exports.wishlistGet = async (req, res) => {
         }
 
         const productIds = await wishlistModel.findOne({ userid: userId }).populate('productsid.productid');
-        
-        let cartCount=0;
-        let wishlistCount=0;
         const products = productIds.productsid;
         wishlistCount = products.length;
         const productids = await cartModel.findOne({ userid: userId })

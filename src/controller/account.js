@@ -3,6 +3,8 @@ const signupModel = require('./../../Models/signupmodel');
 const fs=require( "fs");
 const orderModel = require("../../Models/order");
 const productModel = require('../../Models/productdetails');
+const cartModel=require('../../Models/cart');
+const wishlistModel=require('../../Models/wishlist')
 
 exports.addressGet = async (req, res) => {
     try {
@@ -46,8 +48,24 @@ exports.addressGet = async (req, res) => {
         if(!profiledata.userImage==' '){
             img='true';
         }
+        let cartCount=0;
+        let wishlistCount=0;
+        if(userId){
+            const productids = await cartModel.findOne({ userid: userId });
+            if(productids !== null){ // Corrected check for null
+                cartCount = productids.productsid.length;
+            } else {
+                cartCount = 0;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if(productIds !== null){ // Corrected check for null
+                wishlistCount = productIds.productsid.length; // Changed from productids to productIds
+            } else {
+                wishlistCount = 0;
+            }
+        }
         
-        res.render('user/addaddress',{profiledata,data,img});
+        res.render('user/addaddress',{profiledata,data,img,wishlistCount,cartCount});
 
     } catch (error) {
         console.error('Error in addaddressGet', error);
@@ -132,10 +150,27 @@ exports.altaddressGet=async (req,res)=>{
         if(!profiledata.userImage==' '){
             img='true';
         }
-        res.render("user/altaddress",{profiledata,img})
+        let cartCount=0;
+        let wishlistCount=0;
+        if(userId){
+            const productids = await cartModel.findOne({ userid: userId });
+            if(productids !== null){ // Corrected check for null
+                cartCount = productids.productsid.length;
+            } else {
+                cartCount = 0;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if(productIds !== null){ // Corrected check for null
+                wishlistCount = productIds.productsid.length; // Changed from productids to productIds
+            } else {
+                wishlistCount = 0;
+            }
+        }
+        res.render("user/altaddress",{profiledata,img,cartCount,wishlistCount})
 
-    }catch{
-
+    }catch (error) {
+        console.error('Error in altaddressGet', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 }
 exports.altaddressPost = async (req, res) => {
@@ -183,7 +218,23 @@ exports.ordersGet = async (req, res) => {
         if (!profiledata.userImage == ' ') {
             img = 'true';
         }
-        res.render('user/orders', { orders, profiledata, img });
+        let cartCount=0;
+        let wishlistCount=0;
+        if(userId){
+            const productids = await cartModel.findOne({ userid: userId });
+            if(productids !== null){ // Corrected check for null
+                cartCount = productids.productsid.length;
+            } else {
+                cartCount = 0;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if(productIds !== null){ // Corrected check for null
+                wishlistCount = productIds.productsid.length; // Changed from productids to productIds
+            } else {
+                wishlistCount = 0;
+            }
+        }
+        res.render('user/orders', { orders, profiledata, img,wishlistCount,cartCount });
 
     } catch (error) {
         console.error('Error:', error);
@@ -219,8 +270,8 @@ exports.orderopenGet=async(req,res)=>{
         order=order[0];
         res.render('user/orderopen',{order})
 
-    }catch{
-
-
+    }catch (error) {
+        console.error('Error in getting orders', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 }
