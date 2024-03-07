@@ -1,118 +1,146 @@
 <%- include('../common/head.ejs') %>
-   <div class="wrapper category_products_wrapper">
-    <%- include('../common/top_nav.ejs') %>
-         <div class="content catProducts_content">
+    <div class="wrapper allproducts_wrapper">
+      <div class="loading_screen"><img src="/images/loading gif.gif" class="loading_gif" alt=""></div>
+      <%- include('../common/top_nav.ejs') %>
+    <div class="all_products_content">
+        <section class="top_sec">
+            <h4>FILTERS</h4>
+            <div class="sort_by_div">
+                <p class="sort_recomended">Sort By : Recomended<i class="bi bi-chevron-down"></i></p>
+                <ul class="sort_ul">
+                    <li onclick="filterProducts('PRICE','low to high')">Low to High</a></li>
+                    <li onclick="filterProducts('PRICE','high to low')">High to Low</li>
+                </ul>
+            </div>
+        </section>
 
+        <div class="bottom_products_div">
+        <form action="">
+            <div class="filter_section">
 
-                     
-            <!-- =============================================================================================================== -->
-   
+                <div class="filter_sec cat_sec">
+                    <h4>Category</h4>
+                      <ul>
+                        <li><input type="radio" class="input_cat" value="MENS" name="category" id="mens"><label for="mens">MENS</label></li>
+                        <li><input type="radio" class="input_cat" value="WOMENS" name="category" id="womens"><label for="womens">WOMENS</label></li>
+                        <li><input type="radio" class="input_cat" value="KIDS" name="category" id="kids"><label for="kids">KIDS</label></li>
+                        <li><input type="radio" class="input_cat" value="ELECTRONICS" name="category" id="electronics"><label for="electronics">ELECTRONICS</label></li>
+                        <li><input type="radio" class="input_cat" value="HOME" name="category" id="home"><label for="home">HOME</label></li>
+                      </ul>
+                </div>
+                <div class="filter_sec price_sec">
+                    <h4>Price</h4>
+                    <ul>
+                        <li><input type="radio" class="input_price" value="500" name="price" id="500" ><label for="500">Under ₹500</label></li>
+                        <li><input type="radio" class="input_price" value="1000" name="price" id="1000" ><label for="1000">₹500 - ₹1000</label></li>
+                        <li><input type="radio" class="input_price" value="1500" name="price" id="1500" ><label for="1500">₹1000 - ₹1500</label></li>
+                        <li><input type="radio" class="input_price" value="2500" name="price" id="2500" ><label for="2500">₹1500 - ₹2500</label></li>
+                        <li><input type="radio" class="input_price" value="3000" name="price" id="3000" ><label for="3000">Over ₹2,500</label></li>
+                      </ul>
+                </div>
+                
 
-            <header>
-               <ul>
-                  <li><a href="/user/userhome">HOME</a></li>
-                  <li><a href="/all_products">ALL PRODUCTS</a></li>
-                  <li class="category_li">
-                     <a href="#">ALL CATEGORY&nbsp;<i class="bi bi-chevron-down"></i></a>
-                     <table class="drop_bar">
-                      <% categoryDetails.forEach((category) => { %>
-                          <tr>
-                              <td><a href="/user/categoryget?catid=<%= category.categoryName %>" style="color: red; font-size: large; display: block; text-decoration: none;width: 100%;"><%= category.categoryName %></a></td>
-                              <% category.subCategory.forEach((sub) => { %>
-                                <td><a style="width: 100%;" href="/user/subcategory?subid=<%= sub %>" ><%= sub %></a></td>
-                            <% }); %>
-                          </tr>
-                      <% }); %>
-                  </table>
-                  </li>
-                  <%let cat="MOBILES"%>
-                  <li class=""><a href="/user/categoryget?catid=MOBILES">MOBILES</a></li>
-                  <li class=""><a href="/user/categoryget?catid=LAPTOPS">LAPTOPS</a></li>
-                  <li class=""><a href="/user/categoryget?catid=MENS">MENS</a></li>
-               </ul>
-            </header>
+            </div>
+        </form>
 
+        <%if(products.length==0){%>
+          <h4 style="width: 100%;height: 100%;;display: flex;justify-content: center;align-items: center;">No Products</h4>
 
-            <!-- ========================================================================================================= -->
-            <%if(products.length==0){%>
-              <h4 style="width: 100%;height: 100%;;display: flex;justify-content: center;align-items: center;">No Products</h4>
+        <%}else{%>
+  <div class="product_section">
     
-            <%}else{%>
-      <div class="product_section">
-        
 
-         <%products.forEach((product)=>{%>
+     <%products.forEach((product)=>{%>
 
-                   <div class="product_frame_grid" >
-                     <a onclick="window.location.href='/user/viewproduct?id=<%= product._id %>'">
-                     <div class="top">
-                        <button class="wish_btn" onclick="addtoWishlist(event,'<%= product._id %>')">
-                           <i class="biwish_icon<%= product._id %> <%= (() => {
-                             const productIdObjectId = product._id.toString();
-                             const isProductInWishList = wishlist && wishlist.productsid && wishlist.productsid.find(product => product.productid == productIdObjectId);
-                             return isProductInWishList ? 'bi-heart-fill' : 'bi-heart';
-                           })() %>"></i>
-                        </button>
-                        <img src="/uploads/products/<%= product.productImage[0] %>" style="width: 75%; height: 90%;" alt="">
-                      </div>
-                      <div class="center">
-                        <div class="name_div">
-                        <p class="product_name"><%=product.productName%></p>
-                        </div>
-                        <div class="price_div">
-                           <p class="old_price"><i class="bi bi-currency-rupee"></i><%=product.price%></p>
-                           <p class="new_price"><i class="bi bi-currency-rupee"></i><%=product.discount%></p>
-                        </div>
-                     </div>
-                     <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button>
-                     </div>  
-                     </a>                   
+               <div class="product_frame_grid" >
+                 <a onclick="window.location.href='/user/viewproduct?id=<%= product._id %>'">
+                 <div class="top">
+                    <button class="wish_btn" onclick="addtoWishlist(event,'<%= product._id %>')">
+                       <i class="biwish_icon<%= product._id %> <%= (() => {
+                         const productIdObjectId = product._id.toString();
+                         const isProductInWishList = wishlist && wishlist.productsid && wishlist.productsid.find(product => product.productid == productIdObjectId);
+                         return isProductInWishList ? 'bi-heart-fill' : 'bi-heart';
+                       })() %>"></i>
+                    </button>
+                    <img src="/uploads/products/<%= product.productImage[0] %>" style="width: 75%; height: 90%;" alt="">
                   </div>
-                  <% }) %>
-                  
-                 
+                  <div class="center">
+                    <div class="name_div">
+                    <p class="product_name"><%=product.productName%></p>
+                    </div>
+                    <div class="price_div">
+                       <p class="old_price"><i class="bi bi-currency-rupee"></i><%=product.price%></p>
+                       <p class="new_price"><i class="bi bi-currency-rupee"></i><%=product.discount%></p>
+                    </div>
+                 </div>
+                 <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button>
+                 </div>  
+                 </a>                   
+              </div>
+              <% }) %>
+              
+             
 
-               </div>   
-               <%}%>   
+           </div>   
+           <%}%>   
 
-         </div>
-         <%- include('../common/footer.ejs') %>
+        </div>
+      </div>
+
+      <div class="pagination_div">
+      <div class="link_pagination">
+        <button class="back_btn" onclick="prev()"><i class="bi bi-chevron-left"></i></button>
+          <div class="links">
+              <button class="page_btn active_link" onclick="active()" value="1">1</button>
+              <button class="page_btn" onclick="active()" value="2">2</button>
+              <button class="page_btn" onclick="active()" value="3">3</button>
+              <button class="page_btn" onclick="active()" value="4">4</button>
+              <button class="page_btn" onclick="active()" value="5">5</button>
+              <button class="page_btn" onclick="active()" value="6">6</button>
+              <button class="page_btn" onclick="active()" value="7">7</button>
+           </div>
+          <button class="next_btn" onclick="next()"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </div>
+
+    <%- include('../common/footer.ejs') %>
    </div>
 
    <script>
-      async function addtoWishlist(event, id) {
-        event.preventDefault();
-        event.stopPropagation(); 
-        try {console.log('lolo');
-          const response = await fetch(`/user/addtowishlist?productid=${id}`, { method: 'GET', headers: { 'Content-Type': "application/json" } });
-          const result = await response.json();
-          if(result.success){
-            const path = document.querySelector('.biwish_icon'+id);
-            if(path.classList.contains('bi-heart')){
-              path.classList.replace('bi-heart','bi-heart-fill');
-            }else{
-              path.classList.replace('bi-heart-fill','bi-heart');
-            }
-            const count = result.count;
-            const wishCount = document.getElementById('wish-Count');
-            if (wishCount) {
-              wishCount.innerHTML = count;
-            } else {
-              console.error("Element with ID 'wish-count' not found.");
-            }
+    async function addtoWishlist(event, id) {
+      event.preventDefault();
+      event.stopPropagation(); 
+      try {console.log('lolo');
+        const response = await fetch(`/user/addtowishlist?productid=${id}`, { method: 'GET', headers: { 'Content-Type': "application/json" } });
+        const result = await response.json();
+        if(result.success){
+          const path = document.querySelector('.biwish_icon'+id);
+          if(path.classList.contains('bi-heart')){
+            path.classList.replace('bi-heart','bi-heart-fill');
           }else{
-            window.location.href="/user/login";
+            path.classList.replace('bi-heart-fill','bi-heart');
           }
-        } catch (error) {
-          console.error('Error adding product:', error);
+          const count = result.count;
+          const wishCount = document.getElementById('wish-Count');
+          if (wishCount) {
+            wishCount.innerHTML = count;
+          } else {
+            console.error("Element with ID 'wish-count' not found.");
+          }
+        }else{
+          window.location.href="/user/login";
         }
+      } catch (error) {
+        console.error('Error adding product:', error);
       }
+    }
 
-    </script>
+  </script>
 <script src="/javascript/addtowish.js"></script>
 <script src="/javascript/addtocart.js"></script>
 <script src="/javascript/product-open.js"></script>
-<script src="/javascript/btnsearch.js"></script>
+<script src="/javascript/allproducts.js"></script>
+<script src="/javascript/searching.js"></script>
 
 
-<%- include('../common/end.ejs') %>    
+<%- include('../common/end.ejs') %>

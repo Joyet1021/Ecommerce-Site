@@ -3601,7 +3601,7 @@ word-wrap: break-word;
 }
 .product_section{
     display: grid;
-    grid-template-columns: repeat(auto-fill,minmax(15em,1fr));
+    grid-template-columns: repeat(4,minmax(15em,1fr));
     column-gap: 1.8rem;
     row-gap: 1.8rem;
     padding: .5rem;
@@ -4106,7 +4106,7 @@ background-color: white;
 
     .all_products_content{
         width: 100%;
-        height: calc(100vh - 4.5rem);
+        height: 520px;
     }
     .top_sec{
         display: flex;
@@ -4169,21 +4169,22 @@ background-color: white;
     }
     .bottom_products_div{
         width: 100%;
-        height: calc(100vh - 8.5rem);
+        height: 440px;
         display: flex;
     }
     .filter_section{
         height: 100%;
         width: 17rem;
+        overflow: auto;
         border-right: 1px solid rgba(0, 0, 0, 0.214);
     }
     .product_section{
         position: relative;
         display: grid;
-        grid-template-columns: repeat(4,1fr) !important;
+        grid-template-columns: repeat(3,1fr) !important;
         grid-template-rows: repeat(auto , 25rem) !important;
         row-gap: 2rem;
-        height: 100%;
+        height: 440px;
         width: calc(100% - 17rem);
         padding: 1rem 1.4rem;
         overflow-y: scroll;
@@ -4293,7 +4294,7 @@ background-color: white;
         justify-content: space-around;
         padding: .4rem 4rem;
         width: 100%;
-        height: 12.4rem;
+        height: 13.7rem;
         border-bottom: 1px solid rgba(0, 0, 0, 0.119);
     }
     .color_sec{
@@ -4306,13 +4307,14 @@ background-color: white;
     }
     .filter_section ul{
         width: 100%;
+        
     }
     .filter_section li{
         display: flex;
         align-items: center;
         gap: .6rem;
         list-style: none;
-        height: 1.7rem;
+        height: 1.8rem;
         cursor: pointer;
         font-family: sans-serif;
         font-weight: 600;
@@ -4396,7 +4398,7 @@ background-color: white;
     }
     .pagination_div{
         position: absolute;
-        bottom: 0;
+        bottom: -1;
         right: 0;
         left: 0;
         display: flex;

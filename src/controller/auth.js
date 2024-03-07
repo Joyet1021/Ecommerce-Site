@@ -1,4 +1,5 @@
 const signupModel = require('./../../Models/signupmodel');
+const orderModel=require('./../../Models/order')
 const dotenv=require('dotenv').config()
 const bcrypt = require('bcrypt');
 const twilio = require('twilio');
@@ -295,7 +296,24 @@ exports.resetpasswordPost = async (req, res) => {
 
 
 
-exports.adminhomeGet=(req,res)=>{
-    res.render('admin/adminhome')
+exports.adminhomeGet=async(req,res)=>{
+    const total = await orderModel.aggregate([
+        {
+            $match: { status: 'Delivered' } // Filter by status
+        },
+        {
+            $group: {
+                _id: null,
+                totalSales: { $sum: { $toDouble: '$total' } }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                totalSales: 1
+            }
+        }
+    ]).exec();
+    res.render('admin/adminhome',{total})
 }
 

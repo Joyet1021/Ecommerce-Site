@@ -40,7 +40,11 @@
                    
                   </div>
               </div>
+              <%if(order.status=='Cancelled'){%>
+
+              <%}else{%>
               <div class="cancelOrder"><button class="cancelbtn"><a onclick="confirmDelete('<%=order._id %>','<%=order.productsid[0].productid.productName %>') ;">Cancel</button></div>
+                <%}%>
         </div>
 
 

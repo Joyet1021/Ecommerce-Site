@@ -243,18 +243,18 @@ exports.ordersGet = async (req, res) => {
     }
 };
 exports.deleteorder = async (req, res) => {
-    try {
+    try {console.log('jiii');
         const id = req.query.id;
         const order = await orderModel.findOne({ _id: id });
         const productid = order.productsid[0].productid;
         const quantity = order.productsid[0].quantity;
-        
+        console.log(productid);
         const product = await productModel.findOne({ _id: productid });
         const oldqty = product.quantity;
         const totalqty = oldqty + quantity;
         
         await product.updateOne({ quantity: totalqty });
-        await orderModel.updateOne({ status:'Cancelled' });
+        await order.updateOne({ status:'Cancelled' });
         
         res.status(203).json({ success: true, message: "Product Deleted Successfully" });
     } catch (error) {

@@ -76,6 +76,7 @@ rel="stylesheet">
 
 		<!-- MAIN -->
 		<main>
+			
 			<h1 class="title">Dashboard</h1>
 			<ul class="breadcrumbs">
 				<li><a href="">Home</a></li>
@@ -86,13 +87,12 @@ rel="stylesheet">
 				<div class="card">
 					<div class="head">
 						<div>
-							<h2>1500</h2>
-							<p>Traffic</p>
+							<h5 style="font-weight: bold;">Total Sales</h5>
+							₹<span class="label"> <%=total[0].totalSales%></span>
+							
 						</div>
 						<i class='bx bx-trending-up icon' ></i>
 					</div>
-					<span class="progress" data-value="40%"></span>
-					<span class="label">40%</span>
 				</div>
 				<div class="card">
 					<div class="head">
@@ -102,8 +102,6 @@ rel="stylesheet">
 						</div>
 						<i class='bx bx-trending-down icon down' ></i>
 					</div>
-					<span class="progress" data-value="60%"></span>
-					<span class="label">60%</span>
 				</div>
 				<div class="card">
 					<div class="head">
@@ -113,8 +111,6 @@ rel="stylesheet">
 						</div>
 						<i class='bx bx-trending-up icon' ></i>
 					</div>
-					<span class="progress" data-value="30%"></span>
-					<span class="label">30%</span>
 				</div>
 				<div class="card">
 					<div class="head">
@@ -124,140 +120,47 @@ rel="stylesheet">
 						</div>
 						<i class='bx bx-trending-up icon' ></i>
 					</div>
-					<span class="progress" data-value="80%"></span>
-					<span class="label">80%</span>
 				</div>
 			</div>
 			<div class="data">
 				<div class="content-data">
 					<div class="head">
-						<h3>Sales Report</h3>
-						<div class="menu">
-							<i class='bx bx-dots-horizontal-rounded icon'></i>
-							<ul class="menu-link">
-								<li><a href="#">Edit</a></li>
-								<li><a href="#">Save</a></li>
-								<li><a href="#">Remove</a></li>
-							</ul>
-						</div>
+						<h3>Stock Report</h3>
+						
 					</div>
 					<div class="chart">
-						<div id="chart"></div>
+						<div style="height: 90%;  width: 100%;">
+							<canvas id="myChart"></canvas>
+						  </div>
 					</div>
 				</div>
 				<div class="content-data">
 					<div class="head">
-						<h3>Chatbox</h3>
-						<div class="menu">
-							<i class='bx bx-dots-horizontal-rounded icon'></i>
-							<ul class="menu-link">
-								<li><a href="#">Edit</a></li>
-								<li><a href="#">Save</a></li>
-								<li><a href="#">Remove</a></li>
-							</ul>
-						</div>
+						<h3>Daily Sales Report</h3>
+						
 					</div>
 					<div class="chat-box">
-						<p class="day"><span>Today</span></p>
-						<div class="msg">
-							<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="">
-							<div class="chat">
-								<div class="profile">
-									<span class="username">Alan</span>
-									<span class="time">18:30</span>
-								</div>
-								<p>Hello</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque voluptatum eos quam dolores eligendi exercitationem animi nobis reprehenderit laborum! Nulla.</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, architecto!</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum, dolor sit amet.</p>
-							</div>
+						<div class="chart" style="height: 100%;">
+							<div style="margin-top: 25%;">
+								<canvas id="myChart1"></canvas>
+							  </div>
 						</div>
 					</div>
-					
-					<form action="#">
-						<div class="form-group">
-							<input type="text" placeholder="Type...">
-							<button type="submit" class="btn-send"><i class='bx bxs-send' ></i></button>
-						</div>
-					</form>
 				</div>
-				<div class="content-data">
+				<div class="content-datas">
 					<div class="head">
-						<h3>Chatbox</h3>
-						<div class="menu">
-							<i class='bx bx-dots-horizontal-rounded icon'></i>
-							<ul class="menu-link">
-								<li><a href="#">Edit</a></li>
-								<li><a href="#">Save</a></li>
-								<li><a href="#">Remove</a></li>
-							</ul>
-						</div>
+						<h3>Users Report</h3>
+						
 					</div>
 					<div class="chat-box">
-						<p class="day"><span>Today</span></p>
-						<div class="msg">
-							<img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8cGVvcGxlfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="">
-							<div class="chat">
-								<div class="profile">
-									<span class="username">Alan</span>
-									<span class="time">18:30</span>
-								</div>
-								<p>Hello</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque voluptatum eos quam dolores eligendi exercitationem animi nobis reprehenderit laborum! Nulla.</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam, architecto!</p>
-							</div>
-						</div>
-						<div class="msg me">
-							<div class="chat">
-								<div class="profile">
-									<span class="time">18:30</span>
-								</div>
-								<p>Lorem ipsum, dolor sit amet.</p>
-							</div>
+						<div class="chart" style="height: 100%;margin-top: 60px;">
+							<div>
+								<canvas id="myChart2"></canvas>
+							  </div>
 						</div>
 					</div>
 					
-					<form action="#">
-						<div class="form-group">
-							<input type="text" placeholder="Type...">
-							<button type="submit" class="btn-send"><i class='bx bxs-send' ></i></button>
-						</div>
-					</form>
+					
 				</div>
 			</div>
 		</main>
@@ -265,7 +168,137 @@ rel="stylesheet">
 	</section>
 	<!-- NAVBAR -->
 
-	<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-	<script src="/js/script.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+
+  document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        const response = await fetch('/admin/dashboardstock', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+        if (!response.ok) {
+            throw new Error("Error deleting product: " + response.statusText);
+        }
+        const data = await response.json();
+        if (data && data.category) {
+            const category = data.category;
+			const stock=data.total;
+			new Chart(ctx, {
+				type: 'doughnut',
+				data: {
+					labels: category,
+					datasets: [{
+						label: 'Stock',
+						data: stock,
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					}
+				}
+			});
+		} else {
+            console.log("Failed to get category count");
+        }
+    } catch (error) {
+        console.error('Error deleting product:', error);
+    }
+});
+
+  
+
+const ctz = document.getElementById('myChart1');
+
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        const response = await fetch('/admin/dashboardsales', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+        if (!response.ok) {
+            throw new Error("Error getting sales data: " + response.statusText);
+        }
+        const data = await response.json();
+        if (data && data.length > 0) {
+            const dates = data.map(item => item.date.substring(0, 10));
+            const sales = data.map(item => item.totalSales);
+            new Chart(ctz, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Daily Sales',
+                        data: sales,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMin: 0,
+                            suggestedMax: Math.ceil(Math.max(...sales) / 1000) * 1000 // Round up to the nearest thousand
+                        }
+                    }
+                }
+            });
+        } else {
+            console.log("No sales data available");
+        }
+    } catch (error) {
+        console.error('Error getting sales data:', error);
+    }
+});
+
+
+
+const cty = document.getElementById('myChart2');
+
+document.addEventListener('DOMContentLoaded', async function() {
+    try {
+        const response = await fetch('/admin/dashboardusers', { method: 'GET', headers: { 'Content-Type': 'application/json' } });
+        if (!response.ok) {
+            throw new Error("Error getting user data: " + response.statusText);
+        }
+        const data = await response.json();
+        if (data && data.length > 0) {
+            const dates = data.map(item => item.date.substring(0, 10));
+            const counts = data.map(item => item.count);
+            new Chart(cty, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Signup Users Count',
+                        data: counts,
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        } else {
+            console.log("No user data available");
+        }
+    } catch (error) {
+        console.error('Error getting user data:', error);
+    }
+});
+
+
+
+  
+
+  
+</script>
+<script src="/js/script.js"></script>
 </body>
 </html>

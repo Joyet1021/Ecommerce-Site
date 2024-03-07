@@ -8,6 +8,7 @@ const couponController=require("../controller/Coupons")
 const bannerController=require("../controller/banner")
 const ordersController=require("../controller/adminorders")
 const multer = require('../middlewares/multerMiddleware')
+const dashboardController=require("../controller/admindashboard")
 
 
 router.get("/adminhome",authController.adminhomeGet)
@@ -48,6 +49,10 @@ router.delete("/deletebanner",bannerController.deletebanner)
 
 router.get("/blockedusers",adminController.blockedusersGet)
 router.get("/unblockuser",adminController.unblockuser)
+
+router.get("/dashboardstock",dashboardController.dashboardStock);
+router.get("/dashboardsales",dashboardController.dailySales);
+router.get("/dashboardusers",dashboardController.totalusers);
 
 
 

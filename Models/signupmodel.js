@@ -7,7 +7,8 @@ const schema={
     password:{type:String,required:true},
     role:{type:String,required:true},
     verified:{type:Boolean},
-    blocked: { type : Boolean , default : false }  
+    blocked: { type : Boolean , default : false } ,
+    createdAt:{type:Date, default:new Date()}
 }
 
 
