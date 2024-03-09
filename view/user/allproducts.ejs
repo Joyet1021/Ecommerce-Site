@@ -21,21 +21,19 @@
                 <div class="filter_sec cat_sec">
                     <h4>Category</h4>
                       <ul>
-                        <li><input type="radio" class="input_cat" value="MENS" name="category" id="mens"><label for="mens">MENS</label></li>
-                        <li><input type="radio" class="input_cat" value="WOMENS" name="category" id="womens"><label for="womens">WOMENS</label></li>
-                        <li><input type="radio" class="input_cat" value="KIDS" name="category" id="kids"><label for="kids">KIDS</label></li>
-                        <li><input type="radio" class="input_cat" value="ELECTRONICS" name="category" id="electronics"><label for="electronics">ELECTRONICS</label></li>
-                        <li><input type="radio" class="input_cat" value="HOME" name="category" id="home"><label for="home">HOME</label></li>
+                        <%categoryDetails.forEach((category)=>{%>
+                        <li><input type="radio" style="cursor: pointer;" class="input_cat" value="<%=category.categoryName%>" name="category" id="mens"><label for="<%=category.categoryName%>"><%=category.categoryName%></label></li>
+                      <%})%>
                       </ul>
                 </div>
                 <div class="filter_sec price_sec">
                     <h4>Price</h4>
                     <ul>
-                        <li><input type="radio" class="input_price" value="500" name="price" id="500" ><label for="500">Under ₹500</label></li>
-                        <li><input type="radio" class="input_price" value="1000" name="price" id="1000" ><label for="1000">₹500 - ₹1000</label></li>
-                        <li><input type="radio" class="input_price" value="1500" name="price" id="1500" ><label for="1500">₹1000 - ₹1500</label></li>
-                        <li><input type="radio" class="input_price" value="2500" name="price" id="2500" ><label for="2500">₹1500 - ₹2500</label></li>
-                        <li><input type="radio" class="input_price" value="3000" name="price" id="3000" ><label for="3000">Over ₹2,500</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="500" name="price" id="500" ><label for="500">Under ₹500</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="1000" name="price" id="1000" ><label for="1000">₹500 - ₹1000</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="1500" name="price" id="1500" ><label for="1500">₹1000 - ₹1500</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="2500" name="price" id="2500" ><label for="2500">₹1500 - ₹2500</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="3000" name="price" id="3000" ><label for="3000">Over ₹2,500</label></li>
                       </ul>
                 </div>
                 

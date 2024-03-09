@@ -154,7 +154,9 @@ rel="stylesheet">
                                         <%if(order.status == "Cancelled"){%>
                                             <button type="button" id="select-button<%= order._id %>" class="select-button" ><%= order.status %></button>
 
-                                            <%} else {%>
+                                            <%} else if(order.status=="Delivered") {%>
+                                                <button type="button" id="select-button<%= order._id %>" class="select-button" ><%= order.status %></button>
+                                                <%}else{%>
 
                                         <!-- New td with button for selecting order status -->
                                         <button type="button" id="select-button<%= order._id %>" class="select-button" onclick="showRadioButtons('<%= order._id %>')"><%= order.status %></button>

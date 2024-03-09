@@ -1,9 +1,10 @@
 const signupModel = require('./../../Models/signupmodel');
+const productModel=require('./../../Models/productdetails')
 const orderModel=require('./../../Models/order')
 const dotenv=require('dotenv').config()
 const bcrypt = require('bcrypt');
 const twilio = require('twilio');
-const mailOTP = require('../middlewares/otp')
+const mailOTP = require('../Utilities/otp')
 const accountsid = process.env.accountsId;
 const authToken =process.env.authToken;
 const verifysid = process.env.verifysId;
@@ -314,6 +315,8 @@ exports.adminhomeGet=async(req,res)=>{
             }
         }
     ]).exec();
-    res.render('admin/adminhome',{total})
+    const product=await productModel.find();
+    const products=product.length;
+    res.render('admin/adminhome',{total,products})
 }
 

@@ -2122,6 +2122,7 @@ word-wrap: break-word;
 
 .updatepassword_wrapper{
     .updatepassword_content{
+        height: 700px;
         display: flex;
     }
     .right_content{
@@ -2139,6 +2140,7 @@ word-wrap: break-word;
         width: 29rem;
         height: 39rem;
         padding: 0 1rem;
+        overflow: auto;
         color: rgba(0, 0, 0, 0.739);
         background-color:#02395031;
         border: 1px solid rgba(0, 0, 0, 0.084);
@@ -3214,15 +3216,21 @@ word-wrap: break-word;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
     width: 100% !important;
     height: 26em;
     flex-shrink: 0;
     position: relative;
     transition: all 2s;
+    display: none;
+  animation: slide 2s infinite;
    }
+   .banner_sub_div.active {
+    display: block;
+  }
+  @keyframes slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
   .banner_text_frame{
     top: 20%;
     right: 6rem;

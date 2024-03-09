@@ -18,7 +18,7 @@ submit.addEventListener("click", async (e) => {
  
         const productImageFile = document.querySelector('input[name="productImage"]').files[0];
         
-        if (!productName ||productName==""|| !price || !quantity || !category || !subCategory || !deliverydate|| !description||!productImageFile) {
+        if (!productName || !price || !quantity || !category || !subCategory || !deliverydate|| !description||!productImageFile) {
             message.textContent = "Please fill out all fields";
             setTimeout(() => {
                 message.innerHTML = "";

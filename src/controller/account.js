@@ -1,6 +1,7 @@
 const profileModel = require('../../Models/userprofile');
 const signupModel = require('./../../Models/signupmodel');
 const fs=require( "fs");
+const bcrypt = require('bcrypt');
 const orderModel = require("../../Models/order");
 const productModel = require('../../Models/productdetails');
 const cartModel=require('../../Models/cart');
@@ -275,3 +276,64 @@ exports.orderopenGet=async(req,res)=>{
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 }
+
+exports.updatePasswordGet=async(req,res)=>{
+    try{
+        const userId = req.session.user ? req.session.user._id : null;
+        if (!userId) {
+            return res.redirect('/user/login');
+        }
+        const profiledata = await profileModel.findOne({ userId: userId });
+        let img='false';
+        if(!profiledata.userImage==' '){
+            img='true';
+        }
+        let cartCount=0;
+        let wishlistCount=0;
+        if(userId){
+            const productids = await cartModel.findOne({ userid: userId });
+            if(productids !== null){ // Corrected check for null
+                cartCount = productids.productsid.length;
+            } else {
+                cartCount = 0;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if(productIds !== null){ // Corrected check for null
+                wishlistCount = productIds.productsid.length; // Changed from productids to productIds
+            } else {
+                wishlistCount = 0;
+            }
+        }
+        res.render("user/updatepassword",{profiledata,img,cartCount,wishlistCount})
+
+    }catch (error) {
+        console.error('Error in altaddressGet', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+}
+
+exports.updatePasswordput = async (req, res) => {
+    try {
+        const userId = req.session.user ? req.session.user._id : null;
+        if (!userId) {
+            return res.redirect('/user/login');
+        }
+        const { oldpassword, newpassword } = req.body;
+
+        const user = await signupModel.findById(userId);
+
+        const isMatch = await bcrypt.compare(oldpassword, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ success: false, message: "Invalid old password" });
+        }
+
+        const hashedPassword = await bcrypt.hash(newpassword, 10);
+        user.password = hashedPassword;
+        await user.save();
+
+        return res.status(200).json({ success: true, message: "Password updated" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+};
