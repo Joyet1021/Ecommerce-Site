@@ -1,3 +1,4 @@
+// Import necessary modules and models
 const profileModel = require('../../Models/userprofile');
 const signupModel = require('./../../Models/signupmodel');
 const fs=require( "fs");
@@ -7,17 +8,21 @@ const productModel = require('../../Models/productdetails');
 const cartModel=require('../../Models/cart');
 const wishlistModel=require('../../Models/wishlist')
 
+// Display the address form
 exports.addressGet = async (req, res) => {
     try {
+        // Check if the user is logged in
         const userId = req.session.user ? req.session.user._id : null;
         if (!userId) {
             return res.redirect('/user/login');
         }
+        // Get user details from session
         const user = req.session.user;
         const userName=user.username
         const email = user.email;
         const number = user.phonenumber;
 
+        // Check if user profile exists, if not, create one
         let userdata = await profileModel.findOne({ userId: userId });
 
         if (!userdata) {
@@ -40,6 +45,7 @@ exports.addressGet = async (req, res) => {
             }).save();
         }
 
+        // Fetch user profile data
         const profiledata = await profileModel.findOne({ userId: userId });
         let data='false';
         let img='false';
@@ -51,6 +57,7 @@ exports.addressGet = async (req, res) => {
         }
         let cartCount=0;
         let wishlistCount=0;
+        // Fetch cart and wishlist count
         if(userId){
             const productids = await cartModel.findOne({ userid: userId });
             if(productids !== null){ // Corrected check for null
@@ -66,6 +73,7 @@ exports.addressGet = async (req, res) => {
             }
         }
         
+        // Render the address form
         res.render('user/addaddress',{profiledata,data,img,wishlistCount,cartCount});
 
     } catch (error) {
@@ -73,13 +81,18 @@ exports.addressGet = async (req, res) => {
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 }
+
+// Handle address form submission
 exports.addAddressPost = async (req, res) => {
     try {
+        // Get user ID from session
         const userId = req.session.user ? req.session.user._id : null;
+        // Get uploaded image file
         let userImage = req.file ? req.file.filename : null;
         const { firstName, lastName, dateofBirth, country, state, district, zip, landMark, Address, username, phoneNumber, email } = req.body;
         const address = Address + ' Pin ' + zip;
 
+        // Update user details in signupModel
         await signupModel.findOneAndUpdate({ _id: userId }, {
             $set: {
                 username: username,
@@ -88,8 +101,10 @@ exports.addAddressPost = async (req, res) => {
             }
         });
 
+        // Fetch old profile data
         const oldProfile = await profileModel.findOne({ userId });
 
+        // Create updated profile data object
         let updatedProfileData = {
             userImage: userImage || oldProfile.userImage,
             userName:username,
@@ -117,7 +132,7 @@ exports.addAddressPost = async (req, res) => {
             }]
         };
 
-
+        // Delete old image file if new image is uploaded
         if (req.file && req.file.filename && req.file.filename !== ' ') {
             const img = oldProfile.userImage;
             if (!img == ' ') {
@@ -128,10 +143,11 @@ exports.addAddressPost = async (req, res) => {
                 }
             }
         }
-        
 
+        // Update profile data in profileModel
         await profileModel.updateOne({ userId }, { $set: updatedProfileData });
 
+        // Return success message
         res.status(200).json({ success: true, message: "Address added successfully", data: updatedProfileData });
 
     } catch (error) {
@@ -140,6 +156,7 @@ exports.addAddressPost = async (req, res) => {
     }
 }
 
+// Display alternate address form
 exports.altaddressGet=async (req,res)=>{
     try{
         const userId = req.session.user ? req.session.user._id : null;
@@ -167,6 +184,7 @@ exports.altaddressGet=async (req,res)=>{
                 wishlistCount = 0;
             }
         }
+        // Render alternate address form
         res.render("user/altaddress",{profiledata,img,cartCount,wishlistCount})
 
     }catch (error) {
@@ -174,6 +192,8 @@ exports.altaddressGet=async (req,res)=>{
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 }
+
+// Handle alternate address form submission
 exports.altaddressPost = async (req, res) => {
     try {
         const userId = req.session.user ? req.session.user._id : null;
@@ -204,6 +224,8 @@ exports.altaddressPost = async (req, res) => {
         res.status(500).json({ success: false, message: 'Failed to add address' });
     }
 }
+
+// Display user orders
 exports.ordersGet = async (req, res) => {
     try {
         let userId = req.session.user ? req.session.user._id : null;
@@ -212,6 +234,7 @@ exports.ordersGet = async (req, res) => {
         }
         userId = userId.toString();
         
+        // Fetch user orders
         const orders = await orderModel.find({ userid: userId }).populate('productsid.productid');
 
         const profiledata = await profileModel.findOne({ userId: userId });
@@ -235,6 +258,7 @@ exports.ordersGet = async (req, res) => {
                 wishlistCount = 0;
             }
         }
+        // Render user orders page
         res.render('user/orders', { orders, profiledata, img,wishlistCount,cartCount });
 
     } catch (error) {
@@ -243,19 +267,18 @@ exports.ordersGet = async (req, res) => {
         res.status(500).render('error', { error: 'An unexpected error occurred.' });
     }
 };
+
+// Delete order
 exports.deleteorder = async (req, res) => {
-    try {console.log('jiii');
+    try {
         const id = req.query.id;
         const order = await orderModel.findOne({ _id: id });
         const productid = order.productsid[0].productid;
         const quantity = order.productsid[0].quantity;
-        console.log(productid);
-        const product = await productModel.findOne({ _id: productid });
-        const oldqty = product.quantity;
-        const totalqty = oldqty + quantity;
         
-        await product.updateOne({ quantity: totalqty });
-        await order.updateOne({ status:'Cancelled' });
+        // Update product quantity and order status
+        await productModel.updateOne({ _id: productid }, { $inc: { quantity: quantity } });
+        await orderModel.updateOne({ _id: id }, { status:'Cancelled' });
         
         res.status(203).json({ success: true, message: "Product Deleted Successfully" });
     } catch (error) {
@@ -264,6 +287,7 @@ exports.deleteorder = async (req, res) => {
     }
 }
 
+// Display detailed order information
 exports.orderopenGet=async(req,res)=>{
     try{
         const orderid=req.query.id;
@@ -277,6 +301,7 @@ exports.orderopenGet=async(req,res)=>{
     }
 }
 
+// Display update password form
 exports.updatePasswordGet=async(req,res)=>{
     try{
         const userId = req.session.user ? req.session.user._id : null;
@@ -304,6 +329,7 @@ exports.updatePasswordGet=async(req,res)=>{
                 wishlistCount = 0;
             }
         }
+        // Render update password form
         res.render("user/updatepassword",{profiledata,img,cartCount,wishlistCount})
 
     }catch (error) {
@@ -312,6 +338,7 @@ exports.updatePasswordGet=async(req,res)=>{
     }
 }
 
+// Handle password update
 exports.updatePasswordput = async (req, res) => {
     try {
         const userId = req.session.user ? req.session.user._id : null;

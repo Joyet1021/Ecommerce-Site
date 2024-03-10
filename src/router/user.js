@@ -35,6 +35,7 @@ router.post("/buyNow",userController.buynowpost)
 
 router.get("/categoryGet",userController.categoryGet)
 router.get("/allproducts",userController.allProducts)
+router.get("/filterproduct",userController.filterproducts)
 router.get("/subcategory",userController.subCategory)
    
 router.get("/cart",userController.cartGet)

@@ -4153,6 +4153,7 @@ background-color: white;
         display: none;
         position: absolute;
         z-index: 2;
+        top: 101%;
         border: 1px solid rgba(0, 0, 0, 0.067);
         background-color: white;
     }
@@ -4173,6 +4174,12 @@ background-color: white;
         background-color: rgb(242, 242, 242);
     }
     .sort_by_div:hover .sort_ul{
+        display: block;
+    }
+    .sort_ul li:active{
+        background-color: rgb(242, 242, 242);
+    }
+    .sort_by_div:active .sort_ul{
         display: block;
     }
     .bottom_products_div{

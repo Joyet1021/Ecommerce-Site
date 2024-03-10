@@ -29,11 +29,11 @@
                 <div class="filter_sec price_sec">
                     <h4>Price</h4>
                     <ul>
-                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="500" name="price" id="500" ><label for="500">Under ₹500</label></li>
-                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="1000" name="price" id="1000" ><label for="1000">₹500 - ₹1000</label></li>
-                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="1500" name="price" id="1500" ><label for="1500">₹1000 - ₹1500</label></li>
-                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="2500" name="price" id="2500" ><label for="2500">₹1500 - ₹2500</label></li>
-                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="3000" name="price" id="3000" ><label for="3000">Over ₹2,500</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="0,500" name="price" id="500" ><label for="500">Under ₹500</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="500,1000" name="price" id="1000" ><label for="1000">₹500 - ₹1000</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="1000,1500" name="price" id="1500" ><label for="1500">₹1000 - ₹1500</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="1500,2500" name="price" id="2500" ><label for="2500">₹1500 - ₹2500</label></li>
+                        <li><input type="radio" style="cursor: pointer;" class="input_price" value="2500,100000" name="price" id="3000" ><label for="3000">Over ₹2,500</label></li>
                       </ul>
                 </div>
                 
@@ -108,7 +108,7 @@
     async function addtoWishlist(event, id) {
       event.preventDefault();
       event.stopPropagation(); 
-      try {console.log('lolo');
+      try {
         const response = await fetch(`/user/addtowishlist?productid=${id}`, { method: 'GET', headers: { 'Content-Type': "application/json" } });
         const result = await response.json();
         if(result.success){
@@ -133,12 +133,151 @@
       }
     }
 
+    
+    
+    document.addEventListener("DOMContentLoaded", function () {
+    const categoryRadios = document.querySelectorAll('.input_cat');
+    const priceRadios = document.querySelectorAll('.input_price');
+
+    categoryRadios.forEach(function (radio) {
+        radio.addEventListener('change', function (event) {
+            const selectedCategory = event.target.value;
+            const selectedPriceElement = document.querySelector('.input_price:checked');
+            const selectedPrice = selectedPriceElement ? selectedPriceElement.value : null
+            filterByCategory(selectedPrice,selectedCategory);
+        });
+    });
+
+    priceRadios.forEach(function (radio) {
+    radio.addEventListener('change', function (event) {
+        const selectedPrice = event.target.value;
+        const selectedCategoryElement = document.querySelector('.input_cat:checked');
+        const selectedCategory = selectedCategoryElement ? selectedCategoryElement.value : null;
+
+        filterByPrice(selectedPrice, selectedCategory);
+    });
+});
+
+
+
+    async function filterByCategory(price,category) {
+    try {
+        const selectedPrice = price ? price : null;
+        const response = await fetch(`/user/filterproduct?category=${category}&price=${selectedPrice}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+        console.log('Filter by category result:', result); // Debugging statement
+        if (result.success) {
+            const wishlist=result.wishlist;
+            const productSection = document.querySelector('.product_section');
+            productSection.innerHTML = ''; // Clear previous products
+            result.product.forEach(product => {
+                // Create and append product elements
+                const productFrameGrid = document.createElement('div');
+                productFrameGrid.className = 'product_frame_grid';
+                productFrameGrid.innerHTML = `
+                    <a onclick="window.location.href='/user/viewproduct?id=${product._id}'">
+                        <div class="top">
+                            <button class="wish_btn" onclick="addtoWishlist(event,'${product._id}')">
+                                <i class="biwish_icon${product._id} ${
+                                    wishlist &&
+                                    wishlist.productsid &&
+                                    wishlist.productsid.find(
+                                        wishlistProduct => wishlistProduct.productid == product._id.toString()
+                                    )
+                                        ? 'bi-heart-fill'
+                                        : 'bi-heart'
+                                }"></i>
+                            </button>
+                            <img src="/uploads/products/${product.productImage[0]}" style="width: 75%; height: 90%;" alt="">
+                        </div>
+                        <div class="center">
+                            <div class="name_div">
+                                <p class="product_name">${product.productName}</p>
+                            </div>
+                            <div class="price_div">
+                                <p class="old_price"><i class="bi bi-currency-rupee"></i>${product.price}</p>
+                                <p class="new_price"><i class="bi bi-currency-rupee"></i>${product.discount}</p>
+                            </div>
+                        </div>
+                        <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button></div>
+                    </a>
+                `;
+                productSection.appendChild(productFrameGrid);
+            });
+        } else {
+            console.error("Error filtering products:", result.message);
+        }
+    } catch (error) {
+        console.error('Error filtering products:', error);
+    }
+}
+    
+    
+
+
+async function filterByPrice(price, category) {
+    try {
+        const selectedCategory = category ? category : null;
+        const response = await fetch(`/user/filterproduct?category=${selectedCategory}&price=${price}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+        console.log('Filter by price result:', result); // Debugging statement
+        if (result.success) {
+            const wishlist = result.wishlist;
+            const productSection = document.querySelector('.product_section');
+            productSection.innerHTML = ''; // Clear previous products
+            result.product.forEach(product => {
+                // Create and append product elements
+                const productFrameGrid = document.createElement('div');
+                productFrameGrid.className = 'product_frame_grid';
+                productFrameGrid.innerHTML = `
+                    <a onclick="window.location.href='/user/viewproduct?id=${product._id}'">
+                        <div class="top">
+                            <button class="wish_btn" onclick="addtoWishlist(event,'${product._id}')">
+                                <i class="biwish_icon${product._id} ${
+                                    wishlist &&
+                                    wishlist.productsid &&
+                                    wishlist.productsid.find(
+                                        wishlistProduct => wishlistProduct.productid == product._id.toString()
+                                    )
+                                        ? 'bi-heart-fill'
+                                        : 'bi-heart'
+                                }"></i>
+                            </button>
+                            <img src="/uploads/products/${product.productImage[0]}" style="width: 75%; height: 90%;" alt="">
+                        </div>
+                        <div class="center">
+                            <div class="name_div">
+                                <p class="product_name">${product.productName}</p>
+                            </div>
+                            <div class="price_div">
+                                <p class="old_price"><i class="bi bi-currency-rupee"></i>${product.price}</p>
+                                <p class="new_price"><i class="bi bi-currency-rupee"></i>${product.discount}</p>
+                            </div>
+                        </div>
+                        <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button></div>
+                    </a>
+                `;
+                productSection.appendChild(productFrameGrid);
+            });
+        } else {
+            console.error("Error filtering products:", result.message);
+        }
+    } catch (error) {
+        console.error('Error filtering products:', error);
+    }
+}
+
+
+    })
+
   </script>
-<script src="/javascript/addtowish.js"></script>
-<script src="/javascript/addtocart.js"></script>
-<script src="/javascript/product-open.js"></script>
-<script src="/javascript/allproducts.js"></script>
-<script src="/javascript/searching.js"></script>
+
 
 
 <%- include('../common/end.ejs') %>

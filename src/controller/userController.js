@@ -203,7 +203,8 @@ exports.allProducts = async (req, res) => {
         const userId = req.session.user ? req.session.user._id : null;
         let wishlist = await wishlistModel.findOne({ userid: userId });
         const categoryDetails = await categoryModel.find();
-        const products = await productModel.find();
+        let products = await productModel.find({});
+        
         let cartCount = 0;
         let wishlistCount = 0;
         if (userId) {
@@ -220,13 +221,17 @@ exports.allProducts = async (req, res) => {
                 wishlistCount = 0;
             }
         }
+
+        
         res.render('user/allproducts', { products, categoryDetails, wishlist, cartCount, wishlistCount });
+        
 
     } catch (error) {
         console.error("Error in allProducts controller:", error);
         res.status(500).send("Internal Server Error");
     }
 }
+
 
 exports.cartGet = async (req, res) => {
     try {
@@ -403,4 +408,47 @@ exports.deleteWishlist = async (req, res) => {
         res.status(500).json({ success: false, error: "Internal Server Error" });
     }
 };
+exports.filterproducts = async (req, res) => {
+    try {
+        const userId = req.session.user ? req.session.user._id : null;
+        let wishlist = userId ? await wishlistModel.findOne({ userid: userId }) : null;
+        const category = req.query.category !== undefined ? req.query.category : null;
+        const price = req.query.price !== undefined ? req.query.price : null;
+        const categoryDetails = await categoryModel.find();
+        console.log(price, category, 'lokix');
+        let products = [];
+        
 
+        if (category !== null && price === 'null'?price:null) {
+            products = await productModel.find({ category: category });
+        } else if (price !== null && category === 'null' ? category : null) {
+            const prices = price.split(",");
+            const less = parseInt(prices[0]);
+            const greater = parseInt(prices[1]);
+            products = await productModel.find({ discount: { $gte: less, $lte: greater } });
+        } else if (category !== null && price !== null) {
+            const prices = price.split(",");
+            const less = parseInt(prices[0]);
+            const greater = parseInt(prices[1]);
+            products = await productModel.find({ category: category, discount: { $gte: less, $lte: greater } });
+        } else {
+            products = await productModel.find();
+        }
+        
+        
+        
+
+        return res.status(200).json({
+            success: true,
+            message: "filtered",
+            product: products,
+            wishlist: wishlist,
+            categoryDetails: categoryDetails,
+            
+        });
+
+    } catch (error) {
+        console.error('Error filtering products:', error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+}
