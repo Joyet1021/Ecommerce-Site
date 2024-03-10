@@ -4,6 +4,10 @@ const orderModel=require("./../../Models/order")
 
 exports.ordersGet = async (req, res) => {
     try {
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
         const orders = await orderModel.find();
         res.render("admin/orders", { orders });
     } catch (error) {

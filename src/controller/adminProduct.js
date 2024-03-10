@@ -4,6 +4,10 @@ const fs=require( 'fs');
 
 exports.addproductGet = async (req, res) => {
     try {
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
         const categoryList = await categoryModel.find();
         res.render('admin/addproduct', { categoryList });
     } catch (error) {
@@ -56,6 +60,10 @@ exports.addproductPost = async (req, res) => {
 
 exports.productsGet=async(req,res)=>{
     try{
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
         const productDetails=await productModel.find()
 
         res.render("admin/products",{productDetails})

@@ -364,3 +364,40 @@ exports.updatePasswordput = async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 };
+
+
+exports.aboutusGet=async(req,res)=>{
+    try{
+        const userId = req.session.user ? req.session.user._id : null;
+        if (!userId) {
+            return res.redirect('/user/login');
+        }
+        const profiledata = await profileModel.findOne({ userId: userId });
+        let img='false';
+        if(!profiledata.userImage==' '){
+            img='true';
+        }
+        let cartCount=0;
+        let wishlistCount=0;
+        if(userId){
+            const productids = await cartModel.findOne({ userid: userId });
+            if(productids !== null){ // Corrected check for null
+                cartCount = productids.productsid.length;
+            } else {
+                cartCount = 0;
+            }
+            const productIds = await wishlistModel.findOne({ userid: userId });
+            if(productIds !== null){ // Corrected check for null
+                wishlistCount = productIds.productsid.length; // Changed from productids to productIds
+            } else {
+                wishlistCount = 0;
+            }
+        }
+        // Render update password form
+        res.render("user/aboutus",{profiledata,img,cartCount,wishlistCount})
+
+    }catch (error) {
+        console.error('Error in altaddressGet', error);
+        res.status(500).json({ success: false, error: 'Internal Server Error' });
+    }
+}

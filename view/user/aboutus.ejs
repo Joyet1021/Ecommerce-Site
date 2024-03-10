@@ -1,0 +1,64 @@
+<%- include('../common/head.ejs') %>
+    
+<div class="wrapper aboutus_wrapper">
+  <%- include('../common/top_nav.ejs') %>
+  <div class="content aboutus_content">
+    <div class="frame">
+      <div class="left_bar">
+          <ul>
+              <li class="left_profile_li">
+                  <%if(img=='false'){%>
+                  <img src="/uploads/profiles/altimage-removebg-preview.png" alt="">
+                  <%}else{%>
+                      <img src="/uploads/profiles/<%=profiledata.userImage%>" alt="">
+                      <%}%>
+                  <h3 style="color: white;">HELLO</h3>
+              </li>
+              <li onclick="location.href='/user/Address' " class=""><i class="bi bi_left_bar bi-person-circle"></i>Profile</li>
+              <li onclick="location.href='/user/altaddress' " class=""><p class="adress_add" >+</p>Add Address</li>
+              <li onclick="location.href='/user/updatePassword' " class=""><i class="bi bi_left_bar bi-shield-lock-fill"></i>Update Password</li>
+              <li onclick="location.href='/user/orders' " class=""><i class="bi bi_left_bar bi-gift-fill"></i>Orders</li>
+              <li onclick="location.href='/user/cart'"><i class="bi bi_left_bar bi-cart-fill"></i>Cart</li>
+              <li onclick="location.href='/user/wishlist' " ><i class="bi bi_left_bar bi-heart-fill"></i>Wishlist</li>
+              <li onclick="location.href='/user/aboutus' " class=""><i class="bi bi_left_bar bi-info-circle-fill"></i>About Us</li>
+              <li onclick="location.href='/account/contactus' " class=""><i class="bi bi_left_bar bi-telephone-fill"></i>Contact Us</li>
+          </ul>
+      </div>
+      </div>
+    <div class="right_content">
+      <h3>ABOUT US</h3>
+      <p>
+        
+<br><h5><b>Our Story</b></h5><br>
+Founded in 2021, MITMAT started as a small electronics retailer with a big vision. Over the years, we have grown into a trusted name in the industry, known for our commitment to quality products and exceptional customer service.
+
+<br><br><h5><b>Our Mission</b></h5><br>
+
+At MITMAT, our mission is to provide our customers with the latest electronics at competitive prices, all while delivering a seamless shopping experience. We strive to exceed expectations and build long-lasting relationships with our customers.
+<br><br><h5><b>Our Team</b></h5><br>
+
+Behind MITMAT is a dedicated team of professionals who are passionate about technology and customer satisfaction. Our team works tirelessly to curate a selection of products that meet our high standards of quality and innovation.
+<br><br><h5><b>Customer Commitment</b></h5><br>
+
+Customer satisfaction is at the heart of everything we do. We go above and beyond to ensure that every customer has a positive experience with MITMAT. From easy online shopping to fast and reliable shipping, we are here to serve you.
+<br><br><h5><b>Quality Standards</b></h5><br>
+
+At MITMAT, we stand behind the quality of our products. We work closely with manufacturers to source the best products and conduct rigorous quality control checks to ensure that every product meets our standards.
+<br><br><h5><b>Social Responsibility</b></h5><br>
+
+MITMAT is committed to making a positive impact in the communities we serve. We support various charitable initiatives and strive to operate in an environmentally sustainable manner.
+
+<br><br><h5><b>Join Us</b></h5><br>
+
+Experience the MITMAT difference. Shop with us today and discover why we are a leader in the electronics industry.
+
+With a commitment to innovation and customer satisfaction, MITMAT continues to push boundaries and set new standards in the electronics industry. Join us on our journey as we strive for excellence in everything we do.
+      </p>
+    </div>
+  </div>
+  <%- include('../common/footer.ejs') %>
+</div>
+
+<script src="/javascript/btnsearch.js"></script>
+
+<%- include('../common/end.ejs') %>

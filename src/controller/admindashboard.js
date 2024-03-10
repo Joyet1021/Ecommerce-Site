@@ -5,6 +5,8 @@ const signupModel = require('../../Models/signupmodel');
 
 exports.dashboardStock = async (req, res) => {
     try {
+        
+        
         const result = await productModel.aggregate([
             {
                 $group: {

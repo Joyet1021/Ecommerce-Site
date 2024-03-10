@@ -2,6 +2,10 @@ const bannerModel=require("./../../Models/bannermodel")
 const fs=require( "fs");
 exports.bannerlistGet=async(req,res)=>{
     try{
+      const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
         const bannerData=await bannerModel.find();
         res.render('admin/bannerlist',{bannerData})
     }catch(error){
@@ -12,6 +16,10 @@ exports.bannerlistGet=async(req,res)=>{
    
 exports.addbannerGet=async(req,res)=>{
   try{
+    const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
     res.render('admin/addbanner');
   }catch(error){
     console.error('Error fetching addbanner page:', error.message);

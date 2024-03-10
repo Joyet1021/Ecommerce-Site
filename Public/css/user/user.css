@@ -1902,9 +1902,11 @@ word-wrap: break-word;
 .aboutus_wrapper{
     .aboutus_content{
         display: flex;
-        overflow: hidden;
+        height: 700px;
+        
     }
     .right_content{
+        overflow-y: scroll;
         padding: 0 2.5rem;
         word-wrap: break-word;
     }

@@ -2,6 +2,10 @@ const couponModel=require('./../../Models/couponmodel')
 
 exports.couponlistGet = async(req, res) => {
     try{
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
     let coupon=await couponModel.find()
 
     res.render('admin/couponlist',{coupon});
@@ -9,11 +13,15 @@ exports.couponlistGet = async(req, res) => {
         console.log('Error in getting couponlist',error);
         res.status(500).json({success:false})
     }
-};
+};  
 
 
 exports.addCouponGet=async(req,res)=>{
     try{
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
     res.render("admin/addcoupon")
     }catch(error){
         console.log('Error in add  Coupon page ', error);
@@ -89,4 +97,4 @@ exports.deleteCoupon=async(req,res) =>{
         console.log('Error in deleting coupon', error);
         res.status(500).send('Internal Server Error');
     }
-}
+} 

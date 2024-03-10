@@ -435,9 +435,6 @@ exports.filterproducts = async (req, res) => {
             products = await productModel.find();
         }
         
-        
-        
-
         return res.status(200).json({
             success: true,
             message: "filtered",

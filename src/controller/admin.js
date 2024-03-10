@@ -8,6 +8,10 @@ const session=require('express-session');
 
 exports.userslistGet = async (req, res) => {
     try {
+      const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
     
       const userData = await signupModel.find({ role: 'user', blocked: false });
       res.render('admin/userslist', { userData });
@@ -20,6 +24,10 @@ exports.userslistGet = async (req, res) => {
 
 exports.blockuser=async(req,res)=>{
     try{
+      const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
         const  id = req.query.id;
         await  signupModel.findOneAndUpdate(
           { _id : id },
@@ -41,6 +49,10 @@ exports.blockuser=async(req,res)=>{
 
 exports.blockedusersGet=async(req,res)=>{
   try{
+    const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
     const userData = await signupModel.find({ role: 'user', blocked: true });
     res.render('admin/blockedusers', { userData });
   }catch(error){

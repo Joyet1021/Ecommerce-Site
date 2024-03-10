@@ -142,8 +142,8 @@ exports.userloginPost = async (req, res) => {
             if (comparePassword) {
                 if (userExist.verified === true) {
                     if (userExist.role === "admin") {
-                        req.session.admin = adminExist;
-                        res.render("admin/adminhome");
+                        req.session.admin = userExist;
+                        res.redirect('/admin/adminhome');
                     } else {
                         if (userExist.blocked) {
                             req.flash("error", "User has been blocked");
@@ -160,6 +160,7 @@ exports.userloginPost = async (req, res) => {
                 req.flash("error", "Incorrect Password");
                 return res.status(400).redirect('/user/login');
             }
+            
         }
     } catch (error) {
         res.render('user/login', { error: 'Internal Server Error' });
@@ -297,26 +298,35 @@ exports.resetpasswordPost = async (req, res) => {
 
 
 
-exports.adminhomeGet=async(req,res)=>{
-    const total = await orderModel.aggregate([
-        {
-            $match: { status: 'Delivered' } // Filter by status
-        },
-        {
-            $group: {
-                _id: null,
-                totalSales: { $sum: { $toDouble: '$total' } }
-            }
-        },
-        {
-            $project: {
-                _id: 0,
-                totalSales: 1
-            }
+exports.adminhomeGet = async (req, res) => {
+    try {
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
         }
-    ]).exec();
-    const product=await productModel.find();
-    const products=product.length;
-    res.render('admin/adminhome',{total,products})
-}
 
+        const total = await orderModel.aggregate([
+            {
+                $match: { status: 'Delivered' } // Filter by status
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalSales: { $sum: { $toDouble: '$total' } }
+                }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    totalSales: 1
+                }
+            }
+        ]).exec();
+        const product = await productModel.find();
+        const products = product.length;
+        res.render('admin/adminhome', { total, products });
+    } catch (error) {
+        console.error('Error in adminhomeGet:', error);
+        res.status(500).render('error', { error: 'Internal Server Error' });
+    }
+};

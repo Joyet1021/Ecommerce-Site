@@ -3,6 +3,10 @@ const categoryModel=require('./../../Models/categories')
 
 exports.categoriesGet=async(req,res)=>{
     try{
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
         const categoryList=await categoryModel.find()
         
         res.render("admin/categories",{categoryList})
@@ -14,6 +18,10 @@ exports.categoriesGet=async(req,res)=>{
 }
 exports.addCategory = async (req, res) => {
     try {
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
         const { categoryName, subCategory } = req.body;
         const subcategory = subCategory.split(',').map(sub => sub.trim());
 
@@ -61,6 +69,10 @@ exports.deleteCategory=async(req,res)=>{
 }
 exports.subCategory=async(req,res)=>{
     try{
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (!adminId) {
+            return res.redirect('/user/login');
+        }
         const categoryName=req.params.name
         const category=await categoryModel.findOne({categoryName:categoryName})
         res.render("admin/subcategory",{category})
