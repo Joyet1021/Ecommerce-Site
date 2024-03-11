@@ -173,7 +173,8 @@ let selectedAddress = null;
 addressRadios.forEach(async(radio) => {
     radio.addEventListener('change', async(e) => {
         try {
-        e.preventDefault();e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
         selectedAddress = e.target.nextElementSibling.getAttribute('value');
         const index=selectedAddress;
         const response = await fetch(`/user/addresschoice?index=${index}`, { method: "GET" });
@@ -329,6 +330,7 @@ rzp1.on('payment.failed', function (response){
     }
 });
     </script>
+    <script src="/js/search.js"></script>
 
 <%- include('../common/end.ejs') %>
 

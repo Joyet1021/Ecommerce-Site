@@ -36,6 +36,7 @@ router.post("/buyNow",userController.buynowpost)
 router.get("/categoryGet",userController.categoryGet)
 router.get("/allproducts",userController.allProducts)
 router.get("/filterproduct",userController.filterproducts)
+router.get("/filterPrice",userController.filterprice)
 router.get("/subcategory",userController.subCategory)
    
 router.get("/cart",userController.cartGet)
@@ -65,6 +66,9 @@ router.delete("/deleteorder",accountController.deleteorder)
 router.get("/orderopen",accountController.orderopenGet)
 router.get("/updatePassword",accountController.updatePasswordGet)
 router.put("/updatePasswordput",accountController.updatePasswordput)
+
+router.get("/search",userController.searchGet)
+router.get("/search")
 
 
 

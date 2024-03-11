@@ -1,22 +1,22 @@
 const signupModel = require('./../../Models/signupmodel');
-const productModel=require('./../../Models/productdetails')
-const orderModel=require('./../../Models/order')
-const dotenv=require('dotenv').config()
+const productModel = require('./../../Models/productdetails');
+const orderModel = require('./../../Models/order');
+const dotenv = require('dotenv').config();
 const bcrypt = require('bcrypt');
 const twilio = require('twilio');
-const mailOTP = require('../Utilities/otp')
+const mailOTP = require('../Utilities/otp');
 const accountsid = process.env.accountsId;
-const authToken =process.env.authToken;
+const authToken = process.env.authToken;
 const verifysid = process.env.verifysId;
-const client =twilio(accountsid, authToken);
+const client = twilio(accountsid, authToken);
 var nodemailer = require('nodemailer');
-const flash=require('connect-flash');
-
+const flash = require('connect-flash');
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
-exports.usersignupGet = async (req, res)=> {
+// Controller function to render the user signup page
+exports.usersignupGet = async (req, res) => {
     try {
         const error = req.flash('error');
         res.render('user/signup', { error });
@@ -26,7 +26,7 @@ exports.usersignupGet = async (req, res)=> {
     }
 };
 
-
+// Controller function to handle user signup
 exports.usersignupPost = async (req, res) => {
     try {
         const { username, email, phonenumber, password, confirmPassword } = req.body;
@@ -41,6 +41,7 @@ exports.usersignupPost = async (req, res) => {
             verified: false
         });
 
+        // Validate user input
         const validatingEmail = emailRegex.test(email);
         const validatingPassword = passwordRegex.test(password);
         const signupDatas = await signupModel.find();
@@ -66,6 +67,7 @@ exports.usersignupPost = async (req, res) => {
 
             const twiliophone = phonenumber;
             if (phonenumber) {
+                // Send verification OTP via SMS
                 const verification = await client.verify.v2.services(verifysid)
                     .verifications
                     .create({ to: `+91${twiliophone}`, channel: 'sms' })
@@ -80,32 +82,35 @@ exports.usersignupPost = async (req, res) => {
     }
 };
 
+// Controller function to render the OTP verification page
 exports.sendotpget = (req, res) => {
     const phone = req.params.num
-    res.render('user/sendotp',{phone});
-    
+    res.render('user/sendotp', { phone });
+
 };
 
+// Controller function to handle OTP verification
 exports.sendotpPost = async (req, res) => {
     try {
         const phone = req.params.num;
-        
+
+        // Get OTP from the request body
         const otpA = req.body.a;
         const otpB = req.body.b;
         const otpC = req.body.c;
         const otpD = req.body.d;
         const otpE = req.body.e;
         const otpF = req.body.f;
-
         const otp = otpA + otpB + otpC + otpD + otpE + otpF;
+
+        // Find user by phone number
         const user = await signupModel.findOne({ phonenumber: phone });
-        
 
         if (!user) {
-            res.render('user/sendotp',{phone,error:"User not found"})
-            
+            res.render('user/sendotp', { phone, error: "User not found" });
         }
 
+        // Verify OTP
         const verification_check = await client.verify.v2.services(verifysid)
             .verificationChecks
             .create({ to: `+91${phone}`, code: otp });
@@ -114,27 +119,30 @@ exports.sendotpPost = async (req, res) => {
             await signupModel.updateOne({ phonenumber: phone }, { $set: { verified: true } });
             res.render('user/login');
         } else {
-            res.render('user/sendotp',{phone,error:"Incorrect  OTP"})
+            res.render('user/sendotp', { phone, error: "Incorrect OTP" });
         }
     } catch (err) {
-        res.render('user/login', { error: 'Server Error' }); 
+        res.render('user/login', { error: 'Server Error' });
     }
 };
 
+// Controller function to render the user login page
 exports.userloginGet = function (req, res) {
     const error = req.flash('error');
-    res.render('user/login',{error});
-    
+    res.render('user/login', { error });
+
 };
+
+// Controller function to handle user login
 exports.userloginPost = async (req, res) => {
     try {
         const { email, password } = req.body;
         const userDatas = await signupModel.find();
         const userExist = userDatas.find((val) => val.email === email);
+
         if (!userExist) {
             req.flash("error", "User Doesn't Exist");
             return res.status(400).redirect('/user/login');
-             
         } else {
             const comparePassword = await bcrypt.compare(password, userExist.password);
             const phone = userExist.phonenumber;
@@ -160,65 +168,70 @@ exports.userloginPost = async (req, res) => {
                 req.flash("error", "Incorrect Password");
                 return res.status(400).redirect('/user/login');
             }
-            
+
         }
     } catch (error) {
         res.render('user/login', { error: 'Internal Server Error' });
     }
 };
 
-exports.forgotpasswordGet=(req,res)=>{
-    res.render('user/forgotpassword')
-}
+// Controller function to render the forgot password page
+exports.forgotpasswordGet = (req, res) => {
+    res.render('user/forgotpassword');
+};
 
-exports.forgotpasswordPost=async(req,res)=>{
-    try{
-        const{email}=req.body
-        const userDatas=await signupModel.find()
-        const userExist=userDatas.find((val)=>val.email===email)
-        if(!userExist){
-            res.redirect("/user/login")
-        }else{
+// Controller function to handle forgot password functionality
+exports.forgotpasswordPost = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const userDatas = await signupModel.find();
+        const userExist = userDatas.find((val) => val.email === email);
+
+        if (!userExist) {
+            res.redirect("/user/login");
+        } else {
+            // Create transporter for sending email
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
-                  user: 'joyetjoyasi@gmail.com',
-                  pass: 'etja nfps utyg phkw'
+                    user: 'joyetjoyasi@gmail.com',
+                    pass: 'etja nfps utyg phkw'
                 }
-              });
-              
-              var mailOptions = {
+            });
+
+            // Define mail options
+            var mailOptions = {
                 from: 'joyetjoyasi@gmail.com',
                 to: `${email}`,
                 subject: 'Sending Email using Node.js',
                 text: `Your OTP is ${mailOTP.otp}`
-              };
-              
-              transporter.sendMail(mailOptions, function(error, info){
+            };
+
+            // Send email with OTP
+            transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
-                  console.log(error);
+                    console.log(error);
                 } else {
-                  console.log('Email sent');
+                    console.log('Email sent');
                 }
-              });
-              console.log("forget password otp send successfully");
-              res.redirect(`/user/forgototp/${email}`)
+            });
+            console.log("forget password otp send successfully");
+            res.redirect(`/user/forgototp/${email}`);
         }
-    }catch(error){
-        res.render('user/forgotpassword',{error:'Try after sometime'})
-        
+    } catch (error) {
+        res.render('user/forgotpassword', { error: 'Try after sometime' });
+
     }
+};
 
-    
-}
+// Controller function to render the OTP verification page for forgot password
+exports.forgototpGet = (req, res) => {
+    const email = req.params.mail
+    res.render('user/forgototp', { email })
 
+};
 
-exports.forgototpGet=(req,res)=>{
-    const email=req.params.mail
-    
-    res.render('user/forgototp',{email,})
-    
-}
+// Controller function to resend OTP for forgot password
 exports.resendotp = async (req, res) => {
     try {
         const phone = req.params.num;
@@ -231,47 +244,44 @@ exports.resendotp = async (req, res) => {
     }
 };
 
-exports.forgototpPost=async(req,res)=>{
-    try{
+// Controller function to handle OTP verification for forgot password
+exports.forgototpPost = async (req, res) => {
+    try {
         const email = req.params.mail;
-        
-        
+
+        // Get OTP from the request body
         const otpA = req.body.a;
         const otpB = req.body.b;
         const otpC = req.body.c;
         const otpD = req.body.d;
-        const otp = otpA + otpB + otpC + otpD ;
-        const user = await signupModel.findOne({ email:email });
-       
+        const otp = otpA + otpB + otpC + otpD;
+        const user = await signupModel.findOne({ email: email });
 
         if (!user) {
             console.log('User not found');
             res.redirect('/user/login');  // or handle the error accordingly
             return;
         }
-        if(otp==mailOTP.otp){
-            res.redirect(`/user/resetpasswordGet/${email}`)
+        if (otp == mailOTP.otp) {
+            res.redirect(`/user/resetpasswordGet/${email}`);
         } else {
-            
-            res.redirect('/user/forgototp',{email})
+
+            res.redirect(`/user/forgototp/${ email }`);
         }
-        
 
-
-    }catch(error){
-        console.log("Error in forgot password page ", error)
+    } catch (error) {
+        console.log("Error in forgot password page ", error);
     }
 
-}
+};
 
-exports.resetpasswordGet=(req,res)=>{
-    const email=req.params.mail;
-    
-    
-    res.render('user/resetpassword',{email})
-}
+// Controller function to render the reset password page
+exports.resetpasswordGet = (req, res) => {
+    const email = req.params.mail;
+    res.render('user/resetpassword', { email });
+};
 
-
+// Controller function to handle resetting the password
 exports.resetpasswordPost = async (req, res) => {
     const email = req.params.mail;
     const { password, confirmpassword } = req.body;
@@ -296,8 +306,7 @@ exports.resetpasswordPost = async (req, res) => {
     }
 };
 
-
-
+// Controller function to render the admin home page
 exports.adminhomeGet = async (req, res) => {
     try {
         const adminId = req.session.admin ? req.session.admin._id : null;
@@ -305,6 +314,7 @@ exports.adminhomeGet = async (req, res) => {
             return res.redirect('/user/login');
         }
 
+        // Calculate total sales
         const total = await orderModel.aggregate([
             {
                 $match: { status: 'Delivered' } // Filter by status
@@ -321,7 +331,7 @@ exports.adminhomeGet = async (req, res) => {
                     totalSales: 1
                 }
             }
-        ]).exec();
+        ])
         const product = await productModel.find();
         const products = product.length;
         res.render('admin/adminhome', { total, products });

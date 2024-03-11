@@ -1,40 +1,40 @@
-const couponModel=require('./../../Models/couponmodel')
+const couponModel = require('./../../Models/couponmodel');
 
-exports.couponlistGet = async(req, res) => {
-    try{
+// Controller function to render the list of coupons
+exports.couponlistGet = async (req, res) => {
+    try {
         const adminId = req.session.admin ? req.session.admin._id : null;
         if (!adminId) {
             return res.redirect('/user/login');
         }
-    let coupon=await couponModel.find()
+        let coupon = await couponModel.find();
 
-    res.render('admin/couponlist',{coupon});
-    }catch(error){
-        console.log('Error in getting couponlist',error);
-        res.status(500).json({success:false})
+        res.render('admin/couponlist', { coupon });
+    } catch (error) {
+        console.log('Error in getting coupon list', error);
+        res.status(500).json({ success: false });
     }
-};  
+};
 
-
-exports.addCouponGet=async(req,res)=>{
-    try{
+// Controller function to render the add coupon form
+exports.addCouponGet = async (req, res) => {
+    try {
         const adminId = req.session.admin ? req.session.admin._id : null;
         if (!adminId) {
             return res.redirect('/user/login');
         }
-    res.render("admin/addcoupon")
-    }catch(error){
-        console.log('Error in add  Coupon page ', error);
-        res.status(500).json({"Error": "Internal server error"});
+        res.render("admin/addcoupon");
+    } catch (error) {
+        console.log('Error in add coupon page', error);
+        res.status(500).json({ "Error": "Internal server error" });
     }
-}
-   
+};
 
+// Controller function to handle the addition of a new coupon
 exports.addCouponPost = async (req, res) => {
-    try {  
+    try {
         const { couponCode, minimumPurchase, discountPercentage, startDate, endDate } = req.body;
 
-        
         const newCoupon = new couponModel({
             couponCode,
             minimumPurchase,
@@ -44,34 +44,35 @@ exports.addCouponPost = async (req, res) => {
         });
 
         await newCoupon.save();
-        res.status(203).json({success:true,message:"Coupon Added Successfully"})
-        
+        res.status(203).json({ success: true, message: "Coupon added successfully" });
+
     } catch (error) {
         console.error('Error in adding coupon', error);
-        res.status(500).send('Internal Server Error')
-        
+        res.status(500).send('Internal Server Error');
     }
 };
 
-exports.editCouponGet=async(req,res)=>{
-    try{
-        const id=req.query.id;
-        const couponDetails=await couponModel.findOne({_id : id});
-        res.render('admin/editcoupon',{couponDetails:couponDetails})
-    }catch(error){
-        console.log('Error in Edit Coupon Page', error);
-        res.status(404).json({success:false});
+// Controller function to render the edit coupon form
+exports.editCouponGet = async (req, res) => {
+    try {
+        const id = req.query.id;
+        const couponDetails = await couponModel.findOne({ _id: id });
+        res.render('admin/editcoupon', { couponDetails: couponDetails });
+    } catch (error) {
+        console.log('Error in edit coupon page', error);
+        res.status(404).json({ success: false });
     }
-}
+};
 
-exports.editcouponPost=async(req,res)=>{
-    try{
-        const id=req.query.id;
-        const {couponCode,minimumPurchase,discountPercentage,startDate,endDate}=req.body;
-        const couponDetail=await couponModel.findOneAndUpdate(
-            {_id:id},
-            { 
-                $set:{
+// Controller function to handle the editing of a coupon
+exports.editcouponPost = async (req, res) => {
+    try {
+        const id = req.query.id;
+        const { couponCode, minimumPurchase, discountPercentage, startDate, endDate } = req.body;
+        await couponModel.findOneAndUpdate(
+            { _id: id },
+            {
+                $set: {
                     couponCode,
                     minimumPurchase,
                     discountPercentage,
@@ -81,20 +82,20 @@ exports.editcouponPost=async(req,res)=>{
             }
         );
         res.redirect("/admin/couponlist");
-    }catch(error){
-    console.log('Error In Updating The Coupon Details',error);
-    res.status(500).send('Internal Server Error');
-
+    } catch (error) {
+        console.log('Error in updating the coupon details', error);
+        res.status(500).send('Internal Server Error');
     }
-}
+};
 
-exports.deleteCoupon=async(req,res) =>{
-    try{
-        const id=req.query.id;
-        await couponModel.deleteOne({_id:id})
-        res.status(203).json({success:true,message:"Coupon Deleted Successfully"});
+// Controller function to handle the deletion of a coupon
+exports.deleteCoupon = async (req, res) => {
+    try {
+        const id = req.query.id;
+        await couponModel.deleteOne({ _id: id });
+        res.status(203).json({ success: true, message: "Coupon deleted successfully" });
     } catch (error) {
         console.log('Error in deleting coupon', error);
         res.status(500).send('Internal Server Error');
     }
-} 
+};

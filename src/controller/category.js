@@ -1,6 +1,6 @@
 const categoryModel=require('./../../Models/categories')
 
-
+// Controller function to render the list of categories
 exports.categoriesGet=async(req,res)=>{
     try{
         const adminId = req.session.admin ? req.session.admin._id : null;
@@ -16,6 +16,7 @@ exports.categoriesGet=async(req,res)=>{
     }
     
 }
+// Controller function to add a new category or subcategory
 exports.addCategory = async (req, res) => {
     try {
         const adminId = req.session.admin ? req.session.admin._id : null;
@@ -56,6 +57,8 @@ exports.addCategory = async (req, res) => {
     }
 };
 
+
+// Controller function to delete a category
 exports.deleteCategory=async(req,res)=>{
     try{
         const id = req.query.id;
@@ -67,6 +70,8 @@ exports.deleteCategory=async(req,res)=>{
         res.status(500).send('Internal Server Error');
     }
 }
+
+// Controller function to render the subcategory page
 exports.subCategory=async(req,res)=>{
     try{
         const adminId = req.session.admin ? req.session.admin._id : null;
@@ -82,6 +87,8 @@ exports.subCategory=async(req,res)=>{
         res.status(500).send('Internal Server Error');
     }
 }
+
+// Controller function to delete a subcategory
 exports.deletesubCategory=async(req,res)=>{
    try{
     const{subcategoryId,categoryName}=req.query
@@ -94,8 +101,5 @@ exports.deletesubCategory=async(req,res)=>{
    }catch(error){
        console.log('Error in removing Sub Category', error);
        res.status(400).json({success:false,message:'Something went wrong!'});
-
    }
-    
-
 }

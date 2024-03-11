@@ -2,11 +2,10 @@ const productModel = require('../../Models/productdetails');
 const orderModel = require('../../Models/order');
 const signupModel = require('../../Models/signupmodel');
 
-
+// Controller function to get the total stock of each category
 exports.dashboardStock = async (req, res) => {
     try {
-        
-        
+        // Aggregate the product details to get total stock for each category
         const result = await productModel.aggregate([
             {
                 $group: {
@@ -16,20 +15,22 @@ exports.dashboardStock = async (req, res) => {
             }
         ]).exec(); // Use exec() instead of toArray()
 
+        // Extract the category and total stock from the result
         const _idArray = result.map(item => item._id);
         const totalArray = result.map(item => item.total);
 
-        res.status(200).json({ category:_idArray,total:totalArray });
+        // Send the response with category and total stock arrays
+        res.status(200).json({ category: _idArray, total: totalArray });
     } catch (error) {
         console.error('Error in dashboardStock:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
 
-
-
+// Controller function to calculate daily sales
 exports.dailySales = async (req, res) => {
     try {
+        // Aggregate the order details to get daily total sales
         const result = await orderModel.aggregate([
             {
                 $match: { status: 'Delivered' } // Filter by status
@@ -58,6 +59,8 @@ exports.dailySales = async (req, res) => {
                 }
             }
         ]).exec();
+
+        // Send the response with daily sales data
         res.status(200).json(result);
     } catch (error) {
         console.error('Error calculating daily sales:', error);
@@ -65,8 +68,10 @@ exports.dailySales = async (req, res) => {
     }
 }
 
+// Controller function to calculate total users
 exports.totalusers = async (req, res) => {
     try {
+        // Aggregate the user details to get total users by registration date
         const result = await signupModel.aggregate([
             {
                 $match: {
@@ -99,10 +104,11 @@ exports.totalusers = async (req, res) => {
                 }
             }
         ]).exec();
+
+        // Send the response with total users data
         res.status(200).json(result);
     } catch (error) {
         console.error('Error calculating total users:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }
-

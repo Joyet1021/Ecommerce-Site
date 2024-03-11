@@ -8,8 +8,8 @@
             <div class="sort_by_div">
                 <p class="sort_recomended">Sort By : Recomended<i class="bi bi-chevron-down"></i></p>
                 <ul class="sort_ul">
-                    <li onclick="filterProducts('PRICE','low to high')">Low to High</a></li>
-                    <li onclick="filterProducts('PRICE','high to low')">High to Low</li>
+                    <li onclick="filterProducts('lowtohigh')">Low to High</a></li>
+                    <li onclick="filterProducts('hightolow')">High to Low</li>
                 </ul>
             </div>
         </section>
@@ -276,7 +276,63 @@ async function filterByPrice(price, category) {
 
     })
 
+    async function filterProducts(sortOrder) {
+    try {
+        const response = await fetch(`/user/filterPrice?sortOrder=${sortOrder}`, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const result = await response.json();
+        console.log('Filter products result:', result); // Debugging statement
+        if (result.success) {
+            const wishlist = result.wishlist;
+            const productSection = document.querySelector('.product_section');
+            productSection.innerHTML = ''; // Clear previous products
+            result.products.forEach(product => {
+                // Create and append product elements
+                const productFrameGrid = document.createElement('div');
+                productFrameGrid.className = 'product_frame_grid';
+                productFrameGrid.innerHTML = `
+                    <a onclick="window.location.href='/user/viewproduct?id=${product._id}'">
+                        <div class="top">
+                            <button class="wish_btn" onclick="addtoWishlist(event,'${product._id}')">
+                                <i class="biwish_icon${product._id} ${
+                                    wishlist &&
+                                    wishlist.productsid &&
+                                    wishlist.productsid.find(
+                                        wishlistProduct => wishlistProduct.productid == product._id.toString()
+                                    )
+                                        ? 'bi-heart-fill'
+                                        : 'bi-heart'
+                                }"></i>
+                            </button>
+                            <img src="/uploads/products/${product.productImage[0]}" style="width: 75%; height: 90%;" alt="">
+                        </div>
+                        <div class="center">
+                            <div class="name_div">
+                                <p class="product_name">${product.productName}</p>
+                            </div>
+                            <div class="price_div">
+                                <p class="old_price"><i class="bi bi-currency-rupee"></i>${product.price}</p>
+                                <p class="new_price"><i class="bi bi-currency-rupee"></i>${product.discount}</p>
+                            </div>
+                        </div>
+                        <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button></div>
+                    </a>
+                `;
+                productSection.appendChild(productFrameGrid);
+            });
+        } else {
+            console.error("Error filtering products:", result.message);
+        }
+    } catch (error) {
+        console.error('Error filtering products:', error);
+    }
+}
+
+
   </script>
+  <script src="/js/search.js"></script>
 
 
 
