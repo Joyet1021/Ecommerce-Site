@@ -1937,8 +1937,9 @@ word-wrap: break-word;
 
 
 .contactus_wrapper{
-    .contactus_wrapper{
+    .contactus_content{
         display: flex;
+        height: 700px;
     }
     .right_content{
         display: flex;
@@ -2901,14 +2902,13 @@ word-wrap: break-word;
     .color_li input{
         opacity: 0;
         cursor: pointer;
-        height: 100%;
         width: 100%;
 
     }
     .color_li label{
         position: absolute;
         width: 100%;
-        height: 50%;
+        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -3130,7 +3130,6 @@ word-wrap: break-word;
     .top_star{
         color: gold;
     }
-
 
 
 
@@ -5481,6 +5480,7 @@ background-color: white;
 
 .orderopen_wrapper{
   .order_open_content{
+    width: 100%;
     padding: 2rem 0;
     overflow-y: scroll;
     display: flex;
@@ -5631,7 +5631,8 @@ background-color: white;
 .review_div{
     margin-bottom: 1rem;
     padding: 1rem;
-    width: 100%;
+    width: 94%;
+    cursor: pointer;
     padding-bottom: none;
     transition: all 1s;
 
@@ -5662,7 +5663,7 @@ background-color: white;
     font-family: 'popins',sans-serif;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.317);
     width: 100%;
-    height: 80%;
+    height: 70%;
     transition: all 1s;
 }
 .review_submit_btn{
@@ -5679,6 +5680,23 @@ background-color: white;
 .review_submit_btn:active{
    transform: scale(.99);
 }
+.rating {
+    font-size: 30px;
+ }
+ 
+ .star {
+    cursor: pointer;
+ }
+ 
+ .star:hover,
+ .star.active {
+    color: gold;
+ }
+ 
+ .review_frame {
+    display: none;
+ }
+ 
 }
 .adress_add{
     font-size: x-large;

@@ -334,9 +334,27 @@ exports.adminhomeGet = async (req, res) => {
         ])
         const product = await productModel.find();
         const products = product.length;
-        res.render('admin/adminhome', { total, products });
+        const orders=await orderModel.find()
+        const orderlength=orders.length;
+        res.render('admin/adminhome', { total, products ,orderlength});
     } catch (error) {
         console.error('Error in adminhomeGet:', error);
         res.status(500).render('error', { error: 'Internal Server Error' });
     }
 };
+
+exports.logout = async (req, res) => {
+    try {
+        const userId = req.session.user ? req.session.user._id : null;
+        const adminId = req.session.admin ? req.session.admin._id : null;
+        if (userId||adminId) {
+            req.session.destroy();
+            res.redirect('/user/login');
+        }else{
+            res.redirect('/user/login');
+        }
+    } catch (error) {
+        console.error('Error logging out:', error);
+        res.status(500).render('error', { message: 'Internal Server Error' });
+    }
+}

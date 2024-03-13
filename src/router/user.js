@@ -68,7 +68,9 @@ router.get("/updatePassword",accountController.updatePasswordGet)
 router.put("/updatePasswordput",accountController.updatePasswordput)
 
 router.get("/search",userController.searchGet)
-router.get("/search")
+router.get("/logout",authController.logout);
+
+router.post("/review",accountController.reviewPost)
 
 
 

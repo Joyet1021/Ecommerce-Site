@@ -1,4 +1,17 @@
-<%- include('../common/head.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/user/user.css">
+    
+</head>
+<body>
     
     <div class="wrapper orderopen_wrapper">
 
@@ -43,7 +56,7 @@
               <%if(order.status=='Cancelled'){%>
 
               <%}else{%>
-              <div class="cancelOrder"><button class="cancelbtn"><a onclick="confirmDelete('<%=order._id %>','<%=order.productsid[0].productid.productName %>') ;">Cancel</button></div>
+              <div class="cancelOrder"><button class="cancelbtn" onclick="confirmDelete('<%=order._id %>','<%=order.productsid[0].productid.productName %>', event);">Cancel</button></div>
                 <%}%>
         </div>
 
@@ -51,9 +64,19 @@
         <div class="order_frames review_div">
            <div class="reviewproduct">Rate your Product</div>
            <div class="review_frame">
+            <div class="rating">
+               <span class="star" data-value="1">&#9733;</span>
+               <span class="star" data-value="2">&#9733;</span>
+               <span class="star" data-value="3">&#9733;</span>
+               <span class="star" data-value="4">&#9733;</span>
+               <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <input type="hidden" class="rating-value" value="0">
             <textarea class="review_textarea" placeholder="Review your Product here.." spellcheck="false"></textarea>
-            <button class="review_submit_btn" >Submit Review</button>
-           </div>
+            <div class="message" style="color: rgb(183, 21, 21);margin-bottom: 10px;margin-left: 43%; font-weight: bold;"></div>
+            <button class="review_submit_btn">Submit Review</button>
+         </div>
+         
         </div>
 
         </div>
@@ -64,40 +87,44 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-     function confirmDelete(id,name) {
-           if(id&&name){
-            Swal.fire({
-               title: "Are you sure?",
-               text: "You won't be able to revert this!",
-               icon: "warning",
-               showCancelButton: true,
-               confirmButtonColor: "#3085d6",
-               cancelButtonColor: "#d33",
-               confirmButtonText: "Yes, cancel it!"
-           }).then(async(result) => {
-               if (result.isConfirmed) {
-                   const response=await fetch(`/user/deleteorder?id=${id}`,{method:"delete"});
-                   if (!response.ok) {
-                       throw new Error("Error deleting product: " + response.statusText);
-                   }
-                   const results = await response.json();
-                   if (results.success) {
-                       window.location.href="/user/orders"
-                   } else {
-                       message.innerHTML = result.error || "Unknown error";
-                   }
-               }
-           });
-           }
-      }
+     function confirmDelete(id, name, event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (id && name) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, cancel it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const response = await fetch(`/user/deleteorder?id=${id}`, { method: "delete" });
+                if (!response.ok) {
+                    throw new Error("Error deleting product: " + response.statusText);
+                }
+                const results = await response.json();
+                if (results.success) {
+                    window.location.href = "/user/orders"
+                } else {
+                    message.innerHTML = result.error || "Unknown error";
+                }
+            }
+        });
+    }
+}
+
 
 
 const rateProduct = document.querySelector('.reviewproduct')
 const reviewProduct = document.querySelector('.review_frame')
 rateProduct.addEventListener('click', (event) => {
+    event.preventDefault();
    event.stopPropagation(); // Prevent click event from propagating to parent elements
    reviewProduct.style.display = 'block';
-   reviewProduct.style.height = '10rem'; 
+   reviewProduct.style.height = '18rem'; 
    
 });
 const reviewTextarea = document.querySelector('.review_textarea');
@@ -105,8 +132,68 @@ reviewTextarea.addEventListener('click', (event) => {
     event.stopPropagation();
 });
 
+const stars = document.querySelectorAll('.star');
+const ratingValue = document.querySelector('.rating-value');
 
+stars.forEach((star) => {
+   star.addEventListener('click', (event) => {
+    event.preventDefault()
+      event.stopPropagation(); // Stop the event from propagating
+      const value = parseInt(star.getAttribute('data-value'));
+      ratingValue.value = value;
+      stars.forEach((s, index) => {
+         if (index < value) {
+            s.classList.add('active');
+         } else {
+            s.classList.remove('active');
+         }
+      });
+   });
+});
 
+const submitReviewBtn = document.querySelector('.review_submit_btn');
+const message = document.querySelector(".message");
+
+submitReviewBtn.addEventListener('click', async () => {
+    const productId = '<%=order.productsid[0].productid._id%>';
+    const rating = ratingValue.value;
+    const review = reviewTextarea.value;
+
+    if (!rating || !review) {
+        message.textContent = "All fields are required";
+        setTimeout(() => {
+            message.innerHTML = "";
+        }, 1000);
+    } else {
+        const response = await fetch('/user/review', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                productId,
+                rating,
+                review
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                message.textContent = "Review submitted successfully!";
+                setTimeout(() => {
+                    message.innerHTML = "";
+                    window.location.href = "/user/orders";
+                }, 2000);
+            } else {
+                message.textContent = data.message || "Unknown error";
+            }
+        } else {
+            const error = await response.json();
+            console.error('Error submitting review:', error.message);
+        }
+    }
+});
 
 
 </script>

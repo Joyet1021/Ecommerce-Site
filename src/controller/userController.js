@@ -3,6 +3,7 @@ const productModel = require("../../Models/productdetails");
 const bannerModel = require("../../Models/bannermodel");
 const cartModel = require("../../Models/cart");
 const wishlistModel = require("../../Models/wishlist");
+const reviewModel=require('../../Models/review')
 const { Redirect } = require("twilio/lib/twiml/VoiceResponse");
 
 // Controller for rendering the user's home page
@@ -46,6 +47,16 @@ exports.viewProduct = async (req, res) => {
         const userId = req.session.user ? req.session.user._id : null;
         let cartCount = 0;
         let wishlistCount = 0;
+        let totalrating=0;
+        let review = []; // Initialize review as an empty array
+         // Fetch reviews for the product
+         review = await reviewModel.findOne({ productid: productId });console.log(review,'lokip');
+         if(review){
+            review.reviews.forEach((item)=>{
+                totalrating+=item.rating
+            });
+        }
+
         // Check if user is logged in
         if (userId) {
             const userExist = await cartModel.findOne({ userid: userId });
@@ -66,9 +77,9 @@ exports.viewProduct = async (req, res) => {
                 wishlistCount = productIds ? productIds.productsid.length : 0;
                 cartCount = productids ? productids.productsid.length : 0;
 
+
                 // Render the product view page with the fetched data
-                res.render('user/viewproduct', { product, relatedProducts, productExist, cartCount, wishlistCount });
-                return;
+                return res.render('user/viewproduct', { product, relatedProducts, productExist, cartCount, wishlistCount, review,totalrating });
             }
         }
 
@@ -81,13 +92,14 @@ exports.viewProduct = async (req, res) => {
 
         // Render the product view page with the fetched data
         const productExist = false;
-        res.render('user/viewproduct', { product, relatedProducts, productExist, cartCount, wishlistCount });
+        return res.render('user/viewproduct', { product, relatedProducts, productExist, cartCount, wishlistCount, review ,totalrating});
 
     } catch (error) {
         console.error('Error in viewProduct', error);
-        res.status(500).render('error', { message: 'Internal Server Error' });
+        return res.status(500).render('error', { message: 'Internal Server Error' });
     }
 }
+
 
 // Controller for adding a product to the cart
 exports.addtoCart = async (req, res) => {
@@ -500,11 +512,11 @@ exports.filterprice = async (req, res) => {
 // Controller for handling product search
 exports.searchGet = async (req, res) => {
     try {
-        const Name = req.query.product;
+        const Name = req.query.product;console.log(Name);
         const categoryDetails = await categoryModel.find();
         const products = await productModel.find({
             productName: { $regex: Name, $options: 'i' },
-        });
+        });console.log(products,'milaaa');
         const userId = req.session.user ? req.session.user._id : null;
         let wishlist = await wishlistModel.findOne({ userid: userId });
         let cartCount = 0;

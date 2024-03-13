@@ -1,6 +1,10 @@
 <%- include('../common/head.ejs') %>
 <div class="wrapper productopen_wrapper">
     <%- include('../common/top_nav.ejs') %>
+    <% const length = review ? review.reviews.length : 0; %>
+    <% let avg = 0; %>
+    <% if (length !== 0) { avg = totalrating / length; } %>
+
 
 
     <form id="buy-now-form" action="/user/buyNow?id=<%= product._id %>" method="post" style="width: 100%;">
@@ -57,7 +61,7 @@
     
        
                          <!-- ===================================== -->
-                         <div class="top_rating"><span style="font-size: 1.3rem;">5</span><i class="bi top_star bi-star-fill"></i><span style="font-size: .7rem; font-family: 'Poppins',sans-serif;">Out of <span>4</span> Reviews</span></div><BR>
+                         <div class="top_rating"><span style="font-size: 1.3rem;"><%=avg%></span><i class="bi top_star bi-star-fill"></i><span style="font-size: .7rem; font-family: 'Poppins',sans-serif;">Out of <span><%=length%></span> Reviews</span></div><BR>
                          
                          <!-- =========================================================== -->
                          <% if (Array.isArray(product.size) && product.size.length > 0) { %>
@@ -190,20 +194,32 @@
 
 
         <div class="product_frame_related">
+
             <div class="product_top">Ratings & Reviews</div>
-            <h4 class="rating_number">4.5</h4>
-            <h6 class="basedon_tex">Based on <span>23</span> Reviews</h6>
+            <h4 class="rating_number"><%=avg%></h4>
+            <h6 class="basedon_tex">Based on <span><%=length%></span> Reviews</h6>
+
             <div class="product_bottom product_review">
+                <%if(review){%>
+                <% review.reviews.forEach((reviews)=>{%>
+
+               <div class="review_frame">
+                     <div class="user_review" style="border-bottom: 1px solid rgb(207, 207, 207);">
+                     <span class="star_rating"><span><%=reviews.rating%></span><i class="bi bi-star-fill"></i></span>
+                     <p class="rating_para"><%=reviews.review%></p>
+                  </div>
+               </div>
+               <%})%>
+               <%}else{%>
                 <div class="review_frame">
-                    <div class="user_img_div">
-                        <img class="user_img" src="#" alt="">
+                       <div class="user_review" >
+                       <span class="star_rating"><span>0</span><i class="bi bi-star-fill"></i></span>
+                       <p class="rating_para">No Review</p>
                     </div>
-                    <div class="user_review">
-                        <span class="star_rating"><span>5</span><i class="bi bi-star-fill"></i></span>
-                        <p class="rating_para">good Product</p>
-                    </div>
-                </div>
-            </div>
+                 </div>
+                 <%}%>
+
+        </div>
         </div>
 
         <%- include('../common/footer.ejs') %>

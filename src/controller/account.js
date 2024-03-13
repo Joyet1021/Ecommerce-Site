@@ -7,6 +7,7 @@ const orderModel = require("../../Models/order");
 const productModel = require('../../Models/productdetails');
 const cartModel=require('../../Models/cart');
 const wishlistModel=require('../../Models/wishlist')
+const reviewModel=require('../../Models/review')
 
 // Display the address form
 exports.addressGet = async (req, res) => {
@@ -401,3 +402,40 @@ exports.aboutusGet=async(req,res)=>{
         res.status(500).json({ success: false, error: 'Internal Server Error' });
     }
 }
+
+// Added product review
+exports.reviewPost = async (req, res) => {
+    try {
+        const { productId, rating, review } = req.body;
+        const userid = req.session.user ? req.session.user._id : null;
+        const productExist = await reviewModel.findOne({ productid: productId });
+        let newSchema;
+        if (productExist) {
+            productExist.reviews.push({
+                userid,
+                rating,
+                review
+            });
+            newSchema = productExist;
+        } else {
+            newSchema = new reviewModel({
+                productid: productId,
+                reviews: [{
+                    userid,
+                    review,
+                    rating
+                }]
+            });
+        }
+
+        if (userid === null) {
+            return res.status(400).json({ success: false, message: "Please Login to write a Review" });
+        } else {
+            await newSchema.save();
+            return res.status(200).json({ success: true, message: "Review saved successfully" });
+        }
+    } catch (error) {
+        console.error("Error in reviewPost:", error);
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
