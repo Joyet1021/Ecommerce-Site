@@ -17,11 +17,10 @@
                        <li onclick="location.href='/user/Address' " class=""><i class="bi bi_left_bar bi-person-circle"></i>Profile</li>
                        <li onclick="location.href='/user/altaddress' " class=""><p class="adress_add" >+</p>Add Address</li>
                        <li onclick="location.href='/user/updatePassword' " class=""><i class="bi bi_left_bar bi-shield-lock-fill"></i>Update Password</li>
-                       <li onclick="location.href='/account/orders' " class=""><i class="bi bi_left_bar bi-gift-fill"></i>Orders</li>
-                       <li onclick="location.href='/cart'"><i class="bi bi_left_bar bi-cart-fill"></i>Cart</li>
-                       <li onclick="location.href='/wishlist' " ><i class="bi bi_left_bar bi-heart-fill"></i>Wishlist</li>
+                       <li onclick="location.href='' " class=""><i class="bi bi_left_bar bi-gift-fill"></i>Orders</li>
+                       <li onclick="location.href='/user/cart'"><i class="bi bi_left_bar bi-cart-fill"></i>Cart</li>
+                       <li onclick="location.href='/user/wishlist' " ><i class="bi bi_left_bar bi-heart-fill"></i>Wishlist</li>
                        <li onclick="location.href='/user/aboutus' " class=""><i class="bi bi_left_bar bi-info-circle-fill"></i>About Us</li>
-                       <li onclick="location.href='/account/contactus' " class=""><i class="bi bi_left_bar bi-telephone-fill"></i>Contact Us</li>
                    </ul>
                </div>
                </div>
@@ -38,9 +37,9 @@
                   </table>
                <%}else{%>
 
-               <%orders.forEach((order)=>{ %>
+               <%for(let i=orders.length-1;i>=0;i--){ %>
                   
-               <table class="row<%=order._id %>" style="margin-bottom: 20px;">
+               <table class="row<%=orders[i]._id %>" style="margin-bottom: 20px;">
                   <thead>
                      <tr>
                         <th style="width: 30%;">PRODUCT</th>
@@ -52,28 +51,28 @@
                   </thead>
                
                   <tbody>
-                  <tr class="td_tr" onclick="window.location.href='/user/orderopen?id=<%=order._id %>'" >
+                  <tr class="td_tr" onclick="window.location.href='/user/orderopen?id=<%=orders[i]._id %>'" >
                      
                      <td class="product_td"  >
-                        <div class="img_section"><img src="/uploads/products/<%=order.productsid[0].productid.productImage[0] %>" style="height: 6rem; width: 5rem;" alt=""></div>
+                        <div class="img_section"><img src="/uploads/products/<%=orders[i].productsid[0].productid.productImage[0] %>" style="height: 6rem; width: 5rem;" alt=""></div>
                         <div class="product_details">
-                           <p class="order_product_name"><%=order.productsid[0].productid.productName %></p>
-                           <p class="order_size">Size : <span style="font-size: 1.1rem;"><%=order.productsid[0].size %></span></p>
-                           <p class="order_color">Color : <span><%=order.productsid[0].color %></span></p>
+                           <p class="order_product_name"><%=orders[i].productsid[0].productid.productName %></p>
+                           <p class="order_size">Size : <span style="font-size: 1.1rem;"><%=orders[i].productsid[0].size %></span></p>
+                           <p class="order_color">Color : <span><%=orders[i].productsid[0].color %></span></p>
                         </div>
                      </td>
-                     <td><%=order._id %></td>
-                     <td style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(255, 0, 0, 0.748);"><i class="bi bi-currency-rupee"></i><%=order.productsid[0].productid.discount %></td>
-                     <%const date=order.orderdate.toISOString().substring(0, 10)%>
+                     <td><%=orders[i]._id %></td>
+                     <td style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(255, 0, 0, 0.748);"><i class="bi bi-currency-rupee"></i><%=orders[i].productsid[0].productid.discount %></td>
+                     <%const date=orders[i].orderdate.toISOString().substring(0, 10)%>
                      <td style="font-family: 'Poppins',sans-serif; font-weight: 600; color: rgba(0, 0, 0, 0.748);"><%=date %></td>
-                     <td class="status delivered"><%=order.status %></td>
+                     <td class="status delivered"><%=orders[i].status %></td>
 
                   </tr>
                   </tbody>
 
                </table>
                
-               <% }); %>
+               <% }; %>
                <%}%>
                
             </div>

@@ -1,6 +1,8 @@
 const productModel = require('../../Models/productdetails');
 const categoryModel = require('../../Models/categories');
 const fs = require('fs');
+const wishlistModel = require('../../Models/wishlist');
+const cartModel = require("../../Models/cart");
 
 // Controller function to render the add product page
 exports.addproductGet = async (req, res) => {
@@ -89,8 +91,7 @@ exports.editproductGet = async (req, res) => {
 exports.editproductPost = async (req, res) => {
     try {
         const data = req.params.id;
-        const { productName, price, category, subcategory, size, returnproduct, discount, deliverydate, description, quantity } = req.body;
-
+        const { productName, price, category, subcategory, size,color, returnproduct, discount, deliverydate, description, quantity } = req.body;
         // Find the product by id
         const product = await productModel.findOne({ _id: data });
 
@@ -101,6 +102,7 @@ exports.editproductPost = async (req, res) => {
             category,
             subcategory,
             size,
+            color,
             returnproduct,
             discount,
             deliverydate,
@@ -151,6 +153,11 @@ exports.deleteproduct = async (req, res) => {
 
         // Delete the product from the database
         await productModel.deleteOne({ _id: id });
+        // Remove the product from wishlist
+        await wishlistModel.updateMany({}, { $pull: { productsid: { productid: id } } });
+        // Remove the product from cart
+        await cartModel.updateMany({}, { $pull: { productsid: { productid: id } } });
+
         res.status(203).json({ success: true, message: "Product Deleted Successfully" });
 
     } catch (error) {

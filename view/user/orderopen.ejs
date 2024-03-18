@@ -55,12 +55,17 @@
               </div>
               <%if(order.status=='Cancelled'){%>
 
-              <%}else{%>
+              <%}else if(order.status=='Delivered'){ %>
+                
+                <%}else{%>
               <div class="cancelOrder"><button class="cancelbtn" onclick="confirmDelete('<%=order._id %>','<%=order.productsid[0].productid.productName %>', event);">Cancel</button></div>
                 <%}%>
         </div>
+        <%if(order.reviewed==true){%>
 
+            <%}else if(order.status=='Cancelled'){%>
 
+                <%}else if(order.status=='Delivered'){%>
         <div class="order_frames review_div">
            <div class="reviewproduct">Rate your Product</div>
            <div class="review_frame">
@@ -78,6 +83,10 @@
          </div>
          
         </div>
+        
+
+            <%}else{%>
+                <%}%>
 
         </div>
 

@@ -50,7 +50,7 @@ exports.viewProduct = async (req, res) => {
         let totalrating=0;
         let review = []; // Initialize review as an empty array
          // Fetch reviews for the product
-         review = await reviewModel.findOne({ productid: productId });console.log(review,'lokip');
+         review = await reviewModel.findOne({ productid: productId });
          if(review){
             review.reviews.forEach((item)=>{
                 totalrating+=item.rating
@@ -99,51 +99,6 @@ exports.viewProduct = async (req, res) => {
         return res.status(500).render('error', { message: 'Internal Server Error' });
     }
 }
-
-
-// Controller for adding a product to the cart
-exports.addtoCart = async (req, res) => {
-    try {
-        const userId = req.session?.user._id;
-        if (!userId) {
-            res.status(401).json('not')
-        }
-
-        const productId = req.query?.productid;
-        const color = req.query?.color || '';
-        const size = req.query?.size || '';
-
-        let userExistCart = await cartModel.findOne({ userid: userId });
-
-        if (!userExistCart) {
-            userExistCart = await new cartModel({
-                userid: userId,
-                productsid: [],
-                color: color,
-                size: size
-            }).save();
-        }
-
-        if (productId) {
-            let productFound = false;
-            userExistCart.productsid.forEach((product) => {
-                if (product.productid == productId) {
-                    productFound = true;
-                }
-            });
-
-            if (!productFound) {
-                userExistCart.productsid.unshift({ productid: productId, quantity: 1, color: color, size: size });
-                await userExistCart.save();
-            }
-        }
-
-        return res.status(200).json({ success: true, message: 'Added To Cart Successfully' });
-    } catch (error) {
-        console.error('Error adding product to cart:', error);
-        return res.status(500).json({ success: false, error: 'Internal Server Error' });
-    }
-};
 
 // Controller for handling the buy now functionality
 exports.buynowpost = async (req, res) => {
@@ -227,7 +182,7 @@ exports.allProducts = async (req, res) => {
         const userId = req.session.user ? req.session.user._id : null;
         let wishlist = await wishlistModel.findOne({ userid: userId });
         const categoryDetails = await categoryModel.find();
-        let products = await productModel.find({});
+        
 
         let cartCount = 0;
         let wishlistCount = 0;
@@ -245,9 +200,23 @@ exports.allProducts = async (req, res) => {
                 wishlistCount = 0;
             }
         }
-
+        let category=req.query.category||'';
+        let pageNumber=parseInt(req.query.page)||1;
+        let pagelimit=0;
+        let products=0;
+        if(pageNumber==1){
+            pagelimit=0;
+        }else{
+            pagelimit=(pageNumber-1)*12;
+        }
+        if(category){
+            products=await productModel.aggregate([{$match:{category:'category'}},{$skip:pagelimit},{$limit:12}]);
+        }else{
+            products= await productModel.aggregate([{$skip:pagelimit},{$limit:12}]);
+        }
+    
         // Render the all products page with the fetched data
-        res.render('user/allproducts', { products, categoryDetails, wishlist, cartCount, wishlistCount });
+        res.render('user/allproducts', { products, categoryDetails, wishlist, cartCount, wishlistCount ,pageNumber});
 
 
     } catch (error) {
@@ -255,191 +224,6 @@ exports.allProducts = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 }
-
-// Controller for rendering the cart page
-exports.cartGet = async (req, res) => {
-    try {
-        let cartCount = 0;
-        let wishlistCount = 0;
-        let nouser = false;
-        if (!req.session.user) {
-            nouser = true;
-            return res.render('user/cart', { nouser, cartCount, wishlistCount });
-        }
-        const userId = req.session.user._id;
-
-        let userCart = await cartModel.findOne({ userid: userId });
-
-        if (!userCart) {
-            userCart = await new cartModel({
-                userid: userId,
-                productsid: []
-            }).save();
-        }
-        const productIds = await cartModel.findOne({ userid: userId }).populate('productsid.productid');
-        const products = productIds.productsid;
-        cartCount = products.length;
-        const productids = await wishlistModel.findOne({ userid: userId });
-        wishlistCount = productids.productsid.length;
-
-        // Render the cart page with the fetched data
-        res.render('user/cart', { nouser, productIds, products, cartCount, wishlistCount });
-
-    } catch (error) {
-        console.error('Error in cartGet', error);
-        res.status(500).render('error', { message: 'Internal Server Error' });
-    }
-};
-
-// Controller for updating the quantity of a product in the cart
-exports.updateCartQty = async (req, res) => {
-    try {
-        const userId = req.session.user._id;
-        const quantity = parseInt(req.query.qty);
-        const productId = req.query.id;
-
-        const cart = await cartModel.findOne({ userid: userId });
-
-        // Update the quantity of the specified product in the cart
-        const productIndex = cart.productsid.findIndex(product => product.productid == productId);
-        if (productIndex !== -1) {
-            cart.productsid[productIndex].quantity = quantity;
-        }
-        await cart.save();
-        return res.status(200).json({ success: true, data: "quantity changed successfully" });
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: "Internal server error" });
-    }
-};
-
-// Controller for deleting a product from the cart
-exports.deleteCartProduct = async (req, res) => {
-    try {
-        const product = req.query.id;
-        const userId = req.session.user._id;
-        await cartModel.findOneAndUpdate(
-            { userid: userId },
-            { $pull: { productsid: { productid: product } } },
-            { new: true }
-        );
-        const Product = await cartModel.findOne({ userid: userId });
-        const noproduct = Product.productsid;
-        const cartCount = noproduct ? noproduct.length : 0;
-
-        // Check if the cart is empty and return the appropriate response
-        if (cartCount == 0) {
-            return res.json({ success: true, productExist: false, count: cartCount });
-        }
-        res.json({ success: true, produtExist: true, count: cartCount });
-    } catch (error) {
-        console.error('Error deleting product from cart:', error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
-    }
-};
-
-// Controller for adding a product to the wishlist
-exports.addtowishlist = async (req, res) => {
-    try {
-        const userId = req.session?.user?._id;
-
-        if (!userId) {
-            return res.status(401).json({ message: 'Unauthorized' });
-        }
-
-        const productId = req.query?.productid;
-        let userExistCart = await wishlistModel.findOne({ userid: userId });
-
-        if (!userExistCart) {
-            userExistCart = await new wishlistModel({
-                userid: userId,
-                productsid: []
-            }).save();
-        }
-
-        let productFound = false;
-        for (let i = 0; i < userExistCart.productsid.length; i++) {
-            if (userExistCart.productsid[i].productid == productId) {
-                userExistCart.productsid.splice(i, 1);
-                productFound = true;
-                break;
-            }
-        }
-        if (!productFound) {
-            userExistCart.productsid.unshift({ productid: productId });
-        }
-        await userExistCart.save();
-        const Product = await wishlistModel.findOne({ userid: userId });
-        const noproduct = Product.productsid;
-        const wishlistCount = noproduct ? noproduct.length : 0;
-        return res.status(200).json({ success: true, count: wishlistCount, message: 'Added To Wishlist Successfully' });
-    } catch (error) {
-        console.error('Error adding product to wishlist:', error);
-        return res.status(500).json({ success: false, error: 'Internal Server Error' });
-    }
-}
-
-// Controller for rendering the wishlist page
-exports.wishlistGet = async (req, res) => {
-    try {
-        let cartCount = 0;
-        let wishlistCount = 0;
-        let nouser = false;
-        if (!req.session.user) {
-            nouser = true;
-            return res.render('user/wishlist', { nouser, wishlistCount, cartCount });
-        }
-        const userId = req.session.user._id;
-
-        let userwishlist = await wishlistModel.findOne({ userid: userId });
-
-        if (!userwishlist) {
-            userwishlist = await new wishlistModel({
-                userid: userId,
-                productsid: []
-            }).save();
-        }
-
-        const productIds = await wishlistModel.findOne({ userid: userId }).populate('productsid.productid');
-        const products = productIds.productsid;
-        wishlistCount = products.length;
-        const productids = await cartModel.findOne({ userid: userId })
-        cartCount = productids.productsid.length;
-
-        // Render the wishlist page with the fetched data
-        res.render('user/wishlist', { nouser, productIds, products, wishlistCount, cartCount });
-
-    } catch (error) {
-        console.error('Error in wishlistGet', error);
-        res.status(500).render('error', { message: 'Internal Server Error' });
-    }
-};
-
-// Controller for deleting a product from the wishlist
-exports.deleteWishlist = async (req, res) => {
-    try {
-        const product = req.query.id;
-        const userId = req.session.user._id;
-        await wishlistModel.findOneAndUpdate(
-            { userid: userId },
-            { $pull: { productsid: { productid: product } } },
-            { new: true }
-        );
-        const Product = await wishlistModel.findOne({ userid: userId });
-        const noproduct = Product.productsid;
-        const wishlistCount = noproduct ? noproduct.length : 0;
-
-        // Check if the wishlist is empty and return the appropriate response
-        if (wishlistCount == 0) {
-            return res.json({ success: true, productExist: false, count: wishlistCount });
-        }
-        res.json({ success: true, produtExist: true, count: wishlistCount });
-    } catch (error) {
-        console.error('Error deleting product from cart:', error);
-        res.status(500).json({ success: false, error: "Internal Server Error" });
-    }
-};
 
 // Controller for filtering products based on category and price
 exports.filterproducts = async (req, res) => {
@@ -450,10 +234,7 @@ exports.filterproducts = async (req, res) => {
         const price = req.query.price !== undefined ? req.query.price : null;
         const sort=req.query.sortOrder?req.query.sortOrder:null;
         const categoryDetails = await categoryModel.find();
-        console.log(price, category, 'lokix');
         let products = await productModel.find();
-        console.log(sort,'hfhf');
-
         
         if (category !== null && price === 'null' ? price : null) {
             products = await productModel.find({ category: category });
@@ -508,28 +289,70 @@ exports.filterprice = async (req, res) => {
         return res.status(500).json({ success: false, message: "Internal server error" });
     }
 }
-
 // Controller for handling product search
 exports.searchGet = async (req, res) => {
     try {
-        const Name = req.query.product;console.log(Name);
+        const Name = req.query.product; 
         const categoryDetails = await categoryModel.find();
-        const products = await productModel.find({
-            productName: { $regex: Name, $options: 'i' },
-        });console.log(products,'milaaa');
+        
         const userId = req.session.user ? req.session.user._id : null;
         let wishlist = await wishlistModel.findOne({ userid: userId });
         let cartCount = 0;
         let wishlistCount = 0;
+        
         if (userId) {
             const productids = await cartModel.findOne({ userid: userId });
             cartCount = productids ? productids.productsid.length : 0;
+            
             const productIds = await wishlistModel.findOne({ userid: userId });
             wishlistCount = productIds ? productIds.productsid.length : 0;
         }
-        res.render('user/allproducts', { products, categoryDetails, wishlist, cartCount, wishlistCount });
+    
+        let category= await productModel.aggregate([{$match:{productName:{ $regex: Name, $options: 'i' }}}]);
+        if(category.length!==0){
+            res.render('user/categoryproducts', { category, categoryDetails, wishlist, cartCount, wishlistCount});
+        }else{
+            category= await productModel.aggregate([{$match:{category:{ $regex: Name, $options: 'i' }}}]);
+            res.render('user/categoryproducts', { category, categoryDetails, wishlist, cartCount, wishlistCount});
+        }
     } catch (error) {
         console.error('Error in searchGet controller:', error);
         res.status(500).render('error', { message: 'Internal Server Error' });
     }
 };
+
+exports.pagination = async (req, res) => {
+    try {
+        const userId = req.session.user ? req.session.user._id : null;
+        let wishlist = userId ? await wishlistModel.findOne({ userid: userId }) : null;
+
+        let category = req.query.category || '';
+        let pageNumber = parseInt(req.query.page) || 1;
+        let pagelimit = 0;
+
+        if (pageNumber > 1) {
+            pagelimit = (pageNumber - 1) * 12;
+        }
+
+        let products;
+
+        if (category) {
+            products = await productModel.aggregate([
+                { $match: { category: category } },
+                { $skip: pagelimit },
+                { $limit: 12 }
+            ]);
+        } else {
+            products = await productModel.aggregate([
+                { $skip: pagelimit },
+                { $limit: 12 }
+            ]);
+        }
+
+        return res.status(200).json({ success: true, message: "paginated", products: products, wishlist: wishlist, pageNumber});
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ success: false, message: "An error occurred" });
+    }
+}

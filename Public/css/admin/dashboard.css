@@ -483,7 +483,7 @@ main .data3 {
 	flex-wrap: wrap;
 }
 main .data3 .content-data3 {
-	height: 900px;
+	height: 600px;
 	width: 50%;
 	box-sizing: border-box;
 	padding-left: 30%;

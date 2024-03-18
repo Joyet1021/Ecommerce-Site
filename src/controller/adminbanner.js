@@ -40,13 +40,11 @@ exports.addbannerPost = async (req, res) => {
 
         // Get image filename and other details from request body
         const image = req.file.filename;
-        const { bannerName, bannerHeading, offerPrice, startDate, endDate } = req.body;
+        const { bannerName, startDate, endDate } = req.body;
 
         // Create a new banner schema and save to database
         const newSchema = new bannerModel({
             bannerName,
-            bannerHeading,
-            offerPrice,
             startDate,
             endDate,
             bannerImage: image
@@ -76,7 +74,7 @@ exports.editbannerGet = async (req, res) => {
 exports.editbannerPost = async (req, res) => {
     try {
         const id = req.query.id;
-        const { bannerName, bannerHeading, offerPrice, startDate, endDate } = req.body;
+        const { bannerName, startDate, endDate } = req.body;
 
         // Find the banner by ID
         const banner = await bannerModel.findOne({ _id: id });
@@ -84,8 +82,6 @@ exports.editbannerPost = async (req, res) => {
         // Prepare banner details for update
         const bannerDetail = {
             bannerName,
-            bannerHeading,
-            offerPrice,
             startDate,
             endDate,
             bannerImage: banner.bannerImage

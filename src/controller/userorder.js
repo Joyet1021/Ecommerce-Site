@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const session = require('express-session');
 const orderModel = require("../../Models/order");
 const Razorpay = require('razorpay');
+const wishlistModel = require("../../Models/wishlist");
 
 // Environment variables for Razorpay
 const razorpayid = process.env.RAZORPAY_ID_KEY;
@@ -47,13 +48,28 @@ exports.checkoutGet = async (req, res) => {
             req.session.preorder = order;
             quantity = req.query.quantity;
         }
+        // Initialize variables for user-specific data
+        let wishlist = null;
+        let cartCount = 0;
+        let wishlistCount = 0;
+
+        // Check if user is logged in
+        if (userId) {
+            // Fetch user's wishlist and cart details
+            wishlist = await wishlistModel.findOne({ userid: userId });
+            const cart = await cartModel.findOne({ userid: userId });
+
+            // Update cart and wishlist counts
+            cartCount = cart ? cart.productsid.length : 0;
+            wishlistCount = wishlist ? wishlist.productsid.length : 0;
+        }
 
         // Get user's address and available coupons
         const user = await profileModel.findOne({ userId: userId });
         const Address = user.newAddress;
         const coupon = await couponModel.find({ minimumPurchase: { $lte: total } });
 
-        res.render('user/checkout', { order, total, Address, coupon });
+        res.render('user/checkout', { order, total, Address, coupon,wishlistCount,cartCount });
 
     } catch (error) {
         console.error(error);
@@ -148,15 +164,30 @@ exports.checkoutPost = async (req, res) => {
 }
 
 // Controller function to render the cash on delivery confirmation page
-exports.codConfirmGet = (req, res) => {
+exports.codConfirmGet = async(req, res) => {
     try {
         const userId = req.session.user ? req.session.user._id : null;
         if (!userId) {
             return res.redirect('/user/login');
         }
+        // Initialize variables for user-specific data
+        let wishlist = null;
+        let cartCount = 0;
+        let wishlistCount = 0;
+
+        // Check if user is logged in
+        if (userId) {
+            // Fetch user's wishlist and cart details
+            wishlist = await wishlistModel.findOne({ userid: userId });
+            const cart = await cartModel.findOne({ userid: userId });
+
+            // Update cart and wishlist counts
+            cartCount = cart ? cart.productsid.length : 0;
+            wishlistCount = wishlist ? wishlist.productsid.length : 0;
+        }
         const error = req.flash('error');
         const email = req.session.order.address.email;
-        res.render('user/codconfirm', { email, error })
+        res.render('user/codconfirm', { email, error,wishlistCount,cartCount })
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
@@ -192,6 +223,7 @@ exports.orderPlacedGet = async (req, res) => {
             const productdetails = await productModel.findOne({ _id: id });
             const stock = productdetails.quantity;
             const quantity = stock - qty;
+            await cartModel.updateOne({userid:userid},{$pull:{productsid:{productid:id}}});
             await productModel.updateOne({ _id: id }, { $set: { quantity } });
 
         });
@@ -233,7 +265,22 @@ exports.orderPlacedGet = async (req, res) => {
             );
 
         })
-        res.render("user/orderplaced");
+        // Initialize variables for user-specific data
+        let wishlist = null;
+        let cartCount = 0;
+        let wishlistCount = 0;
+
+        // Check if user is logged in
+        if (userid) {
+            // Fetch user's wishlist and cart details
+            wishlist = await wishlistModel.findOne({ userid });
+            const cart = await cartModel.findOne({ userid});
+
+            // Update cart and wishlist counts
+            cartCount = cart ? cart.productsid.length : 0;
+            wishlistCount = wishlist ? wishlist.productsid.length : 0;
+        }
+        res.render("user/orderplaced",{wishlistCount,cartCount});
 
 
     } catch (error) {

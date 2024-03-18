@@ -8,15 +8,13 @@ submit.addEventListener("click",async(e)=>{
         const form=new FormData(addbannerForm);
         
         const bannerName=document.getElementsByName("bannerName")[0].value.trim();
-        const bannerHeading=document.getElementsByName("bannerHeading")[0].value.trim();
-        const offerPrice=document.getElementsByName("offerPrice")[0].value.trim();
         const startDate=document.getElementsByName("startDate")[0].value.trim();
         const endDate=document.getElementsByName("endDate")[0].value.trim();
         
         // const img=document.getElementById('banner_image').files[0];
         // form.append('bannerImage',img);
         
-        if(!bannerName||!bannerHeading||!offerPrice||!startDate||!endDate){
+        if(!bannerName||!startDate||!endDate){
                 message.textContent= "All fields are required";
                 setTimeout(()=>{
                         message.innerHTML="";

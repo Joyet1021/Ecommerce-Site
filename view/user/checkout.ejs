@@ -3,6 +3,7 @@
     <div class="checkout_wrapper" >
         <%- include('../common/top_nav.ejs') %>
         <form id="full_form" method="post" >
+            <%let totaldisc=0%>
     <div class="checkout_content">
             <div class="checkout_left">
                 <!-- ----------------------------------- -->
@@ -19,7 +20,9 @@
                             </div>
                             <div style="display: flex; gap: .7rem; align-items: center;">
                                 <p class="old_price"><i class="bi bi-currency-rupee"></i><%= product.productid.price * product.quantity %></p>
-                                <p class="new_price"><i class="bi bi-currency-rupee"></i><%= product.productid.discount * product.quantity %></p>
+                                <%const newprice=product.productid.discount * product.quantity%>
+                                <p class="new_price"><i class="bi bi-currency-rupee"></i><%= newprice %></p>
+                                <%totaldisc+=newprice%>
                                 <% let discountPercentage = Math.round(100 - (product.productid.discount / product.productid.price * 100)) %>
                                 <p class="discount"><%= discountPercentage %> % Off</p>
                             </div>
@@ -83,6 +86,11 @@
                     <div class="checkouts_frame_bottom_frame checkouts_frame_bottom_adress" style="overflow: auto;">
                         <h3>SELECT ADDRESS</h3>
                         <h6 class="addmessage" style="color: rgb(225, 7, 7);padding-left: 20%;"></h6>
+                        <%if(Address.length == 0){%>
+                            <div class="select_adress_div" style="font-weight: bold;align-items: start;">
+                                <label for="add" value="" onclick="window.location.href='/user/Address'">Add Address</label>
+                            </div>
+                        <%}%>
                         <% Address.forEach((address,index) => { %>
                         <div class="select_adress_div" style="font-weight: bold;">
                             <input id="add<%= address._id %>" name="address" type="radio">
@@ -146,10 +154,10 @@
          <h3>SUMMARY</h3>
          <div class="summary_frame">
            
-            <p>Subtotal <span><i class="bi bi-currency-rupee"></i><span id="sub_total" class="sub_total"><%=total%></span></span></p>
+            <p>Subtotal <span><i class="bi bi-currency-rupee"></i><span id="sub_total" class="sub_total"><%=totaldisc%></span></span></p>
                         <p>Shipping <span style="color: rgb(0, 160, 0);">FREE</span></p>
                         <p>Coupon <span class="discount_percentage"><i class="bi bi-currency-rupee"></i>0</span></p>
-                        <p>Order Total <span><i class="bi bi-currency-rupee"></i><span id="order_total" class="order_total"><%=total%></span></span></p>
+                        <p>Order Total <span><i class="bi bi-currency-rupee"></i><span id="order_total" class="order_total"><%=totaldisc%></span></span></p>
                         <button type="button" class="proceed_btn">PROCEED</button>
                     </div>
                 </div>

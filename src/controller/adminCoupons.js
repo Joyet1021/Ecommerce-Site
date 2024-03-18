@@ -1,4 +1,4 @@
-const couponModel = require('./../../Models/couponmodel');
+const couponModel = require('../../Models/couponmodel');
 
 // Controller function to render the list of coupons
 exports.couponlistGet = async (req, res) => {

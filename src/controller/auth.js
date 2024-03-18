@@ -102,7 +102,7 @@ exports.sendotpPost = async (req, res) => {
         const otpE = req.body.e;
         const otpF = req.body.f;
         const otp = otpA + otpB + otpC + otpD + otpE + otpF;
-
+        
         // Find user by phone number
         const user = await signupModel.findOne({ phonenumber: phone });
 
@@ -137,9 +137,7 @@ exports.userloginGet = function (req, res) {
 exports.userloginPost = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const userDatas = await signupModel.find();
-        const userExist = userDatas.find((val) => val.email === email);
-
+        const userExist = await signupModel.findOne({ email });
         if (!userExist) {
             req.flash("error", "User Doesn't Exist");
             return res.status(400).redirect('/user/login');

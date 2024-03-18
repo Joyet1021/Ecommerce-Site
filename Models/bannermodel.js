@@ -9,14 +9,6 @@ const schema={
         type:String,
         required:true
     },
-    offerPrice:{
-        type:Number,
-        required:true
-    },
-    bannerHeading:{
-        type:String,
-        required:true
-    },
     startDate:{
         type:Date,
         default:()=>new Date()

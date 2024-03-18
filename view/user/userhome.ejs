@@ -57,7 +57,7 @@
           <div class="product_section" >
           
 
-            <%for(let i = productDetails.length - 1; i >= Math.max(0, productDetails.length - 40); i--) {%>
+            <%for(let i = productDetails.length - 1; i >=  0; i--) {%>
                       <div class="product_frame_grid" >
                         <a onclick="window.location.href='/user/viewproduct?id=<%= productDetails[i]._id %>'">
                         <div class="top">
@@ -68,7 +68,11 @@
                               return isProductInWishList ? 'bi-heart-fill' : 'bi-heart';
                             })() %>"></i>
                             </button>
-                           <img src="/uploads/products/<%= productDetails[i].productImage[0] %> " style="width: 75%; height: 90%;" alt="">
+                            <%if(productDetails[i].category==='LAPTOPS'){%>
+                              <img src="/uploads/products/<%= productDetails[i].productImage[0] %> " style="width: 90%; height: 70%;margin-top: 20%;" alt="">
+                              <%}else{%>
+                           <img src="/uploads/products/<%= productDetails[i].productImage[0] %> " style="width: 80%; height: 90%;margin-top: 15%;" alt="">
+                           <%}%>
                          </div>
                          <div class="center">
                            <div class="name_div">
@@ -91,6 +95,7 @@
                   </div>
                   
         </div>
+        
         <!-- ------------------------- MENS SHIRT --------------------------- -->
         
         
@@ -108,6 +113,7 @@
 
         <%- include('../common/footer.ejs') %>
       </div>
+      
     </div>
 
     <script>

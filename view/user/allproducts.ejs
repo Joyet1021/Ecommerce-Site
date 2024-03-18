@@ -2,6 +2,7 @@
     <div class="wrapper allproducts_wrapper">
       <div class="loading_screen"><img src="/images/loading gif.gif" class="loading_gif" alt=""></div>
       <%- include('../common/top_nav.ejs') %>
+      
     <div class="all_products_content">
         <section class="top_sec">
             <h4>FILTERS</h4>
@@ -60,7 +61,7 @@
                          return isProductInWishList ? 'bi-heart-fill' : 'bi-heart';
                        })() %>"></i>
                     </button>
-                    <img src="/uploads/products/<%= product.productImage[0] %>" style="width: 75%; height: 90%;" alt="">
+                    <img src="/uploads/products/<%= product.productImage[0] %>" style="width: 90%; height: 90%;margin-top: 20%;" alt="">
                   </div>
                   <div class="center">
                     <div class="name_div">
@@ -87,17 +88,11 @@
 
       <div class="pagination_div">
       <div class="link_pagination">
-        <button class="back_btn" onclick="prev()"><i class="bi bi-chevron-left"></i></button>
+        <button class="back_btn" onclick="prevpage(event,'<%=pageNumber%>')"><i class="bi bi-chevron-left"></i></button>
           <div class="links">
-              <button class="page_btn active_link" onclick="active()" value="1">1</button>
-              <button class="page_btn" onclick="active()" value="2">2</button>
-              <button class="page_btn" onclick="active()" value="3">3</button>
-              <button class="page_btn" onclick="active()" value="4">4</button>
-              <button class="page_btn" onclick="active()" value="5">5</button>
-              <button class="page_btn" onclick="active()" value="6">6</button>
-              <button class="page_btn" onclick="active()" value="7">7</button>
+              <button class="page_btn active_link" value="<%=pageNumber%>"><%=pageNumber%></button>
            </div>
-          <button class="next_btn" onclick="next()"><i class="bi bi-chevron-right"></i></button>
+          <button class="next_btn" onclick="nextpage(event,'<%=pageNumber%>')"><a ><i class="bi bi-chevron-right"></i></a></button>
       </div>
     </div>
 
@@ -133,7 +128,7 @@
       }
     }
 
-    
+    let category='';
     
     document.addEventListener("DOMContentLoaded", function () {
     const categoryRadios = document.querySelectorAll('.input_cat');
@@ -142,6 +137,7 @@
     categoryRadios.forEach(function (radio) {
         radio.addEventListener('change', function (event) {
             const selectedCategory = event.target.value;
+            category=selectedCategory;
             const selectedPriceElement = document.querySelector('.input_price:checked');
             const selectedPrice = selectedPriceElement ? selectedPriceElement.value : null
             filterByCategory(selectedPrice,selectedCategory);
@@ -327,6 +323,204 @@ async function filterByPrice(price, category) {
         }
     } catch (error) {
         console.error('Error filtering products:', error);
+    }
+}
+
+async function prevpage(event, page) {
+    try {
+        event.preventDefault();
+        let pageNumber = parseInt(page);
+        if (pageNumber > 1) {
+            pageNumber--;
+        }
+        let prevPageURL='';
+        const selectedCategoryElement = document.querySelector('.input_cat:checked');
+        const selectedCategory = selectedCategoryElement ? selectedCategoryElement.value : null;
+        if(selectedCategory!=='null'){
+            prevPageURL = `/user/pagination?page=${pageNumber}&category=${category}`;
+        }else{
+        // Construct the URL dynamically
+        prevPageURL = `/user/pagination?page=${pageNumber}`;
+        }
+        const response = await fetch(prevPageURL, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+        console.log('Filter products result:', result); // Debugging statement
+        if (result.success) {
+            const wishlist = result.wishlist;
+            const productSection = document.querySelector('.product_section');
+            productSection.innerHTML = ''; // Clear previous products
+            result.products.forEach(product => {
+                // Create and append product elements
+                const productFrameGrid = document.createElement('div');
+                productFrameGrid.className = 'product_frame_grid';
+                productFrameGrid.innerHTML = `
+                    <a onclick="window.location.href='/user/viewproduct?id=${product._id}'">
+                        <div class="top">
+                            <button class="wish_btn" onclick="addtoWishlist(event,'${product._id}')">
+                                <i class="biwish_icon${product._id} ${
+                                    wishlist &&
+                                    wishlist.productsid &&
+                                    wishlist.productsid.find(
+                                        wishlistProduct => wishlistProduct.productid == product._id.toString()
+                                    )
+                                        ? 'bi-heart-fill'
+                                        : 'bi-heart'
+                                }"></i>
+                            </button>
+                            <img src="/uploads/products/${product.productImage[0]}" style="width: 75%; height: 90%;" alt="">
+                        </div>
+                        <div class="center">
+                            <div class="name_div">
+                                <p class="product_name">${product.productName}</p>
+                            </div>
+                            <div class="price_div">
+                                <p class="old_price"><i class="bi bi-currency-rupee"></i>${product.price}</p>
+                                <p class="new_price"><i class="bi bi-currency-rupee"></i>${product.discount}</p>
+                            </div>
+                        </div>
+                        <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button></div>
+                    </a>
+                `;
+                productSection.appendChild(productFrameGrid);
+            });
+
+           
+            
+            const pagenumber=pageNumber
+            // Create and append pagination
+            const paginationDiv = document.querySelector('.pagination_div');
+            paginationDiv.innerHTML = '';
+            const linkPaginationDiv = document.createElement('div');
+            linkPaginationDiv.className = 'link_pagination';
+            linkPaginationDiv.innerHTML = `
+                <button class="back_btn" onclick="prevpage(event, '${pagenumber}')"><i class="bi bi-chevron-left"></i></button>
+                <div class="links">
+                    <button class="page_btn active_link" value="${pagenumber}">${pagenumber}</button>
+                </div>
+                <button class="next_btn" onclick="nextpage(event, '${pagenumber}')"><i class="bi bi-chevron-right"></i></button>
+            `;
+            paginationDiv.appendChild(linkPaginationDiv);
+
+            
+        } else {
+            console.error("Error filtering products:", result.message);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+async function nextpage(event, page) {
+    try {
+        event.preventDefault();
+        const pageNumber = parseInt(page) + 1;
+        let nextPageURL='';
+        let cate=0;
+        const selectedCategoryElement = document.querySelector('.input_cat:checked');
+        const selectedCategory = selectedCategoryElement ? selectedCategoryElement.value : null;
+        if(selectedCategory!=='null'){
+          cate=selectedCategory
+        }
+        if(category&&cate!=='null'){console.log('kjkj');
+            nextPageURL = `/user/pagination?page=${pageNumber}&category=${category}`;
+
+        }else{
+        // Construct the URL dynamically
+        nextPageURL = `/user/pagination?page=${pageNumber}`;
+        }console.log(nextPageURL);
+        // Redirect to the next page
+        const response = await fetch(nextPageURL, {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+
+        const result = await response.json();
+        console.log('Filter products result:', result); // Debugging statement
+        if (result.success) {console.log(result.products,'fdjggjgfd');
+        const products=result.products;
+        if (products.length==0){
+            const pagenumber=pageNumber
+            // Create and append pagination
+            const paginationDiv = document.querySelector('.pagination_div');
+            paginationDiv.innerHTML = '';
+            const linkPaginationDiv = document.createElement('div');
+            linkPaginationDiv.className = 'link_pagination';
+            linkPaginationDiv.innerHTML = `
+                <button class="back_btn" onclick="prevpage(event, '${pagenumber}')"><i class="bi bi-chevron-left"></i></button>
+                <div class="links">
+                    <button class="page_btn active_link" value="${pagenumber}">${pagenumber}</button>
+                </div>
+                <button class="next_btn" onclick=""><i class="bi bi-chevron-right"></i></button>
+            `;
+            paginationDiv.appendChild(linkPaginationDiv);
+        }
+            const wishlist = result.wishlist;
+            const productSection = document.querySelector('.product_section');
+            productSection.innerHTML = ''; // Clear previous products
+            products.forEach(product => {
+                // Create and append product elements
+                const productFrameGrid = document.createElement('div');
+                productFrameGrid.className = 'product_frame_grid';
+                productFrameGrid.innerHTML = `
+                    <a onclick="window.location.href='/user/viewproduct?id=${product._id}'">
+                        <div class="top">
+                            <button class="wish_btn" onclick="addtoWishlist(event,'${product._id}')">
+                                <i class="biwish_icon${product._id} ${
+                                    wishlist &&
+                                    wishlist.productsid &&
+                                    wishlist.productsid.find(
+                                        wishlistProduct => wishlistProduct.productid == product._id.toString()
+                                    )
+                                        ? 'bi-heart-fill'
+                                        : 'bi-heart'
+                                }"></i>
+                            </button>
+                            <img src="/uploads/products/${product.productImage[0]}" style="width: 75%; height: 90%;" alt="">
+                        </div>
+                        <div class="center">
+                            <div class="name_div">
+                                <p class="product_name">${product.productName}</p>
+                            </div>
+                            <div class="price_div">
+                                <p class="old_price"><i class="bi bi-currency-rupee"></i>${product.price}</p>
+                                <p class="new_price"><i class="bi bi-currency-rupee"></i>${product.discount}</p>
+                            </div>
+                        </div>
+                        <div class="bottom"><button  class="addto_cart_btn addto_cart_btn"><i class="bi "></i>V I E W</button></div>
+                    </a>
+                `;
+                productSection.appendChild(productFrameGrid);
+            });
+
+           
+            if(products.length!==0){
+            const pagenumber=pageNumber
+            // Create and append pagination
+            const paginationDiv = document.querySelector('.pagination_div');
+            paginationDiv.innerHTML = '';
+            const linkPaginationDiv = document.createElement('div');
+            linkPaginationDiv.className = 'link_pagination';
+            linkPaginationDiv.innerHTML = `
+                <button class="back_btn" onclick="prevpage(event, '${pagenumber}')"><i class="bi bi-chevron-left"></i></button>
+                <div class="links">
+                    <button class="page_btn active_link" value="${pagenumber}">${pagenumber}</button>
+                </div>
+                <button class="next_btn" onclick="nextpage(event, '${pagenumber}')"><i class="bi bi-chevron-right"></i></button>
+            `;
+            paginationDiv.appendChild(linkPaginationDiv);
+            }
+
+            
+        } else {
+            console.error("Error filtering products:", result.message);
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 

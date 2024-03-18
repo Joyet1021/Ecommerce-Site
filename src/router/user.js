@@ -5,8 +5,10 @@ const multer = require('../middlewares/multerMiddleware')
 
 const authController=require("../controller/auth")
 const userController=require("../controller/userController")
-const accountController=require("../controller/account")
-const orderController=require("../controller/order")
+const accountController=require("../controller/useraccount")
+const orderController=require("../controller/userorder")
+const cartController=require("../controller/usercart")
+const wishlistController=require("../controller/userwishlist")
 
 router.get("/signup",authController.usersignupGet)
 router.post("/sendotp",authController.usersignupPost)
@@ -30,7 +32,7 @@ router.post("/resetlogin/:mail",authController.resetpasswordPost)
 
 router.get("/userhome",userController.userhomeGet)
 router.get("/viewproduct",userController.viewProduct)
-router.get("/addToCart",userController.addtoCart)
+router.get("/addToCart",cartController.addtoCart)
 router.post("/buyNow",userController.buynowpost)
 
 router.get("/categoryGet",userController.categoryGet)
@@ -39,13 +41,13 @@ router.get("/filterproduct",userController.filterproducts)
 router.get("/filterPrice",userController.filterprice)
 router.get("/subcategory",userController.subCategory)
    
-router.get("/cart",userController.cartGet)
-router.delete("/deletecartproduct",userController.deleteCartProduct)
-router.get("/updateCartqty",userController.updateCartQty)
+router.get("/cart",cartController.cartGet)
+router.delete("/deletecartproduct",cartController.deleteCartProduct)
+router.get("/updateCartqty",cartController.updateCartQty)
 
-router.get("/addtowishlist",userController.addtowishlist)
-router.get("/wishlist",userController.wishlistGet)
-router.delete("/deleteWishlist",userController.deleteWishlist)
+router.get("/addtowishlist",wishlistController.addtowishlist)
+router.get("/wishlist",wishlistController.wishlistGet)
+router.delete("/deleteWishlist",wishlistController.deleteWishlist)
 
 router.get("/Address",accountController.addressGet)
 router.post("/addAddress",multer.setUploadType('profiles'),multer.upload.single("profileImage"),accountController.addAddressPost)
@@ -67,7 +69,8 @@ router.get("/orderopen",accountController.orderopenGet)
 router.get("/updatePassword",accountController.updatePasswordGet)
 router.put("/updatePasswordput",accountController.updatePasswordput)
 
-router.get("/search",userController.searchGet)
+router.get("/search",userController.searchGet);
+router.get("/pagination",userController.pagination)
 router.get("/logout",authController.logout);
 
 router.post("/review",accountController.reviewPost)

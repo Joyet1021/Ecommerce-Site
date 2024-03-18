@@ -143,7 +143,7 @@
                          <li class="btn_li" style="display: flex; height: 3rem; justify-content: space-between; width: 90%;">    
                             <%productExist%>
                             <% if(productExist==false){ %>                                                                                
-                            <a  href="" id="add-to-cart-btn-<%= product._id %>" class="submit" onclick="addtocart('<%= product._id %>')">ADD TO CART</a>
+                            <a  href="" id="add-to-cart-btn-<%= product._id %>" class="submit" onclick="addtocart('<%= product._id %>','<%= locals.cartCount %>')">ADD TO CART</a>
                             <% }else{ %>
                             <a  href="" id="add-to-cart-btn-<%= product._id %>" onclick="gotocart('<%= product._id %>')">GO TO CART</a>
                             <% } %>
@@ -169,7 +169,7 @@
                                 <button class="wish_btn_related">
                                     <i class="bi wish_related_pro_icon wish_icon bi-heart"></i>
                                 </button>
-                                <img src="/uploads/products/<%= relatedProduct.productImage[0] %>" style="width: 75%; height: 90%;" alt="">
+                                <img src="/uploads/products/<%= relatedProduct.productImage[0] %>" style="width: 85%; height: 90%;margin-top: 20%;" alt="">
                             </div>
                             <div class="center">
                                 <div class="name_div">
@@ -252,7 +252,7 @@
     }
 
 
-    async function addtocart(id) {
+    async function addtocart(id,cartcount) {
     event.preventDefault(); 
     try {
         const path = document.getElementById('add-to-cart-btn-' + id).innerText;
@@ -299,6 +299,12 @@
             const cartLink = document.getElementById('add-to-cart-btn-' + id);
             cartLink.setAttribute('href', '/user/cart');
             cartLink.innerText = "GO TO CART";
+            const cartCount = document.getElementById('cart-Count');
+            if (cartCount) {
+              cartCount.innerHTML = parseInt(cartcount)+1;
+            } else {
+              console.error("Element with ID 'wish-count' not found.");
+            }
         } else {
             message.innerHTML = result.error || "Unknown error";
         }

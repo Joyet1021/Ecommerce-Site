@@ -1,5 +1,6 @@
 const mongoose=require("mongoose");
 const { array } = require("../src/middlewares/multerMiddleware");
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 const schema={
     productImage:{
@@ -55,5 +56,6 @@ const schema={
 
 
 const productSchema=new mongoose.Schema(schema)
+productSchema.plugin(mongoosePaginate);
 const productModel=new mongoose.model('productdatas',productSchema)
 module.exports = productModel;

@@ -11,7 +11,7 @@ exports.ordersGet = async (req, res) => {
         }
 
         // Find all orders
-        const orders = await orderModel.find();
+        const orders = await orderModel.find().populate('productsid.productid');
         res.render("admin/orders", { orders }); // Render the orders page with orders data
     } catch (error) {
         console.error("Error fetching orders:", error); // Log error

@@ -1,4 +1,4 @@
-const categoryModel=require('./../../Models/categories')
+const categoryModel=require('../../Models/categories')
 
 // Controller function to render the list of categories
 exports.categoriesGet=async(req,res)=>{

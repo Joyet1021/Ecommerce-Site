@@ -1,6 +1,6 @@
 // Import necessary modules and models
 const profileModel = require('../../Models/userprofile');
-const signupModel = require('./../../Models/signupmodel');
+const signupModel = require('../../Models/signupmodel');
 const fs=require( "fs");
 const bcrypt = require('bcrypt');
 const orderModel = require("../../Models/order");
@@ -8,6 +8,7 @@ const productModel = require('../../Models/productdetails');
 const cartModel=require('../../Models/cart');
 const wishlistModel=require('../../Models/wishlist')
 const reviewModel=require('../../Models/review')
+
 
 // Display the address form
 exports.addressGet = async (req, res) => {
@@ -291,10 +292,26 @@ exports.deleteorder = async (req, res) => {
 // Display detailed order information
 exports.orderopenGet=async(req,res)=>{
     try{
+        const userId = req.session.user ? req.session.user._id : null;
         const orderid=req.query.id;
         let order = await orderModel.find({ _id: orderid }).populate('productsid.productid');
         order=order[0];
-        res.render('user/orderopen',{order})
+        // Initialize variables for user-specific data
+        let wishlist = null;
+        let cartCount = 0;
+        let wishlistCount = 0;
+
+        // Check if user is logged in
+        if (userId) {
+            // Fetch user's wishlist and cart details
+            wishlist = await wishlistModel.findOne({ userid: userId });
+            const cart = await cartModel.findOne({ userid: userId });
+
+            // Update cart and wishlist counts
+            cartCount = cart ? cart.productsid.length : 0;
+            wishlistCount = wishlist ? wishlist.productsid.length : 0;
+        }
+        res.render('user/orderopen',{order,wishlistCount,cartCount})
 
     }catch (error) {
         console.error('Error in getting orders', error);
@@ -426,6 +443,14 @@ exports.reviewPost = async (req, res) => {
                     rating
                 }]
             });
+        }
+        const orderToUpdate = await orderModel.findOne({ userid: userid, 'productsid.productid': productId });
+        if (orderToUpdate) {
+            // Update the document
+            await orderModel.updateOne(
+                { _id: orderToUpdate._id }, // Filter to find the document
+                { $set: { reviewed: true } } // Set the reviewed field to true
+            );
         }
 
         if (userid === null) {

@@ -34,6 +34,10 @@ const schema={
     status:{
         type:String,
         default:'Confirmed'
+    },
+    reviewed:{
+        type:Boolean,
+        default:false
     }
 
 }
