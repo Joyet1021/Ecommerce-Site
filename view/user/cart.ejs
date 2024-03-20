@@ -12,7 +12,7 @@
                 <div class="login_to_view">
                     <div class="gologin_frame">
                         <h3>PLEASE LOG IN</h3>
-                        <p>Login to view items in your WISHLIST.</p>
+                        <p>Login to view items in your CART.</p>
                         <button onclick="location.href = '/user/login' " class="login_from_wish_btn">LOGIN</button>
                     </div>
                 </div>
@@ -42,7 +42,11 @@
                                             <% if (i === 5) break; %>
                                         <% } %>
                                     </select>
-                                    <div class="stock_left"> <%=product.productid.quantity%> Stock Left</div>
+                                    <%if(product.productid.quantity==0){%>
+                                    <div class="stock_left"> Out of Stock</div>
+                                    <%}else{%>
+                                        <div class="stock_left"> <%=product.productid.quantity%> Stock Left</div>
+                                        <%}%>
                                 </div>
                                 <div style="display: flex; gap: .7rem; align-items: center;">
                                     <p id="old-price" class="old_price"><%=(product.productid.price*product.quantity)%></p>

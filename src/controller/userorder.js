@@ -35,7 +35,7 @@ exports.checkoutGet = async (req, res) => {
         if (req.query.total) {
             total = req.query.total;
             const cart = await cartModel.findOne({ userid: userId }).populate('productsid.productid');
-            order = cart.productsid;
+            order = cart.productsid.filter(item => item.productid.quantity > 0);
             req.session.preorder = order;
         } else {
             productId = req.query.productid;
@@ -43,10 +43,18 @@ exports.checkoutGet = async (req, res) => {
             const color = req.query.color;
             const qty = req.query.quantity || '1';
             const productid = await productModel.findOne({ _id: productId });
-            order = [{ productid, quantity: qty, size: size, color: color }];
-            total = order[0].productid.discount * qty;
-            req.session.preorder = order;
-            quantity = req.query.quantity;
+            if(productid.quantity>=qty){
+                order = [{ productid, quantity: qty, size: size, color: color }];
+                total = order[0].productid.discount * qty;
+                req.session.preorder = order;
+                quantity = req.query.quantity;
+            }else{
+                order=[];
+                total = 0;
+                req.session.preorder = order;
+                quantity = 0;
+            }
+            
         }
         // Initialize variables for user-specific data
         let wishlist = null;

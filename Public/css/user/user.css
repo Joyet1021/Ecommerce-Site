@@ -3183,7 +3183,7 @@ word-wrap: break-word;
     width: 100%;
     height: calc(100vh - 4.5rem);
     padding: 0 2rem;
-    overflow-y: scroll;
+    
 }
 .banner{
     display: flex;
@@ -3610,11 +3610,11 @@ word-wrap: break-word;
 }
 .product_section{
     display: grid;
-    grid-template-columns: repeat(4,minmax(15em,1fr));
+    grid-template-columns: repeat(auto-fill,minmax(15em,1fr));
     column-gap: 1.8rem;
     row-gap: 1.8rem;
     padding: .5rem;
-    width: 100%;
+    width: 100.5%;
     height: 100%;
 }
 .bi-heart-fill{
@@ -3733,7 +3733,7 @@ background-color: white;
 .product_frame_grid{
     cursor: pointer;
     height: 27rem;
-    width: 18rem;
+    width: 17rem;
     padding: 0 2rem;
     border: 1px solid rgba(62, 62, 62, 0.287);
 }

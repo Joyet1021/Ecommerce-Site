@@ -110,7 +110,11 @@
                                     <option value="4">Qty:4</option>
                                     <option value="5">Qty:5</option>
                                  </select>
-                               <div class="stock_left">Hurry only <%= product.quantity %> LEFT</div>
+                                 <%if(product.quantity==0){%>
+                               <div class="stock_left">Out of  Stock</div>  
+                               <%}else{%>
+                                <div class="stock_left">Hurry only <%= product.quantity %> LEFT</div>
+                                <%}%>
                                <div class="wish_btn_div"><button class="wish_btn" onclick="addToWish(event,'<%= product._id %>')">
                                   <i class="bi wish_white wish_icon"></i>
                                   </button></div>

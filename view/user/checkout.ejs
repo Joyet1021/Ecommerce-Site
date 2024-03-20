@@ -8,6 +8,11 @@
             <div class="checkout_left">
                 <!-- ----------------------------------- -->
                 <div class="checkout_left_top">
+                    <%if(order.length==0){%>
+                        <div class="product product" style="display: flex;align-items: center;justify-content: center;" >
+                            <h4><b>This product is Out of Stock</b></h4>
+                        </div>
+                        <%}%>
                 <%order.forEach((product)=>{%>
                     <div class="product product"  >
                         <div class="image_sec"><img src="/uploads/products/<%=product.productid.productImage[0]%>" style="width: 8rem;height:10rem;" alt=""></div>
