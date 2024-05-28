@@ -29,7 +29,7 @@ app.set("view engine", "ejs");
 app.set("views", "view");
 
 // Serve static files
-app.use(express.static("public"));
+app.use(express.static("Public"));
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URL)
