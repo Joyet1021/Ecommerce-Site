@@ -23,11 +23,14 @@ app.use(flash());
 const userRouter = require("./src/router/user");
 const adminRouter = require("./src/router/admin");
 
-app.use("/", (req, res) => {
-  res.redirect("/user/userhome");
-});
+
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
+
+// Default route
+app.use("/", (req, res) => {
+    res.redirect("/user/userhome");
+  });
 
 // View engine setup
 app.set("view engine", "ejs");
