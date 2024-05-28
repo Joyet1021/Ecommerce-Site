@@ -27,10 +27,6 @@ const adminRouter = require("./src/router/admin");
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
 
-// Default route
-app.use("/", (req, res) => {
-    res.redirect("/user/userhome");
-  });
 
 // View engine setup
 app.set("view engine", "ejs");
