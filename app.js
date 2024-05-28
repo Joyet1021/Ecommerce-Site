@@ -23,6 +23,10 @@ app.use(flash());
 const userRouter = require("./src/router/user");
 const adminRouter = require("./src/router/admin");
 
+// Default route
+app.get("/", (req, res) => {
+    res.redirect("/user/userhome");
+  });
 
 app.use("/admin", adminRouter);
 app.use("/user", userRouter);
