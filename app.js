@@ -32,7 +32,7 @@ app.set("views", "view");
 app.use(express.static("public"));
 
 // Database connection
-mongoose.connect('mongodb://localhost:27017/mainproject')
+mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
         console.log("Database connected");
         // Start the server
