@@ -138,7 +138,7 @@ exports.checkoutPost = async (req, res) => {
                 service: 'gmail',
                 auth: {
                     user: 'joyetjoyasi@gmail.com',
-                    pass: 'etja nfps utyg phkw'
+                    pass: 'tqyk vtsx ciza ghkh'
                 }
             });
 
